@@ -1,0 +1,29 @@
+{
+  "name": "alex-oliveira/ao-scrud",
+  "homepage": "http://github.com/alex-oliveira/ao-scrud",
+  "description": "Resources for SCRUD with Laravel 5.1",
+  "license": "MIT",
+  "keywords": [
+    "alex-oliveira",
+    "laravel",
+    "scrud",
+    "crud"
+  ],
+  "authors": [
+    {
+      "name": "Alex Oliveira",
+      "email": "bsi.alexoliveira@gmail.com",
+      "homepage": "http://alexdeoliveira.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.9",
+    "laravel/framework": "5.1.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "AoScrud\\": "src/"
+    }
+  }
+}
