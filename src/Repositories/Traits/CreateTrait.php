@@ -2,6 +2,7 @@
 
 namespace AoScrud\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Validator;
 
 trait CreateTrait
@@ -11,7 +12,7 @@ trait CreateTrait
      * Main method for the registration.
      *
      * @param array $data
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      * @throws \Exception
      */
     public function create(array $data)
@@ -70,7 +71,7 @@ trait CreateTrait
      * Execute model's create method.
      *
      * @param array $data
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     protected function createSave(array &$data)
     {
