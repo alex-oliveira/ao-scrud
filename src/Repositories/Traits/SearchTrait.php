@@ -81,10 +81,10 @@ trait SearchTrait
     /**
      * Add research rules.
      *
-     * @param Builder $query
+     * @param \Illuminate\Database\Query\Builder $query
      * @param \array $data
      */
-    protected function searchWhere(Builder &$query, &$data)
+    protected function searchWhere(&$query, &$data)
     {
         // TODO: overwrite in repository.
     }
@@ -92,10 +92,10 @@ trait SearchTrait
     /**
      * Add research columns.
      *
-     * @param Builder $query
+     * @param \Illuminate\Database\Query\Builder $query
      * @param \array $data
      */
-    protected function searchCustom(Builder &$query, &$data)
+    protected function searchCustom(&$query, &$data)
     {
         // TODO: overwrite in repository.
     }
