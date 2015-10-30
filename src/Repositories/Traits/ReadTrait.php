@@ -2,6 +2,8 @@
 
 namespace AoScrud\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait ReadTrait
 {
 
@@ -9,7 +11,7 @@ trait ReadTrait
      * Read method.
      *
      * @param integer $id
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function read($id)
     {
