@@ -2,6 +2,7 @@
 
 namespace AoScrud\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Validator;
 
 trait UpdateTrait
@@ -81,7 +82,7 @@ trait UpdateTrait
     /**
      * Execute model's update method.
      *
-     * @param \Illuminate\Database\Eloquent\Model|Model $obj
+     * @param Model $obj
      * @param array $data
      * @return bool
      */
