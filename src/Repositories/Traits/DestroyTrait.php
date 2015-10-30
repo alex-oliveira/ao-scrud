@@ -2,6 +2,8 @@
 
 namespace AoScrud\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait DestroyTrait
 {
 
@@ -48,7 +50,7 @@ trait DestroyTrait
     /**
      * Execute validation in the object for the destroy.
      *
-     * @param \Illuminate\Database\Eloquent\Model|Model $obj
+     * @param Model $obj
      */
     protected function destroyValidator(Model &$obj)
     {
@@ -58,7 +60,7 @@ trait DestroyTrait
     /**
      * Execute model's delete method.
      *
-     * @param \Illuminate\Database\Eloquent\Model|Model $obj
+     * @param Model $obj
      * @return bool|null
      * @throws \Exception
      */
