@@ -2,6 +2,9 @@
 
 namespace AoScrud\Repositories\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
+
 trait SearchTrait
 {
     /**
@@ -29,7 +32,7 @@ trait SearchTrait
      * Research method and paging.
      *
      * @param  array $data
-     * @return \Illuminate\Database\Eloquent\Model[]
+     * @return Model[]
      */
     public function search(array $data = [])
     {
@@ -78,10 +81,10 @@ trait SearchTrait
     /**
      * Add research rules.
      *
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @param \array $data
      */
-    protected function searchWhere(&$query, &$data)
+    protected function searchWhere(Builder &$query, &$data)
     {
         // TODO: overwrite in repository.
     }
@@ -89,10 +92,10 @@ trait SearchTrait
     /**
      * Add research columns.
      *
-     * @param \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @param \array $data
      */
-    protected function searchCustom(&$query, &$data)
+    protected function searchCustom(Builder &$query, &$data)
     {
         // TODO: overwrite in repository.
     }
