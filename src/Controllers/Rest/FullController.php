@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers\Rest;
+namespace AoScrud\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
