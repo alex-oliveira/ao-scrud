@@ -56,6 +56,7 @@ trait UpdateTrait
     protected function updateValidator($id, array &$data, \Closure $callback = null)
     {
         $validator = Validator::make($data, $this->updateRules($id));
+        $validator->setAttributeNames($this->model()->labels());
 
         if (isset($callback))
             $validator->after($callback);
