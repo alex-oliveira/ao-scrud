@@ -2,8 +2,6 @@
 
 namespace AoScrud\Repositories\Traits;
 
-use DB;
-
 trait TransactionTrait
 {
 
@@ -21,17 +19,17 @@ trait TransactionTrait
 
     public function tBegin()
     {
-        $this->transaction ? DB::beginTransaction() : null;
+        $this->transaction ? db()->beginTransaction() : null;
     }
 
     public function tRollBack()
     {
-        $this->transaction ? DB::rollBack() : null;
+        $this->transaction ? db()->rollBack() : null;
     }
 
     public function tCommit()
     {
-        $this->transaction ? DB::commit() : null;
+        $this->transaction ? db()->commit() : null;
     }
 
 }

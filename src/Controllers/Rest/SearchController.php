@@ -1,12 +1,11 @@
 <?php
 
-namespace AoScrud\Controllers;
+namespace AoScrud\Controllers\Rest;
 
-use App;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-abstract class FullController extends Controller
+abstract class SearchController extends Controller
 {
 
     /**
@@ -28,7 +27,7 @@ abstract class FullController extends Controller
      */
     public function __construct()
     {
-        $this->repository = App::make($this->repository());
+        $this->repository = app()->make($this->repository());
     }
 
     /**
@@ -51,17 +50,6 @@ abstract class FullController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        return response()->json($this->repository->create($request->all()), 201);
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int $id
@@ -70,31 +58,6 @@ abstract class FullController extends Controller
     public function show($id)
     {
         return response()->json($this->repository->read($id));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $this->repository->update($id, $request->all());
-        return response()->json([], 204);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $this->repository->destroy($id);
-        return response()->json([], 204);
     }
 
 }

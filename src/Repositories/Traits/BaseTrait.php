@@ -2,8 +2,6 @@
 
 namespace AoScrud\Repositories\Traits;
 
-use App;
-
 trait BaseTrait
 {
 
@@ -28,7 +26,7 @@ trait BaseTrait
      */
     public function model()
     {
-        return is_null($this->singleton) ? $this->singleton = App::make($this->model) : $this->singleton;
+        return is_null($this->singleton) ? $this->singleton = app()->make($this->model) : $this->singleton;
     }
 
 }
