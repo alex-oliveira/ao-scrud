@@ -2,6 +2,7 @@
 
 namespace AoScrud\Repositories\Traits;
 
+use Ao\Exceptions\JsonException;
 use Illuminate\Database\Eloquent\Model;
 use Validator;
 
@@ -54,7 +55,7 @@ trait CreateTrait
      *
      * @param array $data
      * @param \Closure $callback
-     * @throws \Exception
+     * @throws JsonException
      */
     protected function createValidator(array &$data, \Closure $callback = null)
     {
@@ -64,7 +65,7 @@ trait CreateTrait
             $validator->after($callback);
 
         if ($validator->fails())
-            abort(400, $validator->errors()->first());
+            throw new JsonException(json_encode($validator->errors()->all()), 400);
     }
 
     /**
