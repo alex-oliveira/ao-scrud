@@ -89,7 +89,9 @@ trait UpdateTrait
      */
     protected function updateSave(Model &$obj, array &$data)
     {
-        return $obj->update($data);
+        $hash = md5($obj->toJson());
+        $obj->update($data);
+        return $hash == md5($obj->toJson()) ? false : true;
     }
 
 }
