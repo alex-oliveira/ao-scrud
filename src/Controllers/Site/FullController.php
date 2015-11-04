@@ -51,7 +51,7 @@ abstract class FullController extends Controller
         }
 
         $query = collect($request->all());
-        return view($this->views . 'index', compact('list', 'query'));
+        return view($this->views . '.index', compact('list', 'query'));
     }
 
     /**
@@ -66,10 +66,10 @@ abstract class FullController extends Controller
             $obj = $this->repository->read($id);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route($this->routes . 'index');
+            return redirect()->route($this->routes . '.index');
         }
 
-        return view($this->views . 'show', compact('obj'));
+        return view($this->views . '.show', compact('obj'));
     }
 
     /**
@@ -79,7 +79,7 @@ abstract class FullController extends Controller
      */
     public function create()
     {
-        return view($this->views . 'create');
+        return view($this->views . '.create');
     }
 
     /**
@@ -94,15 +94,15 @@ abstract class FullController extends Controller
             $obj = $this->repository->create($request->input('obj'));
         } catch (\Exception $e) {
             if ($e instanceof JsonException) {
-                alert()->danger(trans($this->lang . 'whoops'), $e->getMessageArray());
+                alert()->danger(trans($this->lang . '.whoops'), $e->getMessageArray());
             } else {
                 alert()->danger($e->getMessage());
             }
-            return redirect()->route($this->routes . 'create')->withInput();
+            return redirect()->route($this->routes . '.create')->withInput();
         }
 
-        alert()->success(trans($this->lang . 'created', ['route' => route($this->routes . 'show', ['id' => $obj->id])]));
-        return redirect()->route($this->routes . 'index');
+        alert()->success(trans($this->lang . '.created', ['route' => route($this->routes . '.show', ['id' => $obj->id])]));
+        return redirect()->route($this->routes . '.index');
     }
 
     /**
@@ -117,10 +117,10 @@ abstract class FullController extends Controller
             $obj = $this->repository->read($id);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route($this->routes . 'index');
+            return redirect()->route($this->routes . '.index');
         }
 
-        return view($this->views . 'edit', compact('obj'));
+        return view($this->views . '.edit', compact('obj'));
     }
 
     /**
@@ -136,20 +136,20 @@ abstract class FullController extends Controller
             $result = $this->repository->update($id, $request->input('obj'));
         } catch (\Exception $e) {
             if ($e instanceof JsonException) {
-                alert()->danger(trans($this->lang . 'whoops'), $e->getMessageArray());
+                alert()->danger(trans($this->lang . '.whoops'), $e->getMessageArray());
             } else {
                 alert()->danger($e->getMessage());
             }
-            return redirect()->route($this->routes . 'edit', ['id' => $id]);
+            return redirect()->route($this->routes . '.edit', ['id' => $id]);
         }
 
-        $params = ['route' => route($this->routes . 'show', ['id' => $id])];
+        $params = ['route' => route($this->routes . '.show', ['id' => $id])];
         if ($result) {
-            alert()->success(trans($this->lang . 'updated', $params));
+            alert()->success(trans($this->lang . '.updated', $params));
         } else {
-            alert()->warning(trans($this->lang . 'unchanged', $params));
+            alert()->warning(trans($this->lang . '.unchanged', $params));
         }
-        return redirect()->route($this->routes . 'index');
+        return redirect()->route($this->routes . '.index');
     }
 
     /**
@@ -164,10 +164,10 @@ abstract class FullController extends Controller
             $obj = $this->repository->read($id);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route($this->routes . 'index');
+            return redirect()->route($this->routes . '.index');
         }
 
-        return view($this->views . 'delete', compact('obj'));
+        return view($this->views . '.delete', compact('obj'));
     }
 
     /**
@@ -182,11 +182,11 @@ abstract class FullController extends Controller
             $this->repository->destroy($id);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route($this->routes . 'delete', ['id' => $id]);
+            return redirect()->route($this->routes . '.delete', ['id' => $id]);
         }
 
-        alert()->success(trans($this->lang . 'destroyed'));
-        return redirect()->route($this->routes . 'index');
+        alert()->success(trans($this->lang . '.destroyed'));
+        return redirect()->route($this->routes . '.index');
     }
 
 }
