@@ -8,16 +8,9 @@ trait BaseTrait
     /**
      * Model of the Scrud name.
      *
-     * @var \Illuminate\Database\Eloquent\Model::class
-     */
-    protected $model;
-
-    /**
-     * Singleton of the Scrud.
-     *
      * @var \Illuminate\Database\Eloquent\Model
      */
-    private $singleton;
+    protected $model;
 
     /**
      * Return instance of main repository class.
@@ -26,7 +19,7 @@ trait BaseTrait
      */
     public function model()
     {
-        return is_null($this->singleton) ? $this->singleton = app()->make($this->model) : $this->singleton;
+        return $this->model;
     }
 
 }

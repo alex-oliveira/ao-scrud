@@ -50,6 +50,8 @@ trait SearchTrait
         # order
         if (isset($data['order']) && in_array($data['order'], $this->searchOrders)) {
             $query->orderBy($data['order']);
+        } elseif (count($this->searchOrders) > 0) {
+            $query->orderBy($this->searchOrders[0]);
         }
 
         # customs
