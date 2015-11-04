@@ -2,6 +2,7 @@
 
 namespace AoScrud\Controllers\Site;
 
+use AoScrud\Exceptions\JsonException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
