@@ -59,7 +59,7 @@ trait CreateTrait
     protected function createValidator(array &$data, \Closure $callback = null)
     {
         $validator = app('validator')->make($data, $this->createRules());
-        $validator->setAttributeNames($this->model()->labels());
+        $validator->setAttributeNames($this->labels());
 
         if (isset($callback))
             $validator->after($callback);
