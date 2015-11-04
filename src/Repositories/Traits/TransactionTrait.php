@@ -19,17 +19,17 @@ trait TransactionTrait
 
     public function tBegin()
     {
-        $this->transaction ? db()->beginTransaction() : null;
+        $this->transaction ? app('db')->beginTransaction() : null;
     }
 
     public function tRollBack()
     {
-        $this->transaction ? db()->rollBack() : null;
+        $this->transaction ? app('db')->rollBack() : null;
     }
 
     public function tCommit()
     {
-        $this->transaction ? db()->commit() : null;
+        $this->transaction ? app('db')->commit() : null;
     }
 
 }

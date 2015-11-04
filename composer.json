@@ -19,8 +19,7 @@
   ],
   "require": {
     "php": ">=5.5.9",
-    "laravel/framework": "5.1.*",
-    "alex-oliveira/ao-laravel": "dev-master"
+    "laravel/framework": "5.1.*"
   },
   "autoload": {
     "psr-4": {
