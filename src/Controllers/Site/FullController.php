@@ -52,8 +52,7 @@ abstract class FullController extends Controller
             return redirect()->route('home');
         }
 
-        $query = collect($request->all());
-        return view($this->views . '.index', compact('list', 'query'));
+        return view($this->views . '.index', compact('list'));
     }
 
     /**
@@ -74,15 +73,7 @@ abstract class FullController extends Controller
         return view($this->views . '.show', compact('obj'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view($this->views . '.create');
-    }
+
 
     /**
      * Store a newly created resource in storage.
