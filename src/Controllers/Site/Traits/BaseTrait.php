@@ -2,10 +2,11 @@
 
 namespace AoScrud\Controllers\Site\Traits;
 
-use AoScrud\Repositories\FullRepository;
+use AoScrud\Repositories\BaseRepository;
 
 trait BaseTrait
 {
+
     /**
      * Prefix to route names.
      *
@@ -30,7 +31,7 @@ trait BaseTrait
     /**
      * The main repository.
      *
-     * @var FullRepository;
+     * @var BaseRepository;
      */
     protected $repository;
 
