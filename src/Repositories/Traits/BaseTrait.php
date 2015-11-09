@@ -39,4 +39,14 @@ trait BaseTrait
         return $this->labels;
     }
 
+    /**
+     * Return all items.
+     *
+     * @return array
+     */
+    public function all()
+    {
+        return $this->model->all();
+    }
+
 }
