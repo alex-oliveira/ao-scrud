@@ -11,30 +11,29 @@ trait UpdateTrait
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request $request
-     * @param  int $id
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try {
-            $result = $this->repository->update($id, $request->input('obj'));
+            $result = $this->repository->update($request);
         } catch (\Exception $e) {
             if ($e instanceof JsonException) {
                 alert()->danger(trans($this->lang . '.whoops'), $e->getMessageArray());
             } else {
                 alert()->danger($e->getMessage());
             }
-            return redirect()->route($this->routes . '.edit', ['id' => $id]);
+            return redirect()->back();
         }
 
-        $params = ['route' => route($this->routes . '.show', ['id' => $id])];
+        $p = $request->route()->parameters();
         if ($result) {
-            alert()->success(trans($this->lang . '.updated', $params));
+            alert()->success(trans($this->lang . '.updated', ['route' => route($this->routes . '.show', $p)]));
         } else {
-            alert()->warning(trans($this->lang . '.unchanged', $params));
+            alert()->warning(trans($this->lang . '.unchanged', ['route' => route($this->routes . '.show', $p)]));
         }
-        return redirect()->route($this->routes . '.index');
+        return redirect()->route($this->routes . '.index', $p);
     }
 
 }

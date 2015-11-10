@@ -11,24 +11,25 @@ trait StoreTrait
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         try {
-            $obj = $this->repository->create($request->input('obj'));
+            $obj = $this->repository->create($request);
         } catch (\Exception $e) {
             if ($e instanceof JsonException) {
                 alert()->danger(trans($this->lang . '.whoops'), $e->getMessageArray());
             } else {
                 alert()->danger($e->getMessage());
             }
-            return redirect()->route($this->routes . '.create')->withInput();
+            return redirect()->back()->withInput();
         }
 
-        alert()->success(trans($this->lang . '.created', ['route' => route($this->routes . '.show', ['id' => $obj->id])]));
-        return redirect()->route($this->routes . '.index');
+        $p = $request->route()->parameters();
+        //alert()->success(trans($this->lang . '.created', ['route' => route($this->routes . '.show', ['id' => $obj->id])]));
+        return redirect()->route($this->routes . '.index', $p);
     }
 
 }

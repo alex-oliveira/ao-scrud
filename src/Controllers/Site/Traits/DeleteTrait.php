@@ -2,22 +2,24 @@
 
 namespace AoScrud\Controllers\Site\Traits;
 
+use Illuminate\Http\Request;
+
 trait DeleteTrait
 {
 
     /**
      * Remove confirm the specified resource from storage.
      *
-     * @param int $id
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function delete(Request $request)
     {
         try {
-            $obj = $this->repository->read($id);
+            $obj = $this->repository->read($request);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route($this->routes . '.index');
+            return redirect()->route($this->routes . '.index', $request->route()->parameters());
         }
 
         return view($this->views . '.delete', compact('obj'));
