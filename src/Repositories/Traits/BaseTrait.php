@@ -20,16 +20,6 @@ trait BaseTrait
     protected $labels;
 
     /**
-     * Return instance of main repository class.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function model()
-    {
-        return $this->model;
-    }
-
-    /**
      * Return an array with the labels for the fields.
      *
      * @return array

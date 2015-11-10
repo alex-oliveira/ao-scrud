@@ -2,20 +2,18 @@
 
 namespace AoScrud\Repositories\Traits;
 
-use Illuminate\Database\Eloquent\Model;
-
 trait ReadTrait
 {
 
     /**
      * Read method.
      *
-     * @param integer $id
-     * @return Model
+     * @@param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function read($id)
+    public function read($request)
     {
-        $obj = $this->model()->find($id);
+        $obj = $this->model->find($request->route()->parameter('id'));
 
         if (empty($obj))
             abort(404);

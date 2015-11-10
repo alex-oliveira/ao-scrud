@@ -10,16 +10,16 @@ trait IndexTrait
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
         try {
-            $list = $this->repository->search($request->all());
+            $list = $this->repository->search($request);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route('home');
+            return redirect()->route($this->routeParent);
         }
 
         return view($this->views . '.index', compact('list'));

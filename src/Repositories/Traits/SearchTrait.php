@@ -2,9 +2,6 @@
 
 namespace AoScrud\Repositories\Traits;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
-
 trait SearchTrait
 {
     /**
@@ -31,31 +28,32 @@ trait SearchTrait
     /**
      * Research method and paging.
      *
-     * @param  array $data
-     * @return Model[]
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Model[]
      */
-    public function search(array $data = [])
+    public function search($request)
     {
         # wheres
-        $query = $this->model()->where(function ($query) use ($data) {
-            $this->searchWhere($query, $data);
+        $query = $this->model->where(function ($query) use ($request) {
+            $this->searchWhere($query, $request);
         });
 
         # columns
-        $columns = $this->searchSelect(empty($data['columns']) ? [] : $data['columns']);
-        if (!empty($columns)) {
+        $columns = $this->searchSelect($request->get('columns', []));
+        if (!empty($columns))
             $query->select($columns);
-        }
 
         # order
-        if (isset($data['order']) && in_array($data['order'], $this->searchOrders)) {
-            $query->orderBy($data['order']);
-        } elseif (count($this->searchOrders) > 0) {
-            $query->orderBy($this->searchOrders[0]);
+        if (!empty($this->searchOrders)) {
+            $order = $request->get('order', false);
+            if ($order && in_array($order, $this->searchOrders))
+                $query->orderBy($order);
+            else
+                $query->orderBy($this->searchOrders[0]);
         }
 
         # customs
-        $this->searchCustom($query, $data);
+        $this->searchCustom($query, $request);
 
         # pagination
         return $query->paginate($this->searchItemsPerPage);
@@ -69,24 +67,21 @@ trait SearchTrait
      */
     protected function searchSelect(array $columns)
     {
-        if (empty($this->searchColumns)) {
+        if (empty($this->searchColumns))
             return [];
-        } else {
-            if (empty($columns)) {
-                return $this->searchColumns;
-            } else {
-                return collect($this->searchColumns)->intersect($columns)->all();
-            }
-        }
+        elseif (empty($columns))
+            return $this->searchColumns;
+        else
+            return collect($this->searchColumns)->intersect($columns)->all();
     }
 
     /**
      * Add research rules.
      *
      * @param \Illuminate\Database\Query\Builder $query
-     * @param \array $data
+     * @param \Illuminate\Http\Request $request
      */
-    protected function searchWhere(&$query, &$data)
+    protected function searchWhere($query, $request)
     {
         // TODO: overwrite in repository.
     }
@@ -95,9 +90,9 @@ trait SearchTrait
      * Add research columns.
      *
      * @param \Illuminate\Database\Query\Builder $query
-     * @param \array $data
+     * @param \Illuminate\Http\Request $request
      */
-    protected function searchCustom(&$query, &$data)
+    protected function searchCustom($query, $request)
     {
         // TODO: overwrite in repository.
     }
