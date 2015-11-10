@@ -15,11 +15,13 @@ trait IndexTrait
      */
     public function index(Request $request)
     {
+        $data = array_merge($request->all(), $request->route()->parameters());
+
         try {
-            $list = $this->repository->search($request);
+            $list = $this->repository->search($data);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route($this->routeParent);
+            return redirect()->route((isset($this->routeParent) ? $this->routeParent : 'home'));
         }
 
         return view($this->views . '.index', compact('list'));

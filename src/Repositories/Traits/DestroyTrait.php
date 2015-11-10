@@ -2,21 +2,21 @@
 
 namespace AoScrud\Repositories\Traits;
 
-use Illuminate\Database\Eloquent\Model;
-
 trait DestroyTrait
 {
 
     /**
      * Main method of destroy.
      *
-     * @param integer $id
+     * @param array $data
      * @return boolean
      * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy($data)
     {
-        $obj = $this->destroyFind($id);
+        $data = collect($data);
+
+        $obj = $this->destroyFind($data);
         $this->destroyValidator($obj);
 
         $this->tBegin();
@@ -34,12 +34,12 @@ trait DestroyTrait
     /**
      * Find object for destroy.
      *
-     * @param $id
+     * @param \Illuminate\Support\Collection $data
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function destroyFind($id)
+    protected function destroyFind($data)
     {
-        $obj = $this->model()->find($id);
+        $obj = $this->model->find($data->get('id'));
 
         if (empty($obj))
             abort(404);
@@ -50,9 +50,9 @@ trait DestroyTrait
     /**
      * Execute validation in the object for the destroy.
      *
-     * @param Model $obj
+     * @param \Illuminate\Database\Eloquent\Model $obj
      */
-    protected function destroyValidator(Model &$obj)
+    protected function destroyValidator($obj)
     {
         // TODO: overwrite in repository.
     }
@@ -60,11 +60,11 @@ trait DestroyTrait
     /**
      * Execute model's delete method.
      *
-     * @param Model $obj
+     * @param \Illuminate\Database\Eloquent\Model $obj
      * @return bool|null
      * @throws \Exception
      */
-    protected function destroyFinalize(Model &$obj)
+    protected function destroyFinalize($obj)
     {
         return $obj->delete();
     }

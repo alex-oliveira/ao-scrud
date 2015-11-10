@@ -16,8 +16,11 @@ trait StoreTrait
      */
     public function store(Request $request)
     {
+        $params = $request->route()->parameters();
+        $data = array_merge($request->all(), $params);
+
         try {
-            $obj = $this->repository->create($request);
+            $obj = $this->repository->create($data);
         } catch (\Exception $e) {
             if ($e instanceof JsonException) {
                 alert()->danger(trans($this->lang . '.whoops'), $e->getMessageArray());
@@ -27,9 +30,19 @@ trait StoreTrait
             return redirect()->back()->withInput();
         }
 
-        $p = $request->route()->parameters();
-        //alert()->success(trans($this->lang . '.created', ['route' => route($this->routes . '.show', ['id' => $obj->id])]));
-        return redirect()->route($this->routes . '.index', $p);
+        alert()->success(trans($this->lang . '.created', ['route' => $this->storeRouteShow($obj)]));
+        return redirect()->route($this->routes . '.index', $params);
+    }
+
+    /**
+     * Return a route to show the created object.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $obj
+     * @return \Illuminate\Routing\Route
+     */
+    protected function storeRouteShow($obj)
+    {
+        return route($this->routes . '.show', ['id' => $obj->id]);
     }
 
 }

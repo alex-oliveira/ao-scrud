@@ -15,15 +15,18 @@ trait DestroyTrait
      */
     public function destroy(Request $request)
     {
+        $params = $request->route()->parameters();
+        $data = array_merge($request->all(), $params);
+
         try {
-            $this->repository->destroy($request);
+            $this->repository->destroy($data);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->back();
         }
 
         alert()->success(trans($this->lang . '.destroyed'));
-        return redirect()->route($this->routes . '.index', $request->route()->parameters());
+        return redirect()->route($this->routes . '.index', $params);
     }
 
 }

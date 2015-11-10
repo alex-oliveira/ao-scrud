@@ -3,7 +3,6 @@
 namespace AoScrud\Repositories\Traits;
 
 use AoScrud\Exceptions\JsonException;
-use Illuminate\Database\Eloquent\Model;
 
 trait UpdateTrait
 {
@@ -12,15 +11,16 @@ trait UpdateTrait
      * Main method of update.
      *
      * @param array $data
-     * @param integer $id
      * @return boolean
      * @throws \Exception
      */
-    public function update($id, array $data)
+    public function update(array $data)
     {
+        $data = collect($data);
+
         $this->updateTransformer($data);
-        $this->updateValidator($id, $data);
-        $obj = $this->updateFind($id);
+        $this->updateValidator($data);
+        $obj = $this->updateFind($data);
 
         $this->tBegin();
         try {
@@ -37,9 +37,9 @@ trait UpdateTrait
     /**
      * Prepare data for the update.
      *
-     * @param array $data
+     * @param \Illuminate\Support\Collection $data
      */
-    protected function updateTransformer(array &$data)
+    protected function updateTransformer($data)
     {
         // TODO: overwrite in repository.
     }
@@ -47,14 +47,13 @@ trait UpdateTrait
     /**
      * Execute validation in the data for the update.
      *
-     * @param integer $id
-     * @param array $data
+     * @param \Illuminate\Support\Collection $data
      * @param \Closure $callback
      * @throws JsonException
      */
-    protected function updateValidator($id, array &$data, \Closure $callback = null)
+    protected function updateValidator($data, \Closure $callback = null)
     {
-        $validator = app('validator')->make($data, $this->updateRules($id));
+        $validator = app('validator')->make($data->all(), $this->updateRules($data));
         $validator->setAttributeNames($this->labels());
 
         if (isset($callback))
@@ -65,14 +64,25 @@ trait UpdateTrait
     }
 
     /**
+     * Return an array with the validation rules for the update.
+     *
+     * @param \Illuminate\Support\Collection $data
+     * @return array
+     */
+    protected function updateRules($data)
+    {
+        return []; // TODO: overwrite in repository.
+    }
+
+    /**
      * Find object for update.
      *
-     * @param integer $id
+     * @param \Illuminate\Support\Collection $data
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function updateFind($id)
+    protected function updateFind($data)
     {
-        $obj = $this->model()->find($id);
+        $obj = $this->model->find($data->get('id'));
 
         if (empty($obj))
             abort(404);
@@ -83,13 +93,13 @@ trait UpdateTrait
     /**
      * Execute model's update method.
      *
-     * @param Model $obj
-     * @param array $data
+     * @param \Illuminate\Database\Eloquent\Model $obj
+     * @param \Illuminate\Support\Collection $data
      * @return bool
      */
-    protected function updateSave(Model &$obj, array &$data)
+    protected function updateSave($obj, $data)
     {
-        $obj->fill($data);
+        $obj->fill($data->all());
         return $obj->isDirty() ? $obj->save() : false;
     }
 

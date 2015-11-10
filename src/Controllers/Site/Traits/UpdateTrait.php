@@ -16,8 +16,11 @@ trait UpdateTrait
      */
     public function update(Request $request)
     {
+        $params = $request->route()->parameters();
+        $data = array_merge($request->all(), $params);
+
         try {
-            $result = $this->repository->update($request);
+            $result = $this->repository->update($data);
         } catch (\Exception $e) {
             if ($e instanceof JsonException) {
                 alert()->danger(trans($this->lang . '.whoops'), $e->getMessageArray());
@@ -27,13 +30,13 @@ trait UpdateTrait
             return redirect()->back();
         }
 
-        $p = $request->route()->parameters();
+        $route = route($this->routes . '.show', $params);
         if ($result) {
-            alert()->success(trans($this->lang . '.updated', ['route' => route($this->routes . '.show', $p)]));
+            alert()->success(trans($this->lang . '.updated', ['route' => $route]));
         } else {
-            alert()->warning(trans($this->lang . '.unchanged', ['route' => route($this->routes . '.show', $p)]));
+            alert()->warning(trans($this->lang . '.unchanged', ['route' => $route]));
         }
-        return redirect()->route($this->routes . '.index', $p);
+        return redirect()->route($this->routes . '.index', $params);
     }
 
 }

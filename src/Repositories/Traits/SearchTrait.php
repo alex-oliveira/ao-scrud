@@ -28,24 +28,26 @@ trait SearchTrait
     /**
      * Research method and paging.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  array $data
      * @return \Illuminate\Database\Eloquent\Model[]
      */
-    public function search($request)
+    public function search(array $data)
     {
+        $data = collect($data);
+
         # wheres
-        $query = $this->model->where(function ($query) use ($request) {
-            $this->searchWhere($query, $request);
+        $query = $this->model->where(function ($query) use ($data) {
+            $this->searchWhere($query, $data);
         });
 
         # columns
-        $columns = $this->searchSelect($request->get('columns', []));
+        $columns = $this->searchSelect($data->get('columns', []));
         if (!empty($columns))
             $query->select($columns);
 
         # order
         if (!empty($this->searchOrders)) {
-            $order = $request->get('order', false);
+            $order = $data->get('order', false);
             if ($order && in_array($order, $this->searchOrders))
                 $query->orderBy($order);
             else
@@ -53,7 +55,7 @@ trait SearchTrait
         }
 
         # customs
-        $this->searchCustom($query, $request);
+        $this->searchCustom($query, $data);
 
         # pagination
         return $query->paginate($this->searchItemsPerPage);
@@ -79,9 +81,9 @@ trait SearchTrait
      * Add research rules.
      *
      * @param \Illuminate\Database\Query\Builder $query
-     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Support\Collection $data
      */
-    protected function searchWhere($query, $request)
+    protected function searchWhere($query, $data)
     {
         // TODO: overwrite in repository.
     }
@@ -90,9 +92,9 @@ trait SearchTrait
      * Add research columns.
      *
      * @param \Illuminate\Database\Query\Builder $query
-     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Support\Collection $data
      */
-    protected function searchCustom($query, $request)
+    protected function searchCustom($query, $data)
     {
         // TODO: overwrite in repository.
     }

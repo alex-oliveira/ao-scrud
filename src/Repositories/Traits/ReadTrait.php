@@ -8,12 +8,12 @@ trait ReadTrait
     /**
      * Read method.
      *
-     * @@param \Illuminate\Http\Request $request
+     * @@param array $data
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function read($request)
+    public function read(array $data)
     {
-        $obj = $this->model->find($request->route()->parameter('id'));
+        $obj = $this->model->find($data['id']);
 
         if (empty($obj))
             abort(404);

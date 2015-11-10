@@ -15,11 +15,14 @@ trait DeleteTrait
      */
     public function delete(Request $request)
     {
+        $params = $request->route()->parameters();
+        $data = array_merge($request->all(), $params);
+
         try {
-            $obj = $this->repository->read($request);
+            $obj = $this->repository->read($data);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route($this->routes . '.index', $request->route()->parameters());
+            return redirect()->route($this->routes . '.index', $params);
         }
 
         return view($this->views . '.delete', compact('obj'));

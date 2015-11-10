@@ -3,7 +3,6 @@
 namespace AoScrud\Repositories\Traits;
 
 use AoScrud\Exceptions\JsonException;
-use Illuminate\Database\Eloquent\Model;
 
 trait CreateTrait
 {
@@ -12,11 +11,13 @@ trait CreateTrait
      * Main method for the registration.
      *
      * @param array $data
-     * @return Model
+     * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
     public function create(array $data)
     {
+        $data = collect($data);
+
         $this->createTransformer($data);
         $this->createValidator($data);
 
@@ -33,32 +34,26 @@ trait CreateTrait
     }
 
     /**
-     * Return an array with the validation rules for the registration.
-     *
-     * @return array
-     */
-    abstract public function createRules();
-
-    /**
      * Prepare data for the registration.
      *
-     * @param array $data
+     * @param \Illuminate\Support\Collection $data
+     * @return array
      */
-    protected function createTransformer(array &$data)
+    protected function createTransformer($data)
     {
-        // TODO: overwrite in repository.
+        // TODO: overwrite in your repository.
     }
 
     /**
      * Execute validation in the data for the registration.
      *
-     * @param array $data
+     * @param \Illuminate\Support\Collection $data
      * @param \Closure $callback
      * @throws JsonException
      */
-    protected function createValidator(array &$data, \Closure $callback = null)
+    protected function createValidator($data, \Closure $callback = null)
     {
-        $validator = app('validator')->make($data, $this->createRules());
+        $validator = app('validator')->make($data->all(), $this->createRules($data));
         $validator->setAttributeNames($this->labels());
 
         if (isset($callback))
@@ -69,14 +64,25 @@ trait CreateTrait
     }
 
     /**
+     * Return an array with the validation rules for the registration.
+     *
+     * @param \Illuminate\Support\Collection $data
+     * @return array
+     */
+    protected function createRules($data)
+    {
+        return []; // TODO: overwrite in repository.
+    }
+
+    /**
      * Execute model's create method.
      *
-     * @param array $data
-     * @return Model
+     * @param \Illuminate\Support\Collection $data
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function createSave(array &$data)
+    protected function createSave($data)
     {
-        return $this->model()->create($data);
+        return $this->model->create($data->all());
     }
 
 }
