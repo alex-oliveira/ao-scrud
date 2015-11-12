@@ -13,30 +13,24 @@ trait BaseTrait
     protected $model;
 
     /**
-     * Array with the labels for the fields.
-     *
-     * @var array
-     */
-    protected $labels;
-
-    /**
      * Return an array with the labels for the fields.
      *
      * @return array
      */
     public function labels()
     {
-        return $this->labels;
+        return $this->model->labels();
     }
 
     /**
-     * Return all items.
+     * Get all of the models from the database.
      *
-     * @return array
+     * @param  array|mixed  $columns
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function all()
+    public function all($columns = ['*'])
     {
-        return $this->model->all();
+        return $this->model->all($columns);
     }
 
 }
