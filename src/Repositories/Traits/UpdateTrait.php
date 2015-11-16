@@ -53,7 +53,8 @@ trait UpdateTrait
      */
     protected function updateValidator($data, \Closure $callback = null)
     {
-        $validator = app('validator')->make($data->all(), $this->updateRules($data));
+        $rules = $this->updateRules($data);
+        $validator = app('validator')->make($data->all(), $rules);
         ($labels = $this->labels()) ? $validator->setAttributeNames($labels) : null;
 
         if (isset($callback))
@@ -82,7 +83,7 @@ trait UpdateTrait
      */
     protected function updateFind($data)
     {
-        $obj = $this->model->find($data->get('id'));
+        $obj = $this->model->find($this->xId($data));
 
         if (empty($obj))
             abort(404);

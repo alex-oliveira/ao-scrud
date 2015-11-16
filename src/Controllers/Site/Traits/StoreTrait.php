@@ -30,19 +30,36 @@ trait StoreTrait
             return redirect()->back()->withInput();
         }
 
-        alert()->success(trans($this->lang . '.created', ['route' => $this->storeRouteShow($obj)]));
+        alert()->success(trans($this->lang . '.created', ['route' => $this->storeRouteShow($data, $obj)]));
         return redirect()->route($this->routes . '.index', $params);
     }
 
     /**
      * Return a route to show the created object.
      *
+     * @param array $data
      * @param \Illuminate\Database\Eloquent\Model $obj
      * @return \Illuminate\Routing\Route
      */
-    protected function storeRouteShow($obj)
+    protected function storeRouteShow(array $data, $obj)
     {
-        return route($this->routes . '.show', ['id' => $obj->id]);
+        $data = collect($data);
+
+        $id = $data->get('id', false);
+        $idb = $data->get('idb', false);
+
+        if ($idb) {
+            $r = route($this->routes . '.show', ['id' => $id, 'idb' => $idb, 'idc' => $obj->id]);
+
+        } elseif ($id) {
+            $r = route($this->routes . '.show', ['id' => $id, 'idb' => $obj->id]);
+
+        } else {
+            $r = route($this->routes . '.show', ['id' => $obj->id]);
+
+        }
+
+        return $r;
     }
 
 }

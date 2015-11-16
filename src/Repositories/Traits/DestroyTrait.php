@@ -39,7 +39,7 @@ trait DestroyTrait
      */
     protected function destroyFind($data)
     {
-        $obj = $this->model->find($data->get('id'));
+        $obj = $this->model->find($this->xId($data));
 
         if (empty($obj))
             abort(404);
