@@ -13,28 +13,17 @@ trait BaseTrait
     protected $model;
 
     /**
-     * Return an array with the labels for the fields.
+     * Return the Scrud model.
      *
-     * @return array
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function labels()
+    public function model()
     {
-        return $this->model->labels();
+        return $this->model;
     }
 
     /**
-     * Get all of the models from the database.
-     *
-     * @param  array|mixed $columns
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     */
-    public function all($columns = ['*'])
-    {
-        return $this->model->all($columns);
-    }
-
-    /**
-     * Get all of the models from the database.
+     * <description>
      *
      * @param  array|\Illuminate\Database\Eloquent\Collection $data
      * @return string

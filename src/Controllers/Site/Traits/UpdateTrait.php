@@ -3,7 +3,6 @@
 namespace AoScrud\Controllers\Site\Traits;
 
 use AoScrud\Exceptions\JsonException;
-use Illuminate\Http\Request;
 
 trait UpdateTrait
 {
@@ -11,13 +10,11 @@ trait UpdateTrait
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update()
     {
-        $params = $request->route()->parameters();
-        $data = array_merge($request->all(), $params);
+        $data = $this->updateData();
 
         try {
             $result = $this->repository->update($data);
@@ -30,13 +27,26 @@ trait UpdateTrait
             return redirect()->back();
         }
 
-        $route = route($this->routes . '.show', $params);
+        $route = $this->routes . '.show';
+        $route = route($route, $this->routeParams($route, $data));
         if ($result) {
             alert()->success(trans($this->lang . '.updated', ['route' => $route]));
         } else {
             alert()->warning(trans($this->lang . '.unchanged', ['route' => $route]));
         }
-        return redirect()->route($this->routes . '.index', $params);
+
+        $route = $this->routes . '.index';
+        return redirect()->route($route, $this->routeParams($route, $data));
+    }
+
+    /**
+     * Return all parameters of the request.
+     *
+     * @return array
+     */
+    protected function updateData()
+    {
+        return array_merge(request()->all(), request()->route()->parameters());
     }
 
 }

@@ -55,7 +55,7 @@ trait CreateTrait
     {
         $rules = $this->createRules($data);
         $validator = app('validator')->make($data->all(), $rules);
-        ($labels = $this->labels()) ? $validator->setAttributeNames($labels) : null;
+        ($labels = $this->model()->labels()) ? $validator->setAttributeNames($labels) : null;
 
         if (isset($callback))
             $validator->after($callback);
@@ -83,7 +83,7 @@ trait CreateTrait
      */
     protected function createSave($data)
     {
-        return $this->model->create($data->all());
+        return $this->model()->create($data->all());
     }
 
 }

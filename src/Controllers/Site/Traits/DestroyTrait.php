@@ -2,21 +2,17 @@
 
 namespace AoScrud\Controllers\Site\Traits;
 
-use Illuminate\Http\Request;
-
 trait DestroyTrait
 {
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request)
+    public function destroy()
     {
-        $params = $request->route()->parameters();
-        $data = array_merge($request->all(), $params);
+        $data = $this->destroyData();
 
         try {
             $this->repository->destroy($data);
@@ -26,7 +22,18 @@ trait DestroyTrait
         }
 
         alert()->success(trans($this->lang . '.destroyed'));
-        return redirect()->route($this->routes . '.index', $params);
+        $route = $this->routes . '.index';
+        return redirect()->route($route, $this->routeParams($route, $data));
+    }
+
+    /**
+     * Return all parameters of the request.
+     *
+     * @return array
+     */
+    protected function destroyData()
+    {
+        return request()->route()->parameters();
     }
 
 }

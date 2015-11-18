@@ -2,29 +2,34 @@
 
 namespace AoScrud\Controllers\Site\Traits;
 
-use Illuminate\Http\Request;
-
 trait IndexTrait
 {
 
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index()
     {
-        $data = array_merge($request->all(), $request->route()->parameters());
-
         try {
-            $list = $this->repository->search($data);
+            $list = $this->repository->search($this->indexData());
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route((isset($this->routeParent) ? $this->routeParent : 'home'));
+            return redirect()->route('home');
         }
 
         return view($this->views . '.index', compact('list'));
+    }
+
+    /**
+     * Return all parameters of the request.
+     *
+     * @return array
+     */
+    protected function indexData()
+    {
+        return array_merge(request()->all(), request()->route()->parameters());
     }
 
 }

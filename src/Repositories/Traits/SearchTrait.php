@@ -36,7 +36,7 @@ trait SearchTrait
         $data = collect($data);
 
         # wheres
-        $query = $this->model->where(function ($query) use ($data) {
+        $query = $this->model()->where(function ($query) use ($data) {
             $this->searchWhere($query, $data);
         });
 

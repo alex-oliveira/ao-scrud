@@ -13,7 +13,7 @@ trait ReadTrait
      */
     public function read(array $data)
     {
-        $obj = $this->model->find($this->xId($data));
+        $obj = $this->model()->find($this->xId($data));
 
         if (empty($obj))
             abort(404);

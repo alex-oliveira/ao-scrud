@@ -2,30 +2,37 @@
 
 namespace AoScrud\Controllers\Site\Traits;
 
-use Illuminate\Http\Request;
-
 trait ShowTrait
 {
 
     /**
      * Display the specified resource.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function show(Request $request)
+    public function show()
     {
-        $params = $request->route()->parameters();
-        $data = array_merge($request->all(), $params);
+        $data = $this->showData();
 
         try {
             $obj = $this->repository->read($data);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route($this->routes . '.index', $params);
+            $route = $this->routes . '.index';
+            return redirect()->route($route, $this->routeParams($route, $data));
         }
 
         return view($this->views . '.show', compact('obj'));
+    }
+
+    /**
+     * Return all parameters of the request.
+     *
+     * @return array
+     */
+    protected function showData()
+    {
+        return request()->route()->parameters();
     }
 
 }
