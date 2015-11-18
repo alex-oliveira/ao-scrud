@@ -16,7 +16,7 @@ trait DestroyTrait
     {
         $data = collect($data);
 
-        $obj = $this->destroyFind($data);
+        $obj = $this->destroyRead($data);
         $this->destroyValidator($obj);
 
         $this->tBegin();
@@ -24,7 +24,7 @@ trait DestroyTrait
             $result = $this->destroyFinalize($obj);
         } catch (\Exception $e) {
             $this->tRollBack();
-            abort($e->getCode(), $e->getMessage());
+            throw $e;
         }
         $this->tCommit();
 
@@ -37,14 +37,9 @@ trait DestroyTrait
      * @param \Illuminate\Support\Collection $data
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function destroyFind($data)
+    protected function destroyRead($data)
     {
-        $obj = $this->model()->find($this->xId($data));
-
-        if (empty($obj))
-            abort(404);
-
-        return $obj;
+        return $this->read($data->all());
     }
 
     /**

@@ -18,9 +18,9 @@ trait UpdateTrait
     {
         $data = collect($data);
 
+        $obj = $this->updateRead($data);
         $this->updateTransformer($data);
         $this->updateValidator($data);
-        $obj = $this->updateFind($data);
 
         $this->tBegin();
         try {
@@ -81,14 +81,9 @@ trait UpdateTrait
      * @param \Illuminate\Support\Collection $data
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function updateFind($data)
+    protected function updateRead($data)
     {
-        $obj = $this->model()->find($this->xId($data));
-
-        if (empty($obj))
-            abort(404);
-
-        return $obj;
+        return $this->read($data->all());
     }
 
     /**

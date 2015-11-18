@@ -26,7 +26,7 @@ trait CreateTrait
             $obj = $this->createSave($data);
         } catch (\Exception $e) {
             $this->tRollBack();
-            abort($e->getCode(), $e->getMessage());
+            throw $e;
         }
         $this->tCommit();
 

@@ -2,7 +2,6 @@
 
 namespace AoScrud\Controllers\Site\Traits;
 
-
 trait EditTrait
 {
 

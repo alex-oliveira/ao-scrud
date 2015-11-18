@@ -13,12 +13,62 @@ trait ReadTrait
      */
     public function read(array $data)
     {
-        $obj = $this->model()->find($this->xId($data));
+        $data = collect($data);
+
+        # wheres
+        $query = $this->model()->where(function ($query) use ($data) {
+            $this->readWhere($query, $data);
+        });
+
+        # pagination
+        $obj = $query->get()->first();
 
         if (empty($obj))
-            abort(404);
+            abort(404, '<b>Registro não existe</b> ou não pode ser selecionado.');
 
         return $obj;
+    }
+
+    /**
+     *
+     * id => id
+     *
+     * or
+     *
+     * id => user_id
+     * idb => id
+     *
+     * or
+     *
+     * id => user_id
+     * idb => comment_id
+     * idc => id
+     *
+     * @var array
+     */
+    public $readKeys = ['id' => 'id'];
+
+    /**
+     * Add research rules.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param \Illuminate\Support\Collection $data
+     */
+    protected function readWhere($query, $data)
+    {
+        if (is_null($this->readKeys)) {
+            $ids = ['idj', 'idi', 'idh', 'idg', 'idf', 'ide', 'idd', 'idc', 'idb', 'id'];
+            foreach ($ids as $id) {
+                if ($data->has($id)) {
+                    $this->readKeys = [$id => 'id'];
+                    break;
+                }
+            }
+        }
+
+        foreach ($this->readKeys as $param => $field) {
+            $query->where($field, $data->get($param, false));
+        }
     }
 
 }
