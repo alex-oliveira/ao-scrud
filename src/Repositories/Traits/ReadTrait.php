@@ -30,25 +30,6 @@ trait ReadTrait
     }
 
     /**
-     *
-     * id => id
-     *
-     * or
-     *
-     * id => user_id
-     * idb => id
-     *
-     * or
-     *
-     * id => user_id
-     * idb => comment_id
-     * idc => id
-     *
-     * @var array
-     */
-    public $readKeys = ['id' => 'id'];
-
-    /**
      * Add research rules.
      *
      * @param \Illuminate\Database\Query\Builder $query
@@ -56,17 +37,17 @@ trait ReadTrait
      */
     protected function readWhere($query, $data)
     {
-        if (is_null($this->readKeys)) {
-            $ids = ['idj', 'idi', 'idh', 'idg', 'idf', 'ide', 'idd', 'idc', 'idb', 'id'];
-            foreach ($ids as $id) {
-                if ($data->has($id)) {
-                    $this->readKeys = [$id => 'id'];
-                    break;
-                }
-            }
-        }
+        //if (is_null($this->map)) {
+        //    $ids = ['idj', 'idi', 'idh', 'idg', 'idf', 'ide', 'idd', 'idc', 'idb', 'id'];
+        //    foreach ($ids as $id) {
+        //        if ($data->has($id)) {
+        //            $this->readKeys = [$id => 'id'];
+        //            break;
+        //        }
+        //    }
+        //}
 
-        foreach ($this->readKeys as $param => $field) {
+        foreach ($this->map as $param => $field) {
             $query->where($field, $data->get($param, false));
         }
     }

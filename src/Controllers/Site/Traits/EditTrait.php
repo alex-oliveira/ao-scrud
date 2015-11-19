@@ -12,27 +12,21 @@ trait EditTrait
      */
     public function edit()
     {
-        $data = $this->editData();
+        $data = request()->route()->parameters();
 
         try {
             $obj = $this->repository->read($data);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            $route = $this->routes . '.index';
-            return redirect()->route($route, $this->routeParams($route, $data));
+            return redirect()->route($this->editRoute(), $this->params($this->editRoute()));
         }
 
         return view($this->views . '.edit', compact('obj'));
     }
 
-    /**
-     * Return all parameters of the request.
-     *
-     * @return array
-     */
-    protected function editData()
+    protected function editRoute()
     {
-        return request()->route()->parameters();
+        return $this->routes . '.index';
     }
 
 }

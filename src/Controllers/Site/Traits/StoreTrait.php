@@ -14,7 +14,8 @@ trait StoreTrait
      */
     public function store()
     {
-        $data = $this->storeData();
+        $params = request()->route()->parameters();
+        $data = array_merge(request()->all(), $params);
 
         try {
             $obj = $this->repository->create($data);
@@ -27,42 +28,20 @@ trait StoreTrait
             return redirect()->back()->withInput();
         }
 
-        alert()->success(trans($this->lang . '.created', ['route' => $this->storeRouteShow($obj, $data)]));
-        $route = $this->routes . '.index';
-        return redirect()->route($route, $this->routeParams($route, $data));
-    }
-
-    /**
-     * Return all parameters of the request.
-     *
-     * @return array
-     */
-    protected function storeData()
-    {
-        return array_merge(request()->all(), request()->route()->parameters());
-    }
-
-    /**
-     * Return a route to show the created object.
-     *
-     * @param \Illuminate\Database\Eloquent\Model $obj
-     * @param array $data
-     * @return \Illuminate\Routing\Route
-     */
-    protected function storeRouteShow($obj, array $data = [])
-    {
-        $route = $this->routes . '.show';
-        $params = $this->routeParams($route, $data);
-
-        $ids = ['id', 'idb', 'idc', 'idd', 'ide', 'idf', 'idg', 'idh', 'idi', 'idj'];
-        foreach ($ids as $id) {
-            if (!isset($params[$id])) {
+        foreach (['id', 'idb', 'idc', 'idd', 'ide', 'idf', 'idg', 'idh', 'idi', 'idj'] as $id) {
+            if (empty($params[$id])) {
                 $params[$id] = $obj->id;
                 break;
             }
         }
 
-        return route($route, $params);
+        alert()->success(trans($this->lang . '.created', ['route' => route($this->routes . '.show', $params)]));
+        return redirect()->route($this->storeRoute(), $this->params($this->storeRoute()));
+    }
+
+    protected function storeRoute()
+    {
+        return $this->routes . '.index';
     }
 
 }

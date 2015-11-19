@@ -53,13 +53,14 @@ trait BaseTrait
      * @param  array $params
      * @return string
      */
-    protected function routeParams($name, $params)
+    protected function params($name)
     {
         $data = [];
 
         $route = $this->routes()->getByName($name);
         if ($route) {
             //$data = collect($params)->only($route->parameterNames());
+            $params = request()->route()->parameters();
             foreach ($route->parameterNames() as $param) {
                 if (isset($params[$param]) && strlen($params[$param]) > 0)
                     $data[$param] = $params[$param];

@@ -12,7 +12,7 @@ trait DestroyTrait
      */
     public function destroy()
     {
-        $data = $this->destroyData();
+        $data = request()->route()->parameters();
 
         try {
             $this->repository->destroy($data);
@@ -22,18 +22,12 @@ trait DestroyTrait
         }
 
         alert()->success(trans($this->lang . '.destroyed'));
-        $route = $this->routes . '.index';
-        return redirect()->route($route, $this->routeParams($route, $data));
+        return redirect()->route($this->destroyRoute(), $this->params($this->destroyRoute()));
     }
 
-    /**
-     * Return all parameters of the request.
-     *
-     * @return array
-     */
-    protected function destroyData()
+    protected function destroyRoute()
     {
-        return request()->route()->parameters();
+        return $this->routes . '.index';
     }
 
 }

@@ -12,24 +12,21 @@ trait IndexTrait
      */
     public function index()
     {
+        $data = array_merge(request()->all(), request()->route()->parameters());
+
         try {
-            $list = $this->repository->search($this->indexData());
+            $list = $this->repository->search($data);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            return redirect()->route('home');
+            return redirect()->route($this->indexRoute());
         }
 
         return view($this->views . '.index', compact('list'));
     }
 
-    /**
-     * Return all parameters of the request.
-     *
-     * @return array
-     */
-    protected function indexData()
+    protected function indexRoute()
     {
-        return array_merge(request()->all(), request()->route()->parameters());
+        return 'home';
     }
 
 }

@@ -14,7 +14,7 @@ trait UpdateTrait
      */
     public function update()
     {
-        $data = $this->updateData();
+        $data = array_merge(request()->all(), request()->route()->parameters());
 
         try {
             $result = $this->repository->update($data);
@@ -27,26 +27,19 @@ trait UpdateTrait
             return redirect()->back();
         }
 
-        $route = $this->routes . '.show';
-        $route = route($route, $this->routeParams($route, $data));
+        $route = route($this->routes . '.show', request()->route()->parameters());
         if ($result) {
-            alert()->success(trans($this->lang . '.updated', ['route' => $route]));
+            alert()->success(trans($this->lang . '.updated', compact('route')));
         } else {
-            alert()->warning(trans($this->lang . '.unchanged', ['route' => $route]));
+            alert()->warning(trans($this->lang . '.unchanged', compact('route')));
         }
 
-        $route = $this->routes . '.index';
-        return redirect()->route($route, $this->routeParams($route, $data));
+        return redirect()->route($this->updateRoute(), $this->params($this->updateRoute()));
     }
 
-    /**
-     * Return all parameters of the request.
-     *
-     * @return array
-     */
-    protected function updateData()
+    protected function updateRoute()
     {
-        return array_merge(request()->all(), request()->route()->parameters());
+        return $this->routes . '.index';
     }
 
 }

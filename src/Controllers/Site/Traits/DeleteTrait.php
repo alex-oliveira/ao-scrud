@@ -12,27 +12,21 @@ trait DeleteTrait
      */
     public function delete()
     {
-        $data = $this->deleteData();
+        $data = request()->route()->parameters();
 
         try {
             $obj = $this->repository->read($data);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            $route = $this->routes . '.index';
-            return redirect()->route($route, $this->routeParams($route, $data));
+            return redirect()->route($this->deleteRouteError(), $this->params($this->deleteRouteError()));
         }
 
         return view($this->views . '.delete', compact('obj'));
     }
 
-    /**
-     * Return all parameters of the request.
-     *
-     * @return array
-     */
-    protected function deleteData()
+    protected function deleteRouteError()
     {
-        return request()->route()->parameters();
+        return $this->routes . '.index';
     }
 
 }

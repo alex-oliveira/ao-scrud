@@ -12,27 +12,21 @@ trait ShowTrait
      */
     public function show()
     {
-        $data = $this->showData();
+        $data = request()->route()->parameters();
 
         try {
             $obj = $this->repository->read($data);
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
-            $route = $this->routes . '.index';
-            return redirect()->route($route, $this->routeParams($route, $data));
+            return redirect()->route($this->showRoute(), $this->params($this->showRoute()));
         }
 
         return view($this->views . '.show', compact('obj'));
     }
 
-    /**
-     * Return all parameters of the request.
-     *
-     * @return array
-     */
-    protected function showData()
+    protected function showRoute()
     {
-        return request()->route()->parameters();
+        return $this->routes . '.index';
     }
 
 }

@@ -16,11 +16,11 @@ trait UpdateTrait
      */
     public function update(array $data)
     {
-        $data = collect($data);
-
         $obj = $this->updateRead($data);
+
+        $data = collect($data);
         $this->updateTransformer($data);
-        $this->updateValidator($data);
+        $this->updateValidator($obj, $data);
 
         $this->tBegin();
         try {
@@ -32,6 +32,17 @@ trait UpdateTrait
         $this->tCommit();
 
         return $result;
+    }
+
+    /**
+     * Find object for update.
+     *
+     * @param array $data
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    protected function updateRead($data)
+    {
+        return $this->read($data);
     }
 
     /**
@@ -47,13 +58,14 @@ trait UpdateTrait
     /**
      * Execute validation in the data for the update.
      *
+     * @param \Illuminate\Database\Eloquent\Model $obj
      * @param \Illuminate\Support\Collection $data
      * @param \Closure $callback
      * @throws JsonException
      */
-    protected function updateValidator($data, \Closure $callback = null)
+    protected function updateValidator($obj, $data, \Closure $callback = null)
     {
-        $rules = $this->updateRules($data);
+        $rules = $this->updateRules($obj, $data);
         $validator = app('validator')->make($data->all(), $rules);
         ($labels = $this->model()->labels()) ? $validator->setAttributeNames($labels) : null;
 
@@ -67,23 +79,13 @@ trait UpdateTrait
     /**
      * Return an array with the validation rules for the update.
      *
+     * @param \Illuminate\Database\Eloquent\Model $obj
      * @param \Illuminate\Support\Collection $data
      * @return array
      */
-    protected function updateRules($data)
+    protected function updateRules($obj, $data)
     {
         return []; // TODO: overwrite in repository.
-    }
-
-    /**
-     * Find object for update.
-     *
-     * @param \Illuminate\Support\Collection $data
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    protected function updateRead($data)
-    {
-        return $this->read($data->all());
     }
 
     /**

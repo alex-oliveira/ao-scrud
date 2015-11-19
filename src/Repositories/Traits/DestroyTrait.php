@@ -14,8 +14,6 @@ trait DestroyTrait
      */
     public function destroy($data)
     {
-        $data = collect($data);
-
         $obj = $this->destroyRead($data);
         $this->destroyValidator($obj);
 
@@ -34,12 +32,12 @@ trait DestroyTrait
     /**
      * Find object for destroy.
      *
-     * @param \Illuminate\Support\Collection $data
+     * @param array $data
      * @return \Illuminate\Database\Eloquent\Model
      */
     protected function destroyRead($data)
     {
-        return $this->read($data->all());
+        return $this->read($data);
     }
 
     /**
