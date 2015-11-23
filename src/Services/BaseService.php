@@ -20,9 +20,4 @@ abstract class BaseService
         return array_merge(request()->all(), request()->route()->parameters());
     }
 
-    public static function params()
-    {
-        return request()->route()->parameters();
-    }
-
 }

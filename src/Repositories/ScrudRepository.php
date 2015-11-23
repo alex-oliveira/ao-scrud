@@ -2,18 +2,28 @@
 
 namespace AoScrud\Repositories;
 
-use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 abstract class ScrudRepository extends BaseRepository
 {
 
-    /**
-     * Boot up the repository, pushing criteria
-     */
-    public function boot()
+    protected $fieldsFilters = [];
+    protected $fieldsOrders = [];
+    protected $fieldsWiths = [];
+
+    public function getFieldsFilters()
     {
-        $this->pushCriteria(app(RequestCriteria::class));
+        return $this->fieldsFilters;
+    }
+
+    public function getFieldsOrders()
+    {
+        return $this->fieldsOrders;
+    }
+
+    public function getFieldsWiths()
+    {
+        return $this->fieldsWiths;
     }
 
 }
