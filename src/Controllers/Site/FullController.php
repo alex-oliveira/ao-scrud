@@ -90,7 +90,7 @@ class FullController extends BaseController
         if ($status) {
             alert()->success(trans($this->langs . '.updated', $route));
         } else {
-            alert()->warning(trans($this->langs . '.not-updated', $route));
+            alert()->warning(trans($this->langs . '.unchanged', $route));
         }
 
         return redirect()->route($this->routes . '.index', params()->forget('id'));
@@ -124,11 +124,11 @@ class FullController extends BaseController
         }
 
         if ($status) {
-            alert()->success(trans($this->langs . '.removed'));
+            alert()->success(trans($this->langs . '.destroyed'));
             return redirect()->route($this->routes . '.index', params()->forget('id'));
         }
 
-        alert()->success(trans($this->langs . '.not-removed'));
+        alert()->success(trans($this->langs . '.not-destroyed'));
         return redirect()->back();
 
     }
