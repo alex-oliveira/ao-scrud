@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers\Site;
+namespace AoScrud\Controllers\Rest;
 
 use AoScrud\Services\FullService;
 use Illuminate\Routing\Controller;

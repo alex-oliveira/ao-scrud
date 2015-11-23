@@ -1,99 +1,64 @@
 <?php
 
-namespace AoScrud\Controllers;
+namespace AoScrud\Controllers\Rest;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-abstract class FullController extends Controller
+class FullController extends BaseController
 {
 
-    /**
-     * The main repository.
-     *
-     * @var mixed
-     */
-    protected $repository;
-
-    /**
-     * Return instance of main repository class.
-     *
-     * @return \AoScrud\Repositories\BaseRepository::class
-     */
-    abstract public function repository();
-
-    /**
-     * The class's constructor.
-     */
-    public function __construct()
+    public function index()
     {
-        $this->repository = app()->make($this->repository());
+        try {
+            $result = $this->service->search();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        return response()->json($result->toArray(), 200);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        $data = $this->repository->search($request->all());
 
-        return response()->json($data->items())
-            ->header('x-total', $data->total())
-            ->header('x-per-page', $data->perPage())
-            ->header('x-current-page', $data->currentPage())
-            ->header('x-last-page', $data->lastPage())
-            ->header('x-first-item', $data->firstItem())
-            ->header('x-last-item', $data->lastItem());
+    public function store()
+    {
+        try {
+            $obj = $this->service->create();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        return response()->json($obj->toArray(), 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function show()
     {
-        return response()->json($this->repository->create($request->all()), 201);
+        try {
+            $obj = $this->service->read();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        return response()->json($obj->toArray(), 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function update()
     {
-        return response()->json($this->repository->read($id));
+        try {
+            $status = $this->service->update();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        return response()->json([], ($status ? 204 : 204));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function destroy()
     {
-        $this->repository->update($id, $request->all());
-        return response()->json([], 204);
-    }
+        try {
+            $status = $this->service->destroy();
+        } catch (\Exception $e) {
+            throw $e;
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $this->repository->destroy($id);
-        return response()->json([], 204);
+        return response()->json([], ($status ? 204 : 204));
     }
 
 }
