@@ -8,24 +8,28 @@ use AoScrud\Tools\Criteria\SearchCriteria;
 trait Search
 {
 
-    public function search($data = null, $columns = null, $orders = null, $limit = null)
+    public function search($data = null)
     {
         $data = collect(is_null($data) ? array_merge(request()->all(), request()->route()->parameters()) : $data);
 
-        //$this->searchCriteria($params);
-        //$this->searchColumns($columns);
-        //$this->searchOrders($orders);
-        //$this->searchLimit($limit);
+        $this->searchCustom($data);
 
         try {
-            $this->rep->pushCriteria(new RouteParamsCriteria());
-            $this->rep->pushCriteria(new SearchCriteria());
             $result = $this->rep->paginate();
         } catch (\Exception $e) {
             throw new \Exception('Falha inesperada ao tentar realizar a pesquisa.', 500, $e);
         }
 
         return $result;
+    }
+
+    /**
+     * @param \Illuminate\Support\Collection $data
+     */
+    public function searchCustom($data)
+    {
+        //$this->rep->pushCriteria(new RouteParamsCriteria());
+        $this->rep->pushCriteria(new SearchCriteria($data));
     }
 
 }

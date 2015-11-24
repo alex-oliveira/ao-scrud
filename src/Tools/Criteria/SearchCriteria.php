@@ -3,6 +3,7 @@
 namespace AoScrud\Tools\Criteria;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
@@ -20,22 +21,23 @@ class SearchCriteria implements CriteriaInterface
     protected $rep;
 
     /**
-     * @var \Illuminate\Http\Request;
+     * @var Collection;
      */
-    protected $request;
+    protected $config;
 
-    protected $filters;
-    protected $columns;
-    protected $orders;
-    protected $withs;
+    /**
+     * @var Collection;
+     */
+    protected $data;
 
-    public function __construct(array $filters = [], array $columns = [], array $orders = [], array $withs = [])
+    /**
+     * @param Collection $config
+     * @param Collection $data
+     */
+    public function __construct(Collection $config, Collection $data)
     {
-        $this->request = request();
-        $this->filters = $filters;
-        $this->columns = $columns;
-        $this->orders = $orders;
-        $this->withs = $withs;
+        $this->config = $config;
+        $this->data = $data;
     }
 
     public function apply($model, RepositoryInterface $rep)
@@ -43,15 +45,16 @@ class SearchCriteria implements CriteriaInterface
         $this->model = $model;
         $this->rep = $rep;
 
-        $this->search();
         $this->filter();
+        $this->columns();
         $this->order();
+        $this->limit();
         $this->with();
 
         return $this->model;
     }
 
-    protected function search()
+    protected function filter()
     {
         if (is_null($q = $this->request->get('q', null)))
             return;
@@ -61,32 +64,50 @@ class SearchCriteria implements CriteriaInterface
         dd($this->rep->getFieldsSearchable());
     }
 
-    protected function filter()
+    protected function columns()
     {
-        if (is_null($q = $this->request->get('f', null)))
+        if (is_null($columns = $this->data->get('columns', null)))
             return;
 
+        $columns = array_intersect(explode(';', $columns), $this->config->get('columns', []));
+        if (count($columns) > 0)
+            $this->model = $this->model->select($columns);
     }
 
     protected function order()
     {
-        if (is_null($o = $this->request->get('o', null)))
+        if (is_null($field = $this->data->get('order', null)))
             return;
 
-        if (in_array($o, $this->orders))
-            $this->model = $this->model->orderBy($o, ($this->request->get('s') == 'desc' ? 'desc' : 'asc'));
+        if (in_array($field, $this->config->get('orders', [])))
+            $this->model = $this->model->orderBy($field, ($this->data->get('sort') == 'desc' ? 'desc' : 'asc'));
+    }
+
+    protected function limit()
+    {
+        $page = $this->data->get('page', 1);
+        if (!(is_numeric($page) && is_int($page + 0) && $page > 0)) {
+            $page = 1;
+        }
+
+        $limit = $this->data->get('limit', 15);
+        if (!(is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= 50)) {
+            $limit = 15;
+        }
+
+        $offset = ($page - 1) * $limit;
+        $this->model = $this->model->skipt($offset)->take($limit);
     }
 
     protected function with()
     {
-        if (is_null($w = $this->request->get('w', null)))
+        if (is_null($with = $this->data->get('with', null)))
             return;
 
-        $with = array_intersect($this->withs, explode(';', $w));
+        $with = array_intersect(explode(';', $with), $this->config->get('with', []));
         if (count($with) > 0)
             $this->model = $this->model->with($with);
     }
-
 
 //        $fieldsSearchable   = $repository->getFieldsSearchable();
 //        $search             = $this->request->get( config('repository.criteria.params.search','search') , null);
@@ -139,23 +160,6 @@ class SearchCriteria implements CriteriaInterface
 //                    }
 //                }
 //            });
-//        }
-//
-//        if ( isset($orderBy) && !empty($orderBy) ) {
-//            $model = $model->orderBy($orderBy, $sortedBy);
-//        }
-//
-//        if ( isset($filter) && !empty($filter) ) {
-//            if ( is_string($filter) ) {
-//                $filter = explode(';', $filter);
-//            }
-//
-//            $model = $model->select($filter);
-//        }
-//
-//        if( $with ) {
-//            $with  = explode(';', $with);
-//            $model = $model->with($with);
 //        }
 //
 //        return $model;
