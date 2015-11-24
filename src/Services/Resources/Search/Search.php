@@ -2,20 +2,30 @@
 
 namespace AoScrud\Services\Resources\Search;
 
+use AoScrud\Tools\Criteria\ModelColumnsCriteria;
+use AoScrud\Tools\Criteria\ModelOrderCriteria;
+use AoScrud\Tools\Criteria\ModelRulesCriteria;
+use AoScrud\Tools\Criteria\ModelWithCriteria;
 use AoScrud\Tools\Criteria\RouteParamsCriteria;
-use AoScrud\Tools\Criteria\SearchCriteria;
 
 trait Search
 {
 
-    public function search($data = null)
-    {
-        $data = collect(is_null($data) ? array_merge(request()->all(), request()->route()->parameters()) : $data);
+    protected $searchRules = [];
+    protected $searchColumns = [];
+    protected $searchOrders = [];
+    protected $searchWith = [];
+    protected $searchLimit = 24;
+    protected $searchLimitMax = 50;
 
-        $this->searchCustom($data);
+    //------------------------------------------------------------------------------------------------------------------
+
+    public function search()
+    {
+        $this->searchCustom();
 
         try {
-            $result = $this->rep->paginate();
+            $result = $this->searchExecute();
         } catch (\Exception $e) {
             throw new \Exception('Falha inesperada ao tentar realizar a pesquisa.', 500, $e);
         }
@@ -23,13 +33,49 @@ trait Search
         return $result;
     }
 
-    /**
-     * @param \Illuminate\Support\Collection $data
-     */
-    public function searchCustom($data)
+    protected function searchLimit()
     {
-        //$this->rep->pushCriteria(new RouteParamsCriteria());
-        $this->rep->pushCriteria(new SearchCriteria($data));
+        $limit = request()->get('limit', false);
+        if ($limit && is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= $this->searchLimitMax) {
+            $this->searchLimit = $limit;
+        }
+        return $this->searchLimit;
+    }
+
+    protected function searchExecute()
+    {
+        return $this->rep->paginate($this->searchLimit());
+    }
+
+    protected function searchCustom()
+    {
+        $this->rep->pushCriteria(new RouteParamsCriteria());
+        $this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules()));
+        $this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns()));
+        $this->rep->pushCriteria(new ModelWithCriteria($this->getSearchWith()));
+        $this->rep->pushCriteria(new ModelOrderCriteria($this->getSearchOrders()));
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    public function getSearchRules()
+    {
+        return $this->searchRules;
+    }
+
+    public function getSearchColumns()
+    {
+        return $this->searchColumns;
+    }
+
+    public function getSearchOrders()
+    {
+        return $this->searchOrders;
+    }
+
+    public function getSearchWith()
+    {
+        return $this->searchWith;
     }
 
 }
