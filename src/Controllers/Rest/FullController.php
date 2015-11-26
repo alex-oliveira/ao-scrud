@@ -47,7 +47,7 @@ class FullController extends BaseController
             throw $e;
         }
 
-        return response()->json([], ($status ? 204 : 204));
+        return response()->json([], ($status ? 204 : 304));
     }
 
     public function destroy()
@@ -58,7 +58,7 @@ class FullController extends BaseController
             throw $e;
         }
 
-        return response()->json([], ($status ? 204 : 204));
+        return response()->json([], ($status ? 204 : 304));
     }
 
 }

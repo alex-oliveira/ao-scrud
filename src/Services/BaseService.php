@@ -16,13 +16,11 @@ abstract class BaseService
     protected $rep;
 
     /**
-     * @var array
+     * @return \Illuminate\Support\Collection
      */
-    protected $columns = [];
-
     public static function data()
     {
-        return array_merge(request()->all(), request()->route()->parameters());
+        return collect(array_merge(request()->all(), request()->route()->parameters()));
     }
 
 }

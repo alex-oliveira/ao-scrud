@@ -10,8 +10,9 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
-class RestHandler extends ExceptionHandler
+class BothHandler extends ExceptionHandler
 {
+
     /**
      * A list of the exception types that should not be reported.
      *
@@ -50,19 +51,25 @@ class RestHandler extends ExceptionHandler
 
         $return = [];
         $return['code'] = $e instanceof HttpException ? $e->getStatusCode() : $e->getCode();
-        if ($e instanceof MethodNotAllowedHttpException) {
-            $return['message'] = 'Metodo não permitido';
-        } else {
-            $return['message'] = $e->getMessage();
-        }
 
-        empty($return['message']) ? $return['message'] = class_basename($e) : null;
+//        if ($e instanceof MethodNotAllowedHttpException) {
+//            return response()->json($e->getMessage())->setStatusCode($e->getStatusCode());
+//        } else {
+//            $name = $request->route()->getName();
+//            if (substr($name, 0, 4) == 'api.') {
+//
+//
+//
+//                $return['message'] = $e->getMessage();
+//                if ($e instanceof MultiException) {
+//                    $return['issues'] = $e->getIssues();
+//                }
+//
+//                return response()->json($return)->setStatusCode($return['code']);
+//            }
+//        }
 
-        if ($e instanceof MultiException) {
-            $return['issues'] = $e->getIssues();
-        }
-
-        //return response()->json($return)->setStatusCode($return['code']);
         return parent::render($request, $e);
     }
+
 }
