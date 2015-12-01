@@ -48,7 +48,7 @@ trait Create
             $obj = $this->createSave($data);
         } catch (Exception $e) {
             $this->tRollBack();
-            throw new Exception('falha ao tentar cadastrar', 500, $e);
+            throw $e; //new Exception('falha ao tentar cadastrar', 500, $e);
         }
         $this->tCommit();
 
