@@ -2,6 +2,8 @@
 
 namespace AoScrud\Controllers\Rest;
 
+use Exception;
+
 class FullController extends BaseController
 {
 
@@ -9,7 +11,7 @@ class FullController extends BaseController
     {
         try {
             $result = $this->service->search();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
@@ -21,7 +23,7 @@ class FullController extends BaseController
     {
         try {
             $obj = $this->service->create();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
@@ -32,7 +34,7 @@ class FullController extends BaseController
     {
         try {
             $obj = $this->service->read();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
@@ -43,7 +45,7 @@ class FullController extends BaseController
     {
         try {
             $status = $this->service->update();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
@@ -54,7 +56,7 @@ class FullController extends BaseController
     {
         try {
             $status = $this->service->destroy();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 

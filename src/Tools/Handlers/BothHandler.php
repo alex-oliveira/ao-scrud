@@ -3,6 +3,7 @@
 namespace AoScrud\Tools\Handlers;
 
 use AoScrud\Tools\Exceptions\MultiException;
+use AoScrud\Tools\Exceptions\RestException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -45,29 +46,41 @@ class BothHandler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof RestException) {
+            $e = $e->getPrevious();
+
+            $return = [
+                'code' => ($e instanceof HttpException ? $e->getStatusCode() : $e->getCode()),
+                'message' => class_basename($e),
+                'issues' => '',
+            ];
+
+            if ($e instanceof ModelNotFoundException) {
+                $return['code'] = 404;
+                $return['message'] = 'not found';
+
+            } elseif ($e instanceof MethodNotAllowedHttpException) {
+                $return['code'] = 403;
+                $return['message'] = $e->getMessage();
+
+            } else {
+                $name = $request->route()->getName();
+                if (substr($name, 0, 4) == 'api.') {
+                    $return['message'] = $e->getMessage();
+                    if ($e instanceof MultiException) {
+                        $return['issues'] = $e->getIssues();
+                    }
+                } else {
+                    $return['message'] = 'não implementado';
+                }
+            }
+
+            return response()->json($return)->setStatusCode($return['code']);
+        }
+
         if ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }
-
-        $return = [];
-        $return['code'] = $e instanceof HttpException ? $e->getStatusCode() : $e->getCode();
-
-//        if ($e instanceof MethodNotAllowedHttpException) {
-//            return response()->json($e->getMessage())->setStatusCode($e->getStatusCode());
-//        } else {
-//            $name = $request->route()->getName();
-//            if (substr($name, 0, 4) == 'api.') {
-//
-//
-//
-//                $return['message'] = $e->getMessage();
-//                if ($e instanceof MultiException) {
-//                    $return['issues'] = $e->getIssues();
-//                }
-//
-//                return response()->json($return)->setStatusCode($return['code']);
-//            }
-//        }
 
         return parent::render($request, $e);
     }

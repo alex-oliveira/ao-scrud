@@ -42,7 +42,7 @@ trait Read
         try {
             $obj = $this->readExecute($keys);
         } catch (Exception $e) {
-            throw new Exception('Falha inesperada ao tentar recuperar o registro.', 500, $e);
+            throw $e;
         }
 
         if (is_null($obj)) {

@@ -51,7 +51,7 @@ trait Update
             $status = $this->updateSave($data, $obj);
         } catch (Exception $e) {
             $this->tRollBack();
-            new Exception('falha ao tentar atualizar', 500, $e);
+            throw $e;
         }
         $this->tCommit();
 

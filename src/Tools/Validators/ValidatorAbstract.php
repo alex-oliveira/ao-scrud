@@ -2,7 +2,7 @@
 
 namespace AoScrud\Tools\Validators;
 
-use AoScrud\Tools\Exceptions\MultiException;
+use AoScrud\Tools\Exceptions\ValidatorException;
 
 abstract class ValidatorAbstract
 {
@@ -22,13 +22,13 @@ abstract class ValidatorAbstract
      *
      * @param $data \Illuminate\Support\Collection
      * @param $model \Illuminate\Database\Eloquent\Model
-     * @throws MultiException
+     * @throws ValidatorException
      */
     public function apply($data, $model = null)
     {
         $validator = $this->validator()->make($data->all(), $this->rules($data, $model), $this->messages(), $this->names());
         if ($validator->fails()) {
-            $e = new MultiException('dados inválidos', 400);
+            $e = new ValidatorException('requisição inválida', 400);
             $e->setIssues($validator->errors()->all());
             throw $e;
         }

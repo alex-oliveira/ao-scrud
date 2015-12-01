@@ -72,7 +72,7 @@ trait Search
         try {
             $result = $this->searchExecute();
         } catch (Exception $e) {
-            throw new Exception('Falha inesperada ao tentar realizar a pesquisa.', 500, $e);
+            throw $e;
         }
 
         return $result;

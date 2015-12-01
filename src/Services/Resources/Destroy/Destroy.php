@@ -2,7 +2,7 @@
 
 namespace AoScrud\Services\Resources\Destroy;
 
-use AoScrud\Tools\Validators\ValidatorDestroyAbstract;
+use AoScrud\Tools\Checkers\CheckerAbstract;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,9 +12,9 @@ trait Destroy
     /**
      * The validator class to destroy in repository.
      *
-     * @var ValidatorDestroyAbstract
+     * @var CheckerAbstract
      */
-    protected $destroyValidator;
+    protected $destroyChecker;
 
     //------------------------------------------------------------------------------------------------------------------
     // MASTERS //-------------------------------------------------------------------------------------------------------
@@ -31,14 +31,14 @@ trait Destroy
     {
         $obj = $this->destroyRead($keys);
 
-        $this->destroyValidator($obj);
+        $this->destroyChecker($obj);
 
         $this->tBegin();
         try {
             $status = $this->destroyFinalize($obj);
         } catch (Exception $e) {
             $this->tRollBack();
-            throw new Exception('falha ao tentar excluir', 500, $e);
+            throw $e;
         }
         $this->tCommit();
 
@@ -57,18 +57,18 @@ trait Destroy
     }
 
     /**
-     * Run delete command in the repository.
+     * <description>
      *
      * @param Model $obj
      * @return bool
      */
-    protected function destroyValidator($obj)
+    protected function destroyChecker($obj)
     {
-        if (isset($this->destroyValidator)) {
-            if (is_string($this->destroyValidator) && is_subclass_of($this->destroyValidator, ValidatorDestroyAbstract::class)) {
-                $this->destroyValidator = app($this->destroyValidator);
+        if (isset($this->destroyChecker)) {
+            if (is_string($this->destroyChecker) && is_subclass_of($this->destroyChecker, CheckerAbstract::class)) {
+                $this->destroyChecker = app($this->destroyChecker);
             }
-            is_object($this->destroyValidator) ? $this->destroyValidator->verify($obj) : null;
+            is_object($this->destroyChecker) ? $this->destroyChecker->check($obj) : null;
         }
     }
 
