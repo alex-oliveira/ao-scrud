@@ -62,6 +62,10 @@ class RestHandler extends ExceptionHandler
             $return['issues'] = $e->getIssues();
         }
 
+        if ($e instanceof MultiException) {
+            $e = new \Exception(json_encode($e->getIssues()), $e->getCode(), $e);
+        }
+
         //return response()->json($return)->setStatusCode($return['code']);
         return parent::render($request, $e);
     }
