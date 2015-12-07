@@ -14,6 +14,13 @@ trait Search
 {
 
     /**
+     * The search's criteria.
+     *
+     * @var array
+     */
+    protected $searchCriteria = [];
+
+    /**
      * The search's rules.
      *
      * @var array
@@ -83,6 +90,10 @@ trait Search
      */
     protected function searchCriteria()
     {
+        foreach ($this->searchCriteria as $criteria) {
+            $this->rep->pushCriteria($criteria);
+        }
+
         $this->rep->pushCriteria(new RouteParamsCriteria());
         $this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules()));
         $this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns()));

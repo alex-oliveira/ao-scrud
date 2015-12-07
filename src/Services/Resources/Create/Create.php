@@ -2,7 +2,7 @@
 
 namespace AoScrud\Services\Resources\Create;
 
-use AoScrud\Tools\Formatters\FormatterAbstract;
+use AoScrud\Tools\Interceptors\InterceptorAbstract;
 use AoScrud\Tools\Validators\ValidatorAbstract;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -12,11 +12,11 @@ trait Create
 {
 
     /**
-     * The formatter class to registry in the repository.
+     * The interceptor class to registry in the repository.
      *
-     * @var FormatterAbstract
+     * @var InterceptorAbstract
      */
-    protected $createFormatter;
+    protected $createInterceptor;
 
     /**
      * The validator class to registry in repository.
@@ -40,7 +40,7 @@ trait Create
     {
         $data = is_null($data) ? $this->createData() : collect($data);
 
-        $this->createFormatter($data);
+        $this->createInterceptor($data);
         $this->createValidator($data);
 
         $this->tBegin();
@@ -66,18 +66,18 @@ trait Create
     }
 
     /**
-     * Run formatter class in data of request.
+     * Run interceptor class in data of request.
      *
      * @param Collection $data
      * @return array
      */
-    protected function createFormatter($data)
+    protected function createInterceptor($data)
     {
-        if (isset($this->createFormatter)) {
-            if (is_string($this->createFormatter) && is_subclass_of($this->createFormatter, FormatterAbstract::class)) {
-                $this->createFormatter = app($this->createFormatter);
+        if (isset($this->createInterceptor)) {
+            if (is_string($this->createInterceptor) && is_subclass_of($this->createInterceptor, InterceptorAbstract::class)) {
+                $this->createInterceptor = app($this->createInterceptor);
             }
-            is_object($this->createFormatter) ? $this->createFormatter->apply($data) : null;
+            is_object($this->createInterceptor) ? $this->createInterceptor->apply($data) : null;
         }
     }
 

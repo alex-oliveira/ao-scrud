@@ -2,7 +2,7 @@
 
 namespace AoScrud\Services\Resources\Update;
 
-use AoScrud\Tools\Formatters\FormatterAbstract;
+use AoScrud\Tools\Interceptors\InterceptorAbstract;
 use AoScrud\Tools\Validators\ValidatorAbstract;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -14,9 +14,9 @@ trait Update
     /**
      * The formatter class to update in the repository.
      *
-     * @var FormatterAbstract
+     * @var InterceptorAbstract
      */
-    protected $updateFormatter;
+    protected $updateInterceptor;
 
     /**
      * The validator class to update in repository.
@@ -43,7 +43,7 @@ trait Update
 
         $obj = $this->updateRead($keys);
 
-        $this->updateFormatter($data);
+        $this->updateInterceptor($data);
         $this->updateValidator($data, $obj);
 
         $this->tBegin();
@@ -80,18 +80,18 @@ trait Update
     }
 
     /**
-     * Run formatter class in data of request.
+     * Run interceptor class in data of request.
      *
      * @param Collection $data
      * @return array
      */
-    protected function updateFormatter($data)
+    protected function updateInterceptor($data)
     {
-        if (isset($this->updateFormatter)) {
-            if (is_string($this->updateFormatter) && is_subclass_of($this->updateFormatter, FormatterAbstract::class)) {
-                $this->updateFormatter = app($this->updateFormatter);
+        if (isset($this->updateInterceptor)) {
+            if (is_string($this->updateInterceptor) && is_subclass_of($this->updateInterceptor, InterceptorAbstract::class)) {
+                $this->updateInterceptor = app($this->updateInterceptor);
             }
-            is_object($this->updateFormatter) ? $this->updateFormatter->apply($data) : null;
+            is_object($this->updateInterceptor) ? $this->updateInterceptor->apply($data) : null;
         }
     }
 

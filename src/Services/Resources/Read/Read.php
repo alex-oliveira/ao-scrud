@@ -10,6 +10,14 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait Read
 {
+
+    /**
+     * The read's criteria.
+     *
+     * @var array
+     */
+    protected $readCriteria = [];
+
     /**
      * The columns' names allowed.
      *
@@ -57,7 +65,10 @@ trait Read
      */
     protected function readCriteria()
     {
-        //$this->rep->pushCriteria(new RouteParamsCriteria());
+        foreach ($this->readCriteria as $criteria) {
+            $this->rep->pushCriteria($criteria);
+        }
+
         $this->rep->pushCriteria(new ModelColumnsCriteria($this->getReadColumns()));
         $this->rep->pushCriteria(new ModelWithCriteria($this->getReadWith()));
     }
