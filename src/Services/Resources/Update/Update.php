@@ -121,7 +121,9 @@ trait Update
      */
     protected function updateSave($data, $obj)
     {
-        $obj->fill($data->all());
+        foreach ($data->all() as $key => $value)
+            isset($obj->{$key}) && $obj->{$key} != $value ? $obj->{$key} = $value : null;
+
         return $obj->isDirty() ? $obj->save() : false;
     }
 
