@@ -40,12 +40,13 @@ trait Read
      * Main method to read in the repository.
      *
      * @param array|null $keys
+     * @param bool $onlyRead
      * @return Model|null
      * @throws Exception
      */
-    public function read(array $keys = null)
+    public function read(array $keys = null, $onlyRead = true)
     {
-        $this->readCriteria();
+        $this->readCriteria($onlyRead);
 
         try {
             $obj = $this->readExecute($keys);
@@ -62,15 +63,25 @@ trait Read
 
     /**
      * Add read criteria in the repository.
+     *
+     * @param bool $onlyRead
      */
-    protected function readCriteria()
+    protected function readCriteria($onlyRead = true)
     {
-        foreach ($this->readCriteria as $criteria) {
-            $this->rep->pushCriteria($criteria);
-        }
+        $this->readCriteria[] = new ModelColumnsCriteria($this->getReadColumns());
+        $this->readCriteria[] = new ModelWithCriteria($this->getReadWith());
 
-        $this->rep->pushCriteria(new ModelColumnsCriteria($this->getReadColumns()));
-        $this->rep->pushCriteria(new ModelWithCriteria($this->getReadWith()));
+        if ($onlyRead) {
+            foreach ($this->readCriteria as $criteria)
+                $this->rep->pushCriteria($criteria);
+        } else {
+            foreach ($this->readCriteria as $criteria) {
+                if (isset($criteria->onlyRead) && $criteria->onlyRead == true) {
+                    continue;
+                }
+                $this->rep->pushCriteria($criteria);
+            }
+        }
     }
 
     /**

@@ -11,6 +11,13 @@ class ModelColumnsCriteria implements CriteriaInterface
 {
 
     /**
+     * Determine that the criteria is available only to read e search.
+     *
+     * @var bool
+     */
+    public $onlyRead = true;
+
+    /**
      * @var array;
      */
     protected $allowColumns;

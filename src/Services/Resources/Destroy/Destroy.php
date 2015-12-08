@@ -53,7 +53,7 @@ trait Destroy
      */
     protected function destroyRead(array $keys = null)
     {
-        return $this->read($keys);
+        return $this->read($keys, false);
     }
 
     /**

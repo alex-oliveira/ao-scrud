@@ -76,7 +76,7 @@ trait Update
      */
     protected function updateRead(array $keys = null)
     {
-        return $this->read($keys);
+        return $this->read($keys, false);
     }
 
     /**
@@ -121,9 +121,7 @@ trait Update
      */
     protected function updateSave($data, $obj)
     {
-        foreach ($data->all() as $key => $value)
-            isset($obj->{$key}) && $obj->{$key} != $value ? $obj->{$key} = $value : null;
-
+        $obj->fill($data->all());
         return $obj->isDirty() ? $obj->save() : false;
     }
 
