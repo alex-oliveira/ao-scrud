@@ -10,20 +10,22 @@ class FullController extends BaseController
     public function index()
     {
         try {
-            $result = $this->service->search()->toArray();
+            $result = $this->service->search();
         } catch (Exception $e) {
             throw $e;
         }
 
-        return response()->json($result['data'], 200)
-            ->header('x-total', $result['total'])
-            ->header('x-per-page', $result['per_page'])
-            ->header('x-current-page', $result['current_page'])
-            ->header('x-last-page', $result['last_page'])
-            ->header('x-next-page-url', $result['next_page_url'])
-            ->header('x-prev-page-url', $result['prev_page_url'])
-            ->header('x-from', $result['from'])
-            ->header('x-to', $result['to']);
+        return response()->json($result->toArray(), 200);
+
+        //return response()->json($result['data'], 200)
+        //    ->header('x-total', $result['total'])
+        //    ->header('x-per-page', $result['per_page'])
+        //    ->header('x-current-page', $result['current_page'])
+        //    ->header('x-last-page', $result['last_page'])
+        //    ->header('x-next-page-url', $result['next_page_url'])
+        //    ->header('x-prev-page-url', $result['prev_page_url'])
+        //    ->header('x-from', $result['from'])
+        //    ->header('x-to', $result['to']);
     }
 
 
