@@ -16,28 +16,6 @@ class FullController extends BaseController
         }
 
         return response()->json($result->toArray(), 200);
-
-        //return response()->json($result['data'], 200)
-        //    ->header('x-total', $result['total'])
-        //    ->header('x-per-page', $result['per_page'])
-        //    ->header('x-current-page', $result['current_page'])
-        //    ->header('x-last-page', $result['last_page'])
-        //    ->header('x-next-page-url', $result['next_page_url'])
-        //    ->header('x-prev-page-url', $result['prev_page_url'])
-        //    ->header('x-from', $result['from'])
-        //    ->header('x-to', $result['to']);
-    }
-
-
-    public function store()
-    {
-        try {
-            $obj = $this->service->create();
-        } catch (Exception $e) {
-            throw $e;
-        }
-
-        return response()->json($obj->toArray(), 201);
     }
 
     public function show()
@@ -51,26 +29,37 @@ class FullController extends BaseController
         return response()->json($obj->toArray(), 200);
     }
 
-    public function update()
+    public function store()
     {
         try {
-            $status = $this->service->update();
+            $obj = $this->service->create();
         } catch (Exception $e) {
             throw $e;
         }
 
-        return response()->json([], ($status ? 204 : 304));
+        return response()->json($obj->toArray(), 201);
+    }
+
+    public function update()
+    {
+        try {
+            $changed = $this->service->update();
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return response()->json([], ($changed ? 204 : 200));
     }
 
     public function destroy()
     {
         try {
-            $status = $this->service->destroy();
+            $this->service->destroy();
         } catch (Exception $e) {
             throw $e;
         }
 
-        return response()->json([], ($status ? 204 : 304));
+        return response()->json([], 204);
     }
 
 }

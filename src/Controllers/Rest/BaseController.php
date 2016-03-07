@@ -18,16 +18,6 @@ class BaseController extends Controller
     /**
      * @var string
      */
-    protected $main = 'home';
-
-    /**
-     * @var string
-     */
-    protected $routes = '';
-
-    /**
-     * @var string
-     */
     protected $views = 'ao-scrud::controllers';
 
     /**
