@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Services\Resources\Show;
+namespace AoScrud\Services\Resources\Read;
 
 use AoScrud\Utils\Criteria\ModelColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
@@ -8,48 +8,48 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-trait Show
+trait Read
 {
 
     /**
-     * The show's criteria.
+     * The read's criteria.
      *
      * @var array
      */
-    protected $showCriteria = [];
+    protected $readCriteria = [];
 
     /**
      * The columns' names allowed.
      *
      * @var array
      */
-    protected $showColumns = [];
+    protected $readColumns = [];
 
     /**
      * The withs's names allowed.
      *
      * @var array
      */
-    protected $showWith = [];
+    protected $readWith = [];
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Main method to show in the repository.
+     * Main method to read in the repository.
      *
      * @param array|null $params
-     * @param bool $onlyRead
+     * @param bool $readonly
      * @return Model|null
      * @throws Exception
      */
-    public function show(array $params = null, $onlyRead = true)
+    public function read(array $params = null, $readonly = true)
     {
-        $this->showCriteria($onlyRead);
+        $this->readCriteria($readonly);
 
         try {
-            $obj = $this->showExecute($params);
+            $obj = $this->readExecute($params);
         } catch (Exception $e) {
             throw $e;
         }
@@ -66,21 +66,21 @@ trait Show
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Add show criteria in the repository.
+     * Add read criteria in the repository.
      *
-     * @param bool $onlyRead
+     * @param bool $readonly
      */
-    protected function showCriteria($onlyRead = true)
+    protected function readCriteria($readonly = true)
     {
-        $this->showCriteria[] = new ModelColumnsCriteria($this->getShowColumns());
-        $this->showCriteria[] = new ModelWithCriteria($this->getShowWith());
+        $this->readCriteria[] = new ModelColumnsCriteria($this->getReadColumns());
+        $this->readCriteria[] = new ModelWithCriteria($this->getReadWith());
 
-        if ($onlyRead) {
-            foreach ($this->showCriteria as $criteria)
+        if ($readonly) {
+            foreach ($this->readCriteria as $criteria)
                 $this->rep->pushCriteria($criteria);
         } else {
-            foreach ($this->showCriteria as $criteria) {
-                if (isset($criteria->onlyRead) && $criteria->onlyRead == true) {
+            foreach ($this->readCriteria as $criteria) {
+                if (isset($criteria->readonly) && $criteria->readonly == true) {
                     continue;
                 }
                 $this->rep->pushCriteria($criteria);
@@ -94,7 +94,7 @@ trait Show
      * @param array|null $params
      * @return Model|null
      */
-    protected function showExecute(array $params = null)
+    protected function readExecute(array $params = null)
     {
         return $this->rep->findWhere((is_null($params) ? request()->route()->parameters() : $params))->first();
     }
@@ -108,9 +108,9 @@ trait Show
      *
      * @return array
      */
-    public function getShowColumns()
+    public function getReadColumns()
     {
-        return $this->showColumns;
+        return $this->readColumns;
     }
 
     /**
@@ -118,9 +118,9 @@ trait Show
      *
      * @return array
      */
-    public function getShowWith()
+    public function getReadWith()
     {
-        return $this->showWith;
+        return $this->readWith;
     }
 
 }

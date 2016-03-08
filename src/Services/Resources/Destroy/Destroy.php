@@ -57,7 +57,7 @@ trait Destroy
      */
     protected function destroySelect(array $params = null)
     {
-        return $this->show($params, false);
+        return $this->read($params, false);
     }
 
     /**

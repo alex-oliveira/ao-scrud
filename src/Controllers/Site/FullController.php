@@ -8,7 +8,7 @@ class FullController extends BaseController
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function search()
+    public function index()
     {
         try {
             $result = $this->service->search();
@@ -34,7 +34,7 @@ class FullController extends BaseController
     public function store()
     {
         try {
-            $obj = $this->service->store();
+            $obj = $this->service->create();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->back()->withInput();
@@ -50,7 +50,7 @@ class FullController extends BaseController
     public function show()
     {
         try {
-            $obj = $this->service->show();
+            $obj = $this->service->read();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->routes . '.index', params()->forget('id'));
@@ -65,7 +65,7 @@ class FullController extends BaseController
     public function edit()
     {
         try {
-            $obj = $this->service->edit();
+            $obj = $this->service->read();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->routes . '.index', params()->forget('id'));
@@ -102,7 +102,7 @@ class FullController extends BaseController
     public function delete()
     {
         try {
-            $data= $this->service->delete();
+            $data = $this->service->delete();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->routes . '.index', params()->forget('id'));

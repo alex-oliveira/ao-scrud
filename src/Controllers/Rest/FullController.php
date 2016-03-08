@@ -7,7 +7,7 @@ use Exception;
 class FullController extends BaseController
 {
 
-    public function search()
+    public function index()
     {
         try {
             $result = $this->service->search();
@@ -21,7 +21,7 @@ class FullController extends BaseController
     public function show()
     {
         try {
-            $obj = $this->service->show();
+            $obj = $this->service->read();
         } catch (Exception $e) {
             throw $e;
         }
@@ -32,7 +32,7 @@ class FullController extends BaseController
     public function store()
     {
         try {
-            $obj = $this->service->store();
+            $obj = $this->service->create();
         } catch (Exception $e) {
             throw $e;
         }

@@ -80,7 +80,7 @@ trait Update
      */
     protected function updateSelect(array $keys = null)
     {
-        return $this->show($keys, false);
+        return $this->read($keys, false);
     }
 
     /**

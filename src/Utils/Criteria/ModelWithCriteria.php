@@ -15,7 +15,7 @@ class ModelWithCriteria implements CriteriaInterface
      *
      * @var bool
      */
-    public $onlyRead = true;
+    public $readonly = true;
 
     /**
      * @var array;
