@@ -1,9 +1,9 @@
 <?php
 
-namespace AoScrud\Tools\Handlers;
+namespace AoScrud\Utils\Handlers;
 
-use AoScrud\Tools\Exceptions\MultiException;
-use AoScrud\Tools\Exceptions\RestException;
+use AoScrud\Utils\Exceptions\MultiException;
+use AoScrud\Utils\Exceptions\RestException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;

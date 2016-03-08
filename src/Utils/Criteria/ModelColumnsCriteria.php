@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Tools\Criteria;
+namespace AoScrud\Utils\Criteria;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

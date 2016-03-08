@@ -1,10 +1,10 @@
 <?php
 
-namespace AoScrud\Tools\Handlers;
+namespace AoScrud\Utils\Handlers;
 
-use AoScrud\Tools\Exceptions\CheckerException;
-use AoScrud\Tools\Exceptions\MultiException;
-use AoScrud\Tools\Exceptions\ValidatorException;
+use AoScrud\Utils\Exceptions\CheckerException;
+use AoScrud\Utils\Exceptions\MultiException;
+use AoScrud\Utils\Exceptions\ValidatorException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;

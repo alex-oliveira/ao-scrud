@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Tools\Exceptions;
+namespace AoScrud\Utils\Exceptions;
 
 class MultiException extends \Exception
 {

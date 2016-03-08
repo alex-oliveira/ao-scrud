@@ -1,55 +1,55 @@
 <?php
 
-namespace AoScrud\Services\Resources\Read;
+namespace AoScrud\Services\Resources\Show;
 
-use AoScrud\Tools\Criteria\ModelColumnsCriteria;
-use AoScrud\Tools\Criteria\ModelWithCriteria;
+use AoScrud\Utils\Criteria\ModelColumnsCriteria;
+use AoScrud\Utils\Criteria\ModelWithCriteria;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-trait Read
+trait Show
 {
 
     /**
-     * The read's criteria.
+     * The show's criteria.
      *
      * @var array
      */
-    protected $readCriteria = [];
+    protected $showCriteria = [];
 
     /**
      * The columns' names allowed.
      *
      * @var array
      */
-    protected $readColumns = [];
+    protected $showColumns = [];
 
     /**
      * The withs's names allowed.
      *
      * @var array
      */
-    protected $readWith = [];
+    protected $showWith = [];
 
     //------------------------------------------------------------------------------------------------------------------
-    // MASTERS //-------------------------------------------------------------------------------------------------------
+    // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Main method to read in the repository.
+     * Main method to show in the repository.
      *
-     * @param array|null $keys
+     * @param array|null $params
      * @param bool $onlyRead
      * @return Model|null
      * @throws Exception
      */
-    public function read(array $keys = null, $onlyRead = true)
+    public function show(array $params = null, $onlyRead = true)
     {
-        $this->readCriteria($onlyRead);
+        $this->showCriteria($onlyRead);
 
         try {
-            $obj = $this->readExecute($keys);
+            $obj = $this->showExecute($params);
         } catch (Exception $e) {
             throw $e;
         }
@@ -61,21 +61,25 @@ trait Read
         return $obj;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // CUSTOMS METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
-     * Add read criteria in the repository.
+     * Add show criteria in the repository.
      *
      * @param bool $onlyRead
      */
-    protected function readCriteria($onlyRead = true)
+    protected function showCriteria($onlyRead = true)
     {
-        $this->readCriteria[] = new ModelColumnsCriteria($this->getReadColumns());
-        $this->readCriteria[] = new ModelWithCriteria($this->getReadWith());
+        $this->showCriteria[] = new ModelColumnsCriteria($this->getShowColumns());
+        $this->showCriteria[] = new ModelWithCriteria($this->getShowWith());
 
         if ($onlyRead) {
-            foreach ($this->readCriteria as $criteria)
+            foreach ($this->showCriteria as $criteria)
                 $this->rep->pushCriteria($criteria);
         } else {
-            foreach ($this->readCriteria as $criteria) {
+            foreach ($this->showCriteria as $criteria) {
                 if (isset($criteria->onlyRead) && $criteria->onlyRead == true) {
                     continue;
                 }
@@ -87,17 +91,16 @@ trait Read
     /**
      * Run find command in the repository.
      *
-     * @param array|null $keys
+     * @param array|null $params
      * @return Model|null
      */
-    protected function readExecute(array $keys = null)
+    protected function showExecute(array $params = null)
     {
-        return $this->rep->findWhere((is_null($keys) ? request()->route()->parameters() : $keys))->first();
-        //return $this->rep->find(params()->get('id'));
+        return $this->rep->findWhere((is_null($params) ? request()->route()->parameters() : $params))->first();
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // AUXILIARIES //---------------------------------------------------------------------------------------------------
+    // GETS & SETS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -105,9 +108,9 @@ trait Read
      *
      * @return array
      */
-    public function getReadColumns()
+    public function getShowColumns()
     {
-        return $this->readColumns;
+        return $this->showColumns;
     }
 
     /**
@@ -115,9 +118,9 @@ trait Read
      *
      * @return array
      */
-    public function getReadWith()
+    public function getShowWith()
     {
-        return $this->readWith;
+        return $this->showWith;
     }
 
 }

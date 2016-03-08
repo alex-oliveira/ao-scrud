@@ -2,8 +2,8 @@
 
 namespace AoScrud\Services\Resources\Create;
 
-use AoScrud\Tools\Interceptors\InterceptorAbstract;
-use AoScrud\Tools\Validators\ValidatorAbstract;
+use AoScrud\Utils\Interceptors\InterceptorAbstract;
+use AoScrud\Utils\Validators\ValidatorAbstract;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -26,26 +26,26 @@ trait Create
     protected $createValidator;
 
     //------------------------------------------------------------------------------------------------------------------
-    // MASTERS //-------------------------------------------------------------------------------------------------------
+    // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Main method to registry in the repository.
      *
-     * @param array|null $data
+     * @param array|null $params
      * @return Model
      * @throws Exception
      */
-    public function create(array $data = null)
+    public function create(array $params = null)
     {
-        $data = is_null($data) ? $this->createData() : collect($data);
+        $params = is_null($params) ? $this->createParams() : collect($params);
 
-        $this->createInterceptor($data);
-        $this->createValidator($data);
+        $this->createInterceptor($params);
+        $this->createValidator($params);
 
         $this->tBegin();
         try {
-            $obj = $this->createSave($data);
+            $obj = $this->createSave($params);
         } catch (Exception $e) {
             $this->tRollBack();
             throw $e;
@@ -55,57 +55,61 @@ trait Create
         return $obj;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // CUSTOMS METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Return the data of request to registry.
      *
      * @return Collection
      */
-    protected function createData()
+    protected function createParams()
     {
-        return $this->data();
+        return $this->params();
     }
 
     /**
      * Run interceptor class in data of request.
      *
-     * @param Collection $data
+     * @param Collection $params
      * @return array
      */
-    protected function createInterceptor($data)
+    protected function createInterceptor($params)
     {
         if (isset($this->createInterceptor)) {
             if (is_string($this->createInterceptor) && is_subclass_of($this->createInterceptor, InterceptorAbstract::class)) {
                 $this->createInterceptor = app($this->createInterceptor);
             }
-            is_object($this->createInterceptor) ? $this->createInterceptor->apply($data) : null;
+            is_object($this->createInterceptor) ? $this->createInterceptor->apply($params) : null;
         }
     }
 
     /**
      * Run validator class in data of request.
      *
-     * @param Collection $data
+     * @param Collection $params
      * @return array
      */
-    protected function createValidator($data)
+    protected function createValidator($params)
     {
         if (isset($this->createValidator)) {
             if (is_string($this->createValidator) && is_subclass_of($this->createValidator, ValidatorAbstract::class)) {
                 $this->createValidator = app($this->createValidator);
             }
-            is_object($this->createValidator) ? $this->createValidator->apply($data) : null;
+            is_object($this->createValidator) ? $this->createValidator->apply($params) : null;
         }
     }
 
     /**
      * Run create command in the repository.
      *
-     * @param Collection $data
+     * @param Collection $params
      * @return array
      */
-    protected function createSave($data)
+    protected function createSave($params)
     {
-        return $this->rep->create($data->all());
+        return $this->rep->create($params->all());
     }
 
 }

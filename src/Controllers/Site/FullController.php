@@ -8,7 +8,7 @@ class FullController extends BaseController
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function index()
+    public function search()
     {
         try {
             $result = $this->service->search();
@@ -34,7 +34,7 @@ class FullController extends BaseController
     public function store()
     {
         try {
-            $obj = $this->service->create();
+            $obj = $this->service->store();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->back()->withInput();
@@ -50,7 +50,7 @@ class FullController extends BaseController
     public function show()
     {
         try {
-            $obj = $this->service->read();
+            $obj = $this->service->show();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->routes . '.index', params()->forget('id'));
@@ -65,7 +65,7 @@ class FullController extends BaseController
     public function edit()
     {
         try {
-            $obj = $this->service->read();
+            $obj = $this->service->edit();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->routes . '.index', params()->forget('id'));
@@ -102,13 +102,13 @@ class FullController extends BaseController
     public function delete()
     {
         try {
-            $obj = $this->service->read();
+            $data= $this->service->delete();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->routes . '.index', params()->forget('id'));
         }
 
-        return view($this->views . '.delete', compact('obj'));
+        return view($this->views . '.delete', compact('data'));
     }
 
     /**

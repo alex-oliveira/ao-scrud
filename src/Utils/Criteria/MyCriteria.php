@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Tools\Criteria;
+namespace AoScrud\Utils\Criteria;
 
 use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Contracts\RepositoryInterface;

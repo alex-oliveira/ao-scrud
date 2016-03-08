@@ -18,7 +18,7 @@ abstract class BaseService
     /**
      * @return \Illuminate\Support\Collection
      */
-    public static function data()
+    public static function params()
     {
         return collect(array_merge(request()->all(), request()->route()->parameters()));
     }

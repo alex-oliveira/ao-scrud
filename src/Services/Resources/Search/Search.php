@@ -2,11 +2,11 @@
 
 namespace AoScrud\Services\Resources\Search;
 
-use AoScrud\Tools\Criteria\ModelColumnsCriteria;
-use AoScrud\Tools\Criteria\ModelOrderCriteria;
-use AoScrud\Tools\Criteria\ModelRulesCriteria;
-use AoScrud\Tools\Criteria\ModelWithCriteria;
-use AoScrud\Tools\Criteria\RouteParamsCriteria;
+use AoScrud\Utils\Criteria\ModelColumnsCriteria;
+use AoScrud\Utils\Criteria\ModelOrderCriteria;
+use AoScrud\Utils\Criteria\ModelRulesCriteria;
+use AoScrud\Utils\Criteria\ModelWithCriteria;
+use AoScrud\Utils\Criteria\RouteParamsCriteria;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
@@ -63,7 +63,7 @@ trait Search
     protected $searchLimitMax = 50;
 
     //------------------------------------------------------------------------------------------------------------------
-    // MASTERS //-------------------------------------------------------------------------------------------------------
+    // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -84,6 +84,10 @@ trait Search
 
         return $result;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // CUSTOM METHODS
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Add search criteria in the repository.
@@ -125,7 +129,7 @@ trait Search
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // AUXILIARIES //---------------------------------------------------------------------------------------------------
+    // GETS & SETS
     //------------------------------------------------------------------------------------------------------------------
 
     /**

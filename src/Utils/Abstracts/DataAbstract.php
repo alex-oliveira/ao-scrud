@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Tools\Data;
+namespace AoScrud\Utils\Data;
 
 abstract class DataAbstract
 {

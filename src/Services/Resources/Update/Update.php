@@ -2,8 +2,8 @@
 
 namespace AoScrud\Services\Resources\Update;
 
-use AoScrud\Tools\Interceptors\InterceptorAbstract;
-use AoScrud\Tools\Validators\ValidatorAbstract;
+use AoScrud\Utils\Interceptors\InterceptorAbstract;
+use AoScrud\Utils\Validators\ValidatorAbstract;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -26,29 +26,29 @@ trait Update
     protected $updateValidator;
 
     //------------------------------------------------------------------------------------------------------------------
-    // MASTERS //-------------------------------------------------------------------------------------------------------
+    // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Main method to update in the repository.
      *
-     * @param array $data
+     * @param array $params
      * @param array $keys
      * @return bool
      * @throws Exception
      */
-    public function update(array $data = null, array $keys = null)
+    public function update(array $params = null, array $keys = null)
     {
-        $data = is_null($data) ? $this->updateData() : collect($data);
+        $params = is_null($params) ? $this->updateParams() : collect($params);
 
-        $obj = $this->updateRead($keys);
+        $obj = $this->updateSelect($keys);
 
-        $this->updateInterceptor($data);
-        $this->updateValidator($data, $obj);
+        $this->updateInterceptor($params);
+        $this->updateValidator($params, $obj);
 
         $this->tBegin();
         try {
-            $status = $this->updateSave($data, $obj);
+            $status = $this->updateSave($params, $obj);
         } catch (Exception $e) {
             $this->tRollBack();
             throw $e;
@@ -58,14 +58,18 @@ trait Update
         return $status;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // CUSTOMS METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Return the data of request to update.
      *
      * @return Collection
      */
-    protected function updateData()
+    protected function updateParams()
     {
-        return $this->data();
+        return $this->params();
     }
 
     /**
@@ -74,54 +78,54 @@ trait Update
      * @param array $keys
      * @return Model $obj
      */
-    protected function updateRead(array $keys = null)
+    protected function updateSelect(array $keys = null)
     {
-        return $this->read($keys, false);
+        return $this->show($keys, false);
     }
 
     /**
      * Run interceptor class in data of request.
      *
-     * @param Collection $data
+     * @param Collection $params
      * @return array
      */
-    protected function updateInterceptor($data)
+    protected function updateInterceptor($params)
     {
         if (isset($this->updateInterceptor)) {
             if (is_string($this->updateInterceptor) && is_subclass_of($this->updateInterceptor, InterceptorAbstract::class)) {
                 $this->updateInterceptor = app($this->updateInterceptor);
             }
-            is_object($this->updateInterceptor) ? $this->updateInterceptor->apply($data) : null;
+            is_object($this->updateInterceptor) ? $this->updateInterceptor->apply($params) : null;
         }
     }
 
     /**
      * Run validator class in data of request.
      *
-     * @param Collection $data
+     * @param Collection $params
      * @param Model $obj
      * @return array
      */
-    protected function updateValidator($data, $obj)
+    protected function updateValidator($params, $obj)
     {
         if (isset($this->updateValidator)) {
             if (is_string($this->updateValidator) && is_subclass_of($this->updateValidator, ValidatorAbstract::class)) {
                 $this->updateValidator = app($this->updateValidator);
             }
-            is_object($this->updateValidator) ? $this->updateValidator->apply($data, $obj) : null;
+            is_object($this->updateValidator) ? $this->updateValidator->apply($params, $obj) : null;
         }
     }
 
     /**
      * Run update command in the repository.
      *
-     * @param Collection $data
+     * @param Collection $params
      * @param Model $obj
      * @return bool
      */
-    protected function updateSave($data, $obj)
+    protected function updateSave($params, $obj)
     {
-        $obj->fill($data->all());
+        $obj->fill($params->all());
         return $obj->isDirty() ? $obj->save() : false;
     }
 

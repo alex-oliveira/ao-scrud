@@ -2,7 +2,7 @@
 
 namespace AoScrud\Services\Resources\Destroy;
 
-use AoScrud\Tools\Checkers\CheckerAbstract;
+use AoScrud\Utils\Checkers\CheckerAbstract;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,19 +17,19 @@ trait Destroy
     protected $destroyChecker;
 
     //------------------------------------------------------------------------------------------------------------------
-    // MASTERS //-------------------------------------------------------------------------------------------------------
+    // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Main method to registry in the repository.
      *
-     * @param array|null $keys
+     * @param array|null $params
      * @return bool
      * @throws Exception
      */
-    public function destroy(array $keys = null)
+    public function destroy(array $params = null)
     {
-        $obj = $this->destroyRead($keys);
+        $obj = $this->destroySelect($params);
 
         $this->destroyChecker($obj);
 
@@ -45,15 +45,19 @@ trait Destroy
         return $status;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // CUSTOMS METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Return the object the should be destroyed.
      *
-     * @param array $keys
+     * @param array $params
      * @return Model $obj
      */
-    protected function destroyRead(array $keys = null)
+    protected function destroySelect(array $params = null)
     {
-        return $this->read($keys, false);
+        return $this->show($params, false);
     }
 
     /**

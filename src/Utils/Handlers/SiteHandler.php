@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Tools\Handlers;
+namespace AoScrud\Utils\Handlers;
 
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

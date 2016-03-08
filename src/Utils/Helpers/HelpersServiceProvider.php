@@ -1,11 +1,12 @@
 <?php
 
-namespace AoScrud\Tools\Helpers;
+namespace AoScrud\Utils\Helpers;
 
 use Illuminate\Support\ServiceProvider;
 
 class HelpersServiceProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap any application services.
      *
@@ -23,6 +24,7 @@ class HelpersServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once(__DIR__ . '/helpers.php');
+        require_once(__DIR__ . '/Helpers.php');
     }
+
 }

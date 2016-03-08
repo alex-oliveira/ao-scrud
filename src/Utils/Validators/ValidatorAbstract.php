@@ -1,8 +1,8 @@
 <?php
 
-namespace AoScrud\Tools\Validators;
+namespace AoScrud\Utils\Validators;
 
-use AoScrud\Tools\Exceptions\ValidatorException;
+use AoScrud\Utils\Exceptions\ValidatorException;
 
 abstract class ValidatorAbstract
 {

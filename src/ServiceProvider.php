@@ -14,8 +14,8 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__ . '/Resources/views', 'ao-scrud');
-        $this->loadTranslationsFrom(__DIR__ . '/Resources/langs', 'ao-scrud');
+        $this->loadViewsFrom(__DIR__ . '/Utils/Views', 'ao-scrud');
+        $this->loadTranslationsFrom(__DIR__ . '/Utils/Langs', 'ao-scrud');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Tools\Checkers;
+namespace AoScrud\Utils\Checkers;
 
 abstract class CheckerAbstract
 {
