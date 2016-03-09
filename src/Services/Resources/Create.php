@@ -2,27 +2,27 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Interceptors\InterceptorAbstract;
-use AoScrud\Utils\Validators\ValidatorAbstract;
+use AoScrud\Utils\Interceptors\BaseInterceptor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use PhpSpec\Exception\Exception;
 
 trait Create
 {
 
     /**
-     * The interceptor class to registry in the repository.
+     * The allow fields to create.
      *
-     * @var InterceptorAbstract
+     * @var array
      */
-    protected $createInterceptor;
+    protected $createFillable = [];
 
     /**
-     * The validator class to registry in repository.
+     * The interceptor class to registry in the repository.
      *
-     * @var ValidatorAbstract
+     * @var BaseInterceptor[]
      */
-    protected $createValidator;
+    protected $createInterceptors = [];
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
@@ -31,21 +31,18 @@ trait Create
     /**
      * Main method to registry in the repository.
      *
-     * @param array|null $params
+     * @param Collection|null $data
      * @return Model
      * @throws Exception
      */
-    public function create(array $params = null)
+    public function create(Collection $data = null)
     {
-        $params = is_null($params) ? $this->createParams() : collect($params);
-
-        $this->createInterceptor($params);
-        $this->createValidator($params);
+        $this->createPrepare(is_null($data) ? $data = $this->createParams() : $data);
 
         $this->tBegin();
         try {
-            $obj = $this->createSave($params);
-        } catch (\Exception $e) {
+            $obj = $this->createSave($data);
+        } catch (Exception $e) {
             $this->tRollBack();
             throw $e;
         }
@@ -65,50 +62,53 @@ trait Create
      */
     protected function createParams()
     {
-        return $this->params();
+        return collect(array_merge(request()->all(), request()->route()->parameters()));
     }
 
     /**
-     * Run interceptor class in data of request.
+     * Run all preparations before create.
      *
-     * @param Collection $params
-     * @return array
+     * @param Collection $data
      */
-    protected function createInterceptor($params)
+    protected function createPrepare(Collection $data)
     {
-        if (isset($this->createInterceptor)) {
-            if (is_string($this->createInterceptor) && is_subclass_of($this->createInterceptor, InterceptorAbstract::class)) {
-                $this->createInterceptor = app($this->createInterceptor);
-            }
-            is_object($this->createInterceptor) ? $this->createInterceptor->apply($params) : null;
-        }
+        $this->createFillable();
+        $this->createInterceptors($data);
     }
 
     /**
-     * Run validator class in data of request.
+     * Define the allow fields to create.
+     */
+    protected function createFillable()
+    {
+        $this->rep->modelCurrent()->fillable($this->createFillable);
+    }
+
+    /**
+     * Apply the interceptors in data of request.
      *
-     * @param Collection $params
+     * @param Collection $data
      * @return array
      */
-    protected function createValidator($params)
+    protected function createInterceptors($data)
     {
-        if (isset($this->createValidator)) {
-            if (is_string($this->createValidator) && is_subclass_of($this->createValidator, ValidatorAbstract::class)) {
-                $this->createValidator = app($this->createValidator);
+        foreach ($this->createInterceptors as $key => $interceptor) {
+            if (is_string($interceptor) && is_subclass_of($interceptor, BaseInterceptor::class)) {
+                $this->createInterceptors[$key] = $interceptor = app($interceptor);
             }
-            is_object($this->createValidator) ? $this->createValidator->apply($params) : null;
+            is_object($interceptor) && $interceptor instanceof BaseInterceptor ? $interceptor->apply($data) : null;
         }
     }
 
     /**
      * Run create command in the repository.
      *
-     * @param Collection $params
+     * @param Collection $data
      * @return array
      */
-    protected function createSave($params)
+    protected function createSave($data)
     {
-        return $this->rep->create($params->all());
+        return $this->rep->create($data->all());
     }
 
 }

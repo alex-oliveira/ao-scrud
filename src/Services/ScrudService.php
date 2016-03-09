@@ -2,13 +2,13 @@
 
 namespace AoScrud\Services;
 
+use AoScrud\Repositories\ScrudRepository;
 use AoScrud\Services\Resources\Search;
 use AoScrud\Services\Resources\Create;
 use AoScrud\Services\Resources\Read;
 use AoScrud\Services\Resources\Update;
 use AoScrud\Services\Resources\Destroy;
 use AoScrud\Utils\Traits\Transactions;
-use Prettus\Repository\Eloquent\BaseRepository;
 
 abstract class ScrudService
 {
@@ -18,7 +18,7 @@ abstract class ScrudService
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * @var BaseRepository
+     * @var ScrudRepository
      */
     protected $rep;
 

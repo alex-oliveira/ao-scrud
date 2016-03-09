@@ -1,30 +1,32 @@
 <?php
 
-namespace AoScrud\Utils\Validators;
+namespace AoScrud\Utils\Interceptors;
 
 use AoScrud\Utils\Exceptions\ValidatorException;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
-abstract class ValidatorAbstract
+abstract class ValidatorInterceptor extends BaseInterceptor
 {
 
     protected $names;
     protected $messages;
 
     /**
-     * @param $data \Illuminate\Support\Collection
-     * @param $model \Illuminate\Database\Eloquent\Model
+     * @param $data Collection
+     * @param $model Model
      * @return array
      */
-    abstract protected function rules($data, $model = null);
+    abstract protected function rules(Collection $data, Model $model = null);
 
     /**
      * Responsible method for validate the data of the registry.
      *
-     * @param $data \Illuminate\Support\Collection
-     * @param $model \Illuminate\Database\Eloquent\Model
+     * @param $data Collection
+     * @param $model Model
      * @throws ValidatorException
      */
-    public function apply($data, $model = null)
+    public function apply(Collection $data, Model $model = null)
     {
         $validator = $this->validator()->make($data->all(), $this->rules($data, $model), $this->messages(), $this->names());
         if ($validator->fails()) {

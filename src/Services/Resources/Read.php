@@ -6,6 +6,7 @@ use AoScrud\Utils\Criteria\ModelColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use PhpSpec\Exception\Exception;
 
 trait Read
 {
@@ -41,7 +42,7 @@ trait Read
      * @param array|null $params
      * @param bool $readonly
      * @return Model|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function read(array $params = null, $readonly = true)
     {
@@ -49,7 +50,7 @@ trait Read
 
         try {
             $obj = $this->readExecute($params);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
