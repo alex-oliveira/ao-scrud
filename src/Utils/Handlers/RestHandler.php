@@ -73,11 +73,20 @@ class RestHandler extends ExceptionHandler
 
         } else {
             switch ($method = $route->getMethods()[0]) {
-                case 'GET': $return['message'] = 'falha inesperada ao tentar realizar a consulta'; break;
-                case 'POST': $return['message'] = 'falha inesperada ao tentar realizar o cadastro'; break;
-                case 'PUT': $return['message'] = 'falha inesperada ao tentar realizar a atualização'; break;
-                case 'DELETE': $return['message'] = 'falha inesperada ao tentar realizar a exclusão'; break;
-                default: $return['message'] = 'falha inesperada ao tentar execultar a operação';
+                case 'GET':
+                    $return['message'] = 'falha inesperada ao tentar realizar a consulta';
+                    break;
+                case 'POST':
+                    $return['message'] = 'falha inesperada ao tentar realizar o cadastro';
+                    break;
+                case 'PUT':
+                    $return['message'] = 'falha inesperada ao tentar realizar a atualização';
+                    break;
+                case 'DELETE':
+                    $return['message'] = 'falha inesperada ao tentar realizar a exclusão';
+                    break;
+                default:
+                    $return['message'] = 'falha inesperada ao tentar execultar a operação';
             }
         }
 

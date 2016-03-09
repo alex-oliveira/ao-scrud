@@ -2,64 +2,15 @@
 
 namespace AoScrud\Controllers\Rest;
 
-use Exception;
+use AoScrud\Controllers\Rest\Actions\Destroy;
+use AoScrud\Controllers\Rest\Actions\Index;
+use AoScrud\Controllers\Rest\Actions\Show;
+use AoScrud\Controllers\Rest\Actions\Store;
+use AoScrud\Controllers\Rest\Actions\Update;
 
-class FullController extends BaseController
+class FullController extends RestController
 {
 
-    public function index()
-    {
-        try {
-            $data = $this->service->search();
-        } catch (Exception $e) {
-            throw $e;
-        }
-
-        return response()->json(is_array($data) ? $data : $data->toArray(), 200);
-    }
-
-    public function show()
-    {
-        try {
-            $data = $this->service->read();
-        } catch (Exception $e) {
-            throw $e;
-        }
-
-        return response()->json(is_array($data) ? $data : $data->toArray(), 200);
-    }
-
-    public function store()
-    {
-        try {
-            $data = $this->service->create();
-        } catch (Exception $e) {
-            throw $e;
-        }
-
-        return response()->json(is_array($data) ? $data : $data->toArray(), 201);
-    }
-
-    public function update()
-    {
-        try {
-            $changed = $this->service->update();
-        } catch (Exception $e) {
-            throw $e;
-        }
-
-        return response()->json([], ($changed ? 204 : 200));
-    }
-
-    public function destroy()
-    {
-        try {
-            $this->service->destroy();
-        } catch (Exception $e) {
-            throw $e;
-        }
-
-        return response()->json([], 204);
-    }
+    use Index, Show, Store, Update, Destroy;
 
 }
