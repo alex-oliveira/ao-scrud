@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Services\Criteria;
+namespace AoScrud\Utils\Criteria;
 
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;

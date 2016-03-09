@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Services\Interceptors;
+namespace AoScrud\Utils\Interceptors;
 
 abstract class InterceptorAbstract
 {

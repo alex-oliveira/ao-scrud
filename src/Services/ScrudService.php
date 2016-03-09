@@ -7,7 +7,7 @@ use AoScrud\Services\Resources\Create;
 use AoScrud\Services\Resources\Read;
 use AoScrud\Services\Resources\Update;
 use AoScrud\Services\Resources\Destroy;
-use AoScrud\Util\Traits\Transactions;
+use AoScrud\Utils\Traits\Transactions;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 abstract class ScrudService

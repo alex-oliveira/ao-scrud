@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Util\Traits;
+namespace AoScrud\Utils\Traits;
 
 trait Transactions
 {

@@ -2,11 +2,11 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Services\Criteria\ModelColumnsCriteria;
-use AoScrud\Services\Criteria\ModelOrderCriteria;
-use AoScrud\Services\Criteria\ModelRulesCriteria;
-use AoScrud\Services\Criteria\ModelWithCriteria;
-use AoScrud\Services\Criteria\RouteParamsCriteria;
+use AoScrud\Utils\Criteria\ModelColumnsCriteria;
+use AoScrud\Utils\Criteria\ModelOrderCriteria;
+use AoScrud\Utils\Criteria\ModelRulesCriteria;
+use AoScrud\Utils\Criteria\ModelWithCriteria;
+use AoScrud\Utils\Criteria\RouteParamsCriteria;
 use Illuminate\Database\Eloquent\Model;
 
 trait Search
@@ -69,7 +69,7 @@ trait Search
      * Main method to read in the repository.
      *
      * @return Model[]|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function search()
     {

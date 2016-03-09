@@ -2,8 +2,8 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Services\Criteria\ModelColumnsCriteria;
-use AoScrud\Services\Criteria\ModelWithCriteria;
+use AoScrud\Utils\Criteria\ModelColumnsCriteria;
+use AoScrud\Utils\Criteria\ModelWithCriteria;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -41,7 +41,7 @@ trait Read
      * @param array|null $params
      * @param bool $readonly
      * @return Model|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function read(array $params = null, $readonly = true)
     {

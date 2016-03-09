@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Services\Validators;
+namespace AoScrud\Utils\Validators;
 
 use AoScrud\Utils\Exceptions\ValidatorException;
 

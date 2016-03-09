@@ -2,8 +2,8 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Services\Interceptors\InterceptorAbstract;
-use AoScrud\Services\Validators\ValidatorAbstract;
+use AoScrud\Utils\Interceptors\InterceptorAbstract;
+use AoScrud\Utils\Validators\ValidatorAbstract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 

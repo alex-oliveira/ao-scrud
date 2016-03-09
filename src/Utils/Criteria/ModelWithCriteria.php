@@ -1,9 +1,7 @@
 <?php
 
-namespace AoScrud\Services\Criteria;
+namespace AoScrud\Utils\Criteria;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 

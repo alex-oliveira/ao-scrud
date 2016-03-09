@@ -2,7 +2,7 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Services\Checkers\CheckerAbstract;
+use AoScrud\Utils\Checkers\CheckerAbstract;
 use Illuminate\Database\Eloquent\Model;
 
 trait Destroy
@@ -24,7 +24,7 @@ trait Destroy
      *
      * @param array|null $params
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function destroy(array $params = null)
     {
