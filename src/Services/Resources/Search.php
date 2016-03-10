@@ -8,6 +8,7 @@ use AoScrud\Utils\Criteria\ModelRulesCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
 use AoScrud\Utils\Criteria\RouteParamsCriteria;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait Search
 {
@@ -68,12 +69,13 @@ trait Search
     /**
      * Main method to read in the repository.
      *
+     * @param Collection $data
      * @return Model[]|null
      * @throws \Exception
      */
-    public function search()
+    public function search(Collection $data = null)
     {
-        $this->searchCriteria();
+        $this->searchPrepare(is_null($data) ? $data = $this->searchParams() : $data);
 
         try {
             $result = $this->searchExecute();
@@ -89,13 +91,24 @@ trait Search
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Add search criteria in the repository.
+     * Return the data of request to search.
+     *
+     * @return Collection
      */
-    protected function searchCriteria()
+    protected function searchParams()
     {
-        foreach ($this->searchCriteria as $criteria) {
+        return collect(array_merge(request()->all(), request()->route()->parameters()));
+    }
+
+    /**
+     * Run all preparations before search.
+     *
+     * @param Collection $data
+     */
+    protected function searchPrepare(Collection $data = null)
+    {
+        foreach ($this->searchCriteria as $criteria)
             $this->rep->pushCriteria($criteria);
-        }
 
         $this->rep->pushCriteria(new RouteParamsCriteria());
         $this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules()));
