@@ -13,9 +13,11 @@ use AoScrud\Utils\Traits\Transactions;
 abstract class ScrudService
 {
 
-    use Transactions, Search, Create, Read, Update, Destroy;
+    use Search, Create, Read, Update, Destroy;
 
     //------------------------------------------------------------------------------------------------------------------
+
+    use Transactions;
 
     /**
      * @var ScrudRepository

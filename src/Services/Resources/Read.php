@@ -6,6 +6,7 @@ use AoScrud\Utils\Criteria\ModelColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 use PhpSpec\Exception\Exception;
 
 trait Read
@@ -39,17 +40,17 @@ trait Read
     /**
      * Main method to read in the repository.
      *
-     * @param array|null $params
+     * @param Collection $data
      * @param bool $readonly
      * @return Model|null
      * @throws Exception
      */
-    public function read(array $params = null, $readonly = true)
+    public function read(Collection $data = null, $readonly = true)
     {
-        $this->readCriteria($readonly);
+        $this->readPrepare(is_null($data) ? $data = $this->readParams() : $data, $readonly);
 
         try {
-            $obj = $this->readExecute($params);
+            $obj = $this->readExecute($data);
         } catch (Exception $e) {
             throw $e;
         }
@@ -62,15 +63,26 @@ trait Read
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // CUSTOMS METHODS
+    // SECONDARY METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Add read criteria in the repository.
+     * Return the data of request to read.
      *
+     * @return Collection
+     */
+    protected function readParams()
+    {
+        return collect(request()->route()->parameters());
+    }
+
+    /**
+     * Run all preparations before read.
+     *
+     * @param Collection $data
      * @param bool $readonly
      */
-    protected function readCriteria($readonly = true)
+    protected function readPrepare(Collection $data, $readonly = true)
     {
         $this->readCriteria[] = new ModelColumnsCriteria($this->getReadColumns());
         $this->readCriteria[] = new ModelWithCriteria($this->getReadWith());
@@ -91,16 +103,16 @@ trait Read
     /**
      * Run find command in the repository.
      *
-     * @param array|null $params
+     * @param Collection $data
      * @return Model|null
      */
-    protected function readExecute(array $params = null)
+    protected function readExecute(Collection $data)
     {
-        return $this->rep->findWhere((is_null($params) ? request()->route()->parameters() : $params))->first();
+        return $this->rep->findWhere($data->all())->first();
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // GETS & SETS
+    // SECONDARY METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**

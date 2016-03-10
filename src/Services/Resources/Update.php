@@ -2,8 +2,7 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Interceptors\InterceptorAbstract;
-use AoScrud\Utils\Validators\ValidatorAbstract;
+use AoScrud\Utils\Interceptors\SaveInterceptor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PhpSpec\Exception\Exception;
@@ -19,18 +18,11 @@ trait Update
     protected $updateFillable = [];
 
     /**
-     * The formatter class to update in the repository.
+     * The interceptor class to update in the repository.
      *
-     * @var InterceptorAbstract
+     * @var SaveInterceptor[]
      */
-    protected $updateInterceptor;
-
-    /**
-     * The validator class to update in repository.
-     *
-     * @var ValidatorAbstract
-     */
-    protected $updateValidator;
+    protected $updateInterceptors = [];
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
@@ -40,23 +32,19 @@ trait Update
      * Main method to update in the repository.
      *
      * @param Collection $data
-     * @param array $keys
+     * @param Collection $keys
      * @return bool
      * @throws Exception
      */
-    public function update(Collection $data = null, array $keys = null)
+    public function update(Collection $data = null, Collection $keys = null)
     {
         $obj = $this->updateSelect($keys);
 
         $this->updatePrepare(is_null($data) ? $data = $this->updateParams() : $data, $obj);
 
-
-        $this->updateInterceptor($data);
-        $this->updateValidator($data, $obj);
-
         $this->tBegin();
         try {
-            $status = $this->updateSave($data, $obj);
+            $status = $this->updateExecute($data, $obj);
         } catch (Exception $e) {
             $this->tRollBack();
             throw $e;
@@ -67,16 +55,16 @@ trait Update
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // CUSTOMS METHODS
+    // SECONDARY METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Return the object the should be updated.
      *
-     * @param array $keys
+     * @param Collection $keys
      * @return Model $obj
      */
-    protected function updateSelect(array $keys = null)
+    protected function updateSelect(Collection $keys = null)
     {
         return $this->read($keys, false);
     }
@@ -100,8 +88,7 @@ trait Update
     protected function updatePrepare(Collection $data, Model $obj)
     {
         $this->updateFillable();
-        $this->updateInterceptor($data, $obj);
-        $this->updateValidator($data, $obj);
+        $this->updateInterceptors($data, $obj);
     }
 
     /**
@@ -109,41 +96,23 @@ trait Update
      */
     protected function updateFillable()
     {
-        $this->modelCurrent()->fillable($this->updateFillable);
+        //$this->rep->modelCurrent()->fillable($this->updateFillable);
     }
 
     /**
-     * Run interceptor class in data of request.
+     * Apply the interceptors in data before update.
      *
      * @param Collection $data
      * @param Model $obj
      * @return array
      */
-    protected function updateInterceptor($data, $obj)
+    protected function updateInterceptors(Collection $data, Model $obj)
     {
-        if (isset($this->updateInterceptor)) {
-            if (is_string($this->updateInterceptor) && is_subclass_of($this->updateInterceptor, InterceptorAbstract::class)) {
-                $this->updateInterceptor = app($this->updateInterceptor);
+        foreach ($this->updateInterceptors as $key => $interceptor) {
+            if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class)) {
+                $this->updateInterceptors[$key] = $interceptor = app($interceptor);
             }
-            is_object($this->updateInterceptor) ? $this->updateInterceptor->apply($data, $obj) : null;
-        }
-    }
-
-
-    /**
-     * Run validator class in data of request.
-     *
-     * @param Collection $data
-     * @param Model $obj
-     * @return array
-     */
-    protected function updateValidator($data, $obj)
-    {
-        if (isset($this->updateValidator)) {
-            if (is_string($this->updateValidator) && is_subclass_of($this->updateValidator, ValidatorAbstract::class)) {
-                $this->updateValidator = app($this->updateValidator);
-            }
-            is_object($this->updateValidator) ? $this->updateValidator->apply($data, $obj) : null;
+            is_object($interceptor) && $interceptor instanceof SaveInterceptor ? $interceptor->apply($data, $obj) : null;
         }
     }
 
@@ -154,7 +123,7 @@ trait Update
      * @param Model $obj
      * @return bool
      */
-    protected function updateSave($data, $obj)
+    protected function updateExecute(Collection $data, Model $obj)
     {
         $obj->fill($data->all());
         return $obj->isDirty() ? $obj->save() : false;

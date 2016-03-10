@@ -2,18 +2,19 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Checkers\CheckerAbstract;
+use AoScrud\Utils\Interceptors\DestroyInterceptor;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait Destroy
 {
 
     /**
-     * The validator class to destroy in repository.
+     * The interceptor class to registry in the repository.
      *
-     * @var CheckerAbstract
+     * @var DestroyInterceptor[]
      */
-    protected $destroyChecker;
+    protected $createInterceptors = [];
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
@@ -22,50 +23,50 @@ trait Destroy
     /**
      * Main method to registry in the repository.
      *
-     * @param array|null $params
+     * @param Collection $keys
      * @return bool
      * @throws \Exception
      */
-    public function destroy(array $params = null)
+    public function destroy(Collection $keys = null)
     {
-        $obj = $this->destroySelect($params);
-
-        $this->destroyChecker($obj);
-
-        $this->tBegin();
-        try {
-            $status = $this->destroyFinalize($obj);
-        } catch (\Exception $e) {
-            $this->tRollBack();
-            throw $e;
-        }
-        $this->tCommit();
-
-        return $status;
+//        $obj = $this->destroySelect($keys);
+//
+//        $this->destroyPrepare($obj);
+//
+//        $this->tBegin();
+//        try {
+//            $status = $this->destroyExecute($obj);
+//        } catch (\Exception $e) {
+//            $this->tRollBack();
+//            throw $e;
+//        }
+//        $this->tCommit();
+//
+//        return $status;
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // CUSTOMS METHODS
+    // SECONDARY METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Return the object the should be destroyed.
      *
-     * @param array $params
+     * @param Collection $keys
      * @return Model $obj
      */
-    protected function destroySelect(array $params = null)
+    protected function destroySelect(Collection $keys = null)
     {
-        return $this->read($params, false);
+        return $this->read($keys, false);
     }
 
     /**
-     * <description>
+     * Run all preparations before destroy.
      *
      * @param Model $obj
      * @return bool
      */
-    protected function destroyChecker($obj)
+    protected function destroyPrepare(Model $obj)
     {
         if (isset($this->destroyChecker)) {
             if (is_string($this->destroyChecker) && is_subclass_of($this->destroyChecker, CheckerAbstract::class)) {
@@ -79,9 +80,9 @@ trait Destroy
      * Run delete command in the repository.
      *
      * @param Model $obj
-     * @return bool
+     * @return bool|null
      */
-    protected function destroyFinalize($obj)
+    protected function destroyExecute(Model $obj)
     {
         return $obj->delete();
     }

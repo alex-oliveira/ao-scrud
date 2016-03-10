@@ -2,7 +2,7 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Interceptors\BaseInterceptor;
+use AoScrud\Utils\Interceptors\SaveInterceptor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PhpSpec\Exception\Exception;
@@ -20,7 +20,7 @@ trait Create
     /**
      * The interceptor class to registry in the repository.
      *
-     * @var BaseInterceptor[]
+     * @var SaveInterceptor[]
      */
     protected $createInterceptors = [];
 
@@ -41,7 +41,7 @@ trait Create
 
         $this->tBegin();
         try {
-            $obj = $this->createSave($data);
+            $obj = $this->createExecute($data);
         } catch (Exception $e) {
             $this->tRollBack();
             throw $e;
@@ -52,7 +52,7 @@ trait Create
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // CUSTOMS METHODS
+    // AUXILIARY METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -81,22 +81,22 @@ trait Create
      */
     protected function createFillable()
     {
-        $this->rep->modelCurrent()->fillable($this->createFillable);
+        //$this->rep->modelCurrent()->fillable($this->createFillable);
     }
 
     /**
-     * Apply the interceptors in data of request.
+     * Apply the interceptors in data before create.
      *
      * @param Collection $data
      * @return array
      */
-    protected function createInterceptors($data)
+    protected function createInterceptors(Collection $data)
     {
         foreach ($this->createInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, BaseInterceptor::class)) {
+            if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class)) {
                 $this->createInterceptors[$key] = $interceptor = app($interceptor);
             }
-            is_object($interceptor) && $interceptor instanceof BaseInterceptor ? $interceptor->apply($data) : null;
+            is_object($interceptor) && $interceptor instanceof SaveInterceptor ? $interceptor->apply($data) : null;
         }
     }
 
@@ -104,9 +104,9 @@ trait Create
      * Run create command in the repository.
      *
      * @param Collection $data
-     * @return array
+     * @return Model
      */
-    protected function createSave($data)
+    protected function createExecute(Collection $data)
     {
         return $this->rep->create($data->all());
     }

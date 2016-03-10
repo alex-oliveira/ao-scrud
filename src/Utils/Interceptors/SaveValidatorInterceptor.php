@@ -6,7 +6,7 @@ use AoScrud\Utils\Exceptions\ValidatorException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-abstract class ValidatorInterceptor extends BaseInterceptor
+abstract class SaveValidatorInterceptor extends SaveInterceptor
 {
 
     protected $names;
@@ -14,21 +14,21 @@ abstract class ValidatorInterceptor extends BaseInterceptor
 
     /**
      * @param $data Collection
-     * @param $model Model
+     * @param $obj Model
      * @return array
      */
-    abstract protected function rules(Collection $data, Model $model = null);
+    abstract protected function rules(Collection $data, Model $obj = null);
 
     /**
      * Responsible method for validate the data of the registry.
      *
      * @param $data Collection
-     * @param $model Model
+     * @param $obj Model
      * @throws ValidatorException
      */
-    public function apply(Collection $data, Model $model = null)
+    public function apply(Collection $data, Model $obj = null)
     {
-        $validator = $this->validator()->make($data->all(), $this->rules($data, $model), $this->messages(), $this->names());
+        $validator = $this->validator()->make($data->all(), $this->rules($data, $obj), $this->messages(), $this->names());
         if ($validator->fails()) {
             $e = new ValidatorException('requisição inválida', 400);
             $e->setIssues($validator->errors()->all());
