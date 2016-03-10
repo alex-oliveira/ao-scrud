@@ -5,7 +5,6 @@ namespace AoScrud\Services\Resources;
 use AoScrud\Utils\Criteria\ModelColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
 trait Read
@@ -55,7 +54,7 @@ trait Read
         }
 
         if (is_null($obj)) {
-            throw new ModelNotFoundException();
+            abort(404, 'Model not found');
         }
 
         return $obj;

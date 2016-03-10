@@ -13,7 +13,7 @@ trait Update
             throw $e;
         }
 
-        return response()->json([], ($changed ? 204 : 200));
+        return response()->json([], ($changed ? 200 : 204));
     }
 
 }
