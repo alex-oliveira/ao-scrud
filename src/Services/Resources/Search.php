@@ -73,9 +73,9 @@ trait Search
      * @return Model[]|null
      * @throws \Exception
      */
-    public function search(Collection $data = null)
+    public function search(Collection $data)
     {
-        $this->searchPrepare(is_null($data) ? $data = $this->searchParams() : $data);
+        $this->searchPrepare($data);
 
         try {
             $result = $this->searchExecute();
@@ -89,16 +89,6 @@ trait Search
     //------------------------------------------------------------------------------------------------------------------
     // SECONDARY METHODS
     //------------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Return the data of request to search.
-     *
-     * @return Collection
-     */
-    protected function searchParams()
-    {
-        return collect(array_merge(request()->all(), request()->route()->parameters()));
-    }
 
     /**
      * Run all preparations before search.

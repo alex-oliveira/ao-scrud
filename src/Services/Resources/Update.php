@@ -35,11 +35,11 @@ trait Update
      * @return bool
      * @throws \Exception
      */
-    public function update(Collection $data = null, Collection $keys = null)
+    public function update(Collection $data, Collection $keys)
     {
         $obj = $this->updateSelect($keys);
 
-        $this->updatePrepare(is_null($data) ? $data = $this->updateParams() : $data, $obj);
+        $this->updatePrepare($data, $obj);
 
         $this->tBegin();
         try {
@@ -63,19 +63,9 @@ trait Update
      * @param Collection $keys
      * @return Model $obj
      */
-    protected function updateSelect(Collection $keys = null)
+    protected function updateSelect(Collection $keys)
     {
         return $this->read($keys, false);
-    }
-
-    /**
-     * Return the data of request to update.
-     *
-     * @return Collection
-     */
-    protected function updateParams()
-    {
-        return collect(array_merge(request()->all(), request()->route()->parameters()));
     }
 
     /**
@@ -86,33 +76,22 @@ trait Update
      */
     protected function updatePrepare(Collection $data, Model $obj)
     {
-        $this->updateFillable();
-        $this->updateInterceptors($data, $obj);
-    }
-
-    /**
-     * Define the allow fields to update.
-     */
-    protected function updateFillable()
-    {
-        //$this->rep->modelCurrent()->fillable($this->updateFillable);
-    }
-
-    /**
-     * Apply the interceptors in data before update.
-     *
-     * @param Collection $data
-     * @param Model $obj
-     * @return array
-     */
-    protected function updateInterceptors(Collection $data, Model $obj)
-    {
         foreach ($this->updateInterceptors as $key => $interceptor) {
             if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class)) {
                 $this->updateInterceptors[$key] = $interceptor = app($interceptor);
             }
             is_object($interceptor) && $interceptor instanceof SaveInterceptor ? $interceptor->apply($data, $obj) : null;
         }
+    }
+
+    /**
+     * Define the allow fields to update.
+     *
+     * @return array
+     */
+    protected function updateFillable()
+    {
+        return $this->updateFillable;
     }
 
     /**
@@ -124,7 +103,7 @@ trait Update
      */
     protected function updateExecute(Collection $data, Model $obj)
     {
-        $obj->fill($data->all());
+        $obj->fill($data->all()); // $data->only($this->updateFillable())
         return $obj->isDirty() ? $obj->save() : false;
     }
 

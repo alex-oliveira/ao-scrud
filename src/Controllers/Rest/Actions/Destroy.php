@@ -8,7 +8,7 @@ trait Destroy
     public function destroy()
     {
         try {
-            $this->api->destroy();
+            $this->api->destroy(collect(request()->route()->parameters()));
         } catch (\Exception $e) {
             throw $e;
         }

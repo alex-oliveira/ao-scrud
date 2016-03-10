@@ -34,9 +34,9 @@ trait Create
      * @return Model
      * @throws \Exception
      */
-    public function create(Collection $data = null)
+    public function create(Collection $data)
     {
-        $this->createPrepare(is_null($data) ? $data = $this->createParams() : $data);
+        $this->createPrepare($data);
 
         $this->tBegin();
         try {
@@ -55,41 +55,11 @@ trait Create
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Return the data of request to registry.
-     *
-     * @return Collection
-     */
-    protected function createParams()
-    {
-        return collect(array_merge(request()->all(), request()->route()->parameters()));
-    }
-
-    /**
      * Run all preparations before create.
      *
      * @param Collection $data
      */
     protected function createPrepare(Collection $data)
-    {
-        $this->createFillable();
-        $this->createInterceptors($data);
-    }
-
-    /**
-     * Define the allow fields to create.
-     */
-    protected function createFillable()
-    {
-        //$this->rep->modelCurrent()->fillable($this->createFillable);
-    }
-
-    /**
-     * Apply the interceptors in data before create.
-     *
-     * @param Collection $data
-     * @return array
-     */
-    protected function createInterceptors(Collection $data)
     {
         foreach ($this->createInterceptors as $key => $interceptor) {
             if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class)) {
@@ -100,6 +70,16 @@ trait Create
     }
 
     /**
+     * Define the allow fields to create.
+     *
+     * @return array
+     */
+    protected function createFillable()
+    {
+        return $this->createFillable;
+    }
+
+    /**
      * Run create command in the repository.
      *
      * @param Collection $data
@@ -107,7 +87,7 @@ trait Create
      */
     protected function createExecute(Collection $data)
     {
-        return $this->rep->create($data->all());
+        return $this->rep->create($data->all()); //$data->only($this->createFillable())
     }
 
 }

@@ -27,7 +27,7 @@ trait Destroy
      * @return bool
      * @throws \Exception
      */
-    public function destroy(Collection $keys = null)
+    public function destroy(Collection $keys)
     {
         $obj = $this->destroySelect($keys);
 
@@ -55,7 +55,7 @@ trait Destroy
      * @param Collection $keys
      * @return Model $obj
      */
-    protected function destroySelect(Collection $keys = null)
+    protected function destroySelect(Collection $keys)
     {
         return $this->read($keys, false);
     }

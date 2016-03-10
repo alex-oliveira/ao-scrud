@@ -43,18 +43,14 @@ trait Read
      * @return Model|null
      * @throws \Exception
      */
-    public function read(Collection $data = null, $readonly = true)
+    public function read(Collection $data, $readonly = true)
     {
-        $this->readPrepare(is_null($data) ? $data = $this->readParams() : $data, $readonly);
+        $this->readPrepare($data, $readonly);
 
         try {
             $obj = $this->readExecute($data);
         } catch (\Exception $e) {
             throw $e;
-        }
-
-        if (is_null($obj)) {
-            abort(404, 'Model not found');
         }
 
         return $obj;
@@ -63,16 +59,6 @@ trait Read
     //------------------------------------------------------------------------------------------------------------------
     // SECONDARY METHODS
     //------------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Return the data of request to read.
-     *
-     * @return Collection
-     */
-    protected function readParams()
-    {
-        return collect(request()->route()->parameters());
-    }
 
     /**
      * Run all preparations before read.
@@ -106,11 +92,16 @@ trait Read
      */
     protected function readExecute(Collection $data)
     {
-        return $this->rep->findWhere($data->all())->first();
+        $obj = $this->rep->findWhere($data->all())->first();
+
+        if (is_null($obj))
+            abort(404, 'Model not found');
+
+        return $obj;
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // SECONDARY METHODS
+    // AUXILIARY METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**

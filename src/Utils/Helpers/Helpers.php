@@ -12,14 +12,14 @@ if (!function_exists('params')) {
 
 }
 
-//if (!function_exists('fail')) {
-//
-//    /**
-//     * @return \AoScrud\RestException
-//     */
-//    function fail($code, $message)
-//    {
-//        //return app('fail');
-//    }
-//
-//}
+if (!function_exists('validator')) {
+
+    /**
+     * @return \Illuminate\Validation\Factory
+     */
+    function validator()
+    {
+        return app('validator');
+    }
+
+}
