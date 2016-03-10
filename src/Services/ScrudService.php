@@ -13,23 +13,13 @@ use AoScrud\Utils\Traits\Transactions;
 abstract class ScrudService
 {
 
-    use Search, Create, Read, Update, Destroy;
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    use Transactions;
-
     /**
      * @var ScrudRepository
      */
     protected $rep;
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public static function params()
-    {
-        return collect(array_merge(request()->all(), request()->route()->parameters()));
-    }
+    //------------------------------------------------------------------------------------------------------------------
+
+    use Transactions, Search, Create, Read, Update, Destroy;
 
 }

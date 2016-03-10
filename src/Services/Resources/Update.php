@@ -5,7 +5,6 @@ namespace AoScrud\Services\Resources;
 use AoScrud\Utils\Interceptors\SaveInterceptor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use PhpSpec\Exception\Exception;
 
 trait Update
 {
@@ -34,7 +33,7 @@ trait Update
      * @param Collection $data
      * @param Collection $keys
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function update(Collection $data = null, Collection $keys = null)
     {
@@ -45,7 +44,7 @@ trait Update
         $this->tBegin();
         try {
             $status = $this->updateExecute($data, $obj);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->tRollBack();
             throw $e;
         }

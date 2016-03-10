@@ -5,7 +5,6 @@ namespace AoScrud\Services\Resources;
 use AoScrud\Utils\Interceptors\SaveInterceptor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use PhpSpec\Exception\Exception;
 
 trait Create
 {
@@ -33,7 +32,7 @@ trait Create
      *
      * @param Collection|null $data
      * @return Model
-     * @throws Exception
+     * @throws \Exception
      */
     public function create(Collection $data = null)
     {
@@ -42,7 +41,7 @@ trait Create
         $this->tBegin();
         try {
             $obj = $this->createExecute($data);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->tRollBack();
             throw $e;
         }

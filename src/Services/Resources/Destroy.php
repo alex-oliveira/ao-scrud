@@ -14,7 +14,7 @@ trait Destroy
      *
      * @var DestroyInterceptor[]
      */
-    protected $createInterceptors = [];
+    protected $destroyInterceptors = [];
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
@@ -29,20 +29,20 @@ trait Destroy
      */
     public function destroy(Collection $keys = null)
     {
-//        $obj = $this->destroySelect($keys);
-//
-//        $this->destroyPrepare($obj);
-//
-//        $this->tBegin();
-//        try {
-//            $status = $this->destroyExecute($obj);
-//        } catch (\Exception $e) {
-//            $this->tRollBack();
-//            throw $e;
-//        }
-//        $this->tCommit();
-//
-//        return $status;
+        $obj = $this->destroySelect($keys);
+
+        $this->destroyPrepare($obj);
+
+        $this->tBegin();
+        try {
+            $status = $this->destroyExecute($obj);
+        } catch (\Exception $e) {
+            $this->tRollBack();
+            throw $e;
+        }
+        $this->tCommit();
+
+        return $status;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -68,11 +68,11 @@ trait Destroy
      */
     protected function destroyPrepare(Model $obj)
     {
-        if (isset($this->destroyChecker)) {
-            if (is_string($this->destroyChecker) && is_subclass_of($this->destroyChecker, CheckerAbstract::class)) {
-                $this->destroyChecker = app($this->destroyChecker);
+        foreach ($this->destroyInterceptors as $key => $interceptor) {
+            if (is_string($interceptor) && is_subclass_of($interceptor, DestroyInterceptor::class)) {
+                $this->destroyInterceptors[$key] = $interceptor = app($interceptor);
             }
-            is_object($this->destroyChecker) ? $this->destroyChecker->check($obj) : null;
+            is_object($interceptor) && $interceptor instanceof DestroyInterceptor ? $interceptor->apply($obj) : null;
         }
     }
 
