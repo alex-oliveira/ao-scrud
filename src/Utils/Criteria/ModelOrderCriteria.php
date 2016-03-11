@@ -2,10 +2,10 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use Prettus\Repository\Contracts\CriteriaInterface;
+use Illuminate\Support\Collection;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
-class ModelOrderCriteria implements CriteriaInterface
+class ModelOrderCriteria extends BaseSearchCriteria
 {
 
     /**
@@ -15,21 +15,21 @@ class ModelOrderCriteria implements CriteriaInterface
 
     /**
      * @param array $allowOrders
+     * @param Collection $data
      */
-    public function __construct(array $allowOrders = [])
+    public function __construct(array $allowOrders = [], Collection $data = null)
     {
         $this->allowOrders = $allowOrders;
+        $this->data = is_null($data) ? collect(request()->only(['order', 'sort'])) : $data;
     }
 
     public function apply($model, RepositoryInterface $repository)
     {
-        if (empty($this->allowOrders)) {
+        if (empty($this->allowOrders))
             return $model;
-        }
 
-        if (($order = request()->get('order', false)) && in_array($order, $this->allowOrders)) {
-            $model = $model->orderBy($order, (request()->get('sort') == 'desc' ? 'desc' : 'asc'));
-        }
+        if (($order = $this->data()->get('order', false)) && in_array($order, $this->allowOrders))
+            $model = $model->orderBy($order, ($this->data()->get('sort') == 'desc' ? 'desc' : 'asc'));
 
         return $model;
     }

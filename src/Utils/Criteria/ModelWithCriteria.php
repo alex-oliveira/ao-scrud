@@ -2,10 +2,10 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use Prettus\Repository\Contracts\CriteriaInterface;
+use Illuminate\Support\Collection;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
-class ModelWithCriteria implements CriteriaInterface
+class ModelWithCriteria extends BaseSearchCriteria
 {
 
     /**
@@ -22,25 +22,24 @@ class ModelWithCriteria implements CriteriaInterface
 
     /**
      * @param array $allowWith
+     * @param Collection $data
      */
-    public function __construct(array $allowWith = [])
+    public function __construct(array $allowWith = [], Collection $data = null)
     {
         $this->allowWith = $allowWith;
+        $this->data = is_null($data) ? collect(request()->only(['with'])) : $data;
     }
 
     public function apply($model, RepositoryInterface $repository)
     {
-        if (empty($this->allowWith)) {
+        if (empty($this->allowWith))
             return $model;
-        }
 
-        if ($with = request()->get('with', false)) {
+        if ($with = $this->data()->get('with', false))
             $with = array_intersect(explode(';', $with), $this->allowWith);
-        }
 
-        if ($with && count($with) > 0) {
+        if ($with && count($with) > 0)
             $model = $model->with($with);
-        }
 
         return $model;
     }

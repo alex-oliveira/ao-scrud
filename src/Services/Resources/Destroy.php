@@ -23,13 +23,13 @@ trait Destroy
     /**
      * Main method to registry in the repository.
      *
-     * @param Collection $keys
+     * @param Collection $data
      * @return bool
      * @throws \Exception
      */
-    public function destroy(Collection $keys)
+    public function destroy(Collection $data)
     {
-        $obj = $this->destroySelect($keys);
+        $obj = $this->destroySelect($data);
 
         $this->destroyPrepare($obj);
 
@@ -52,12 +52,12 @@ trait Destroy
     /**
      * Return the object the should be destroyed.
      *
-     * @param Collection $keys
+     * @param Collection $data
      * @return Model $obj
      */
-    protected function destroySelect(Collection $keys)
+    protected function destroySelect(Collection $data)
     {
-        return $this->read($keys, false);
+        return $this->read(collect($data->all()), false);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace AoScrud\Services\Resources;
 
+use AoScrud\Utils\Criteria\BaseSearchCriteria;
 use AoScrud\Utils\Criteria\ModelColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelOrderCriteria;
 use AoScrud\Utils\Criteria\ModelRulesCriteria;
@@ -95,16 +96,20 @@ trait Search
      *
      * @param Collection $data
      */
-    protected function searchPrepare(Collection $data = null)
+    protected function searchPrepare(Collection $data)
     {
-        foreach ($this->searchCriteria as $criteria)
-            $this->rep->pushCriteria($criteria);
+        foreach ($this->searchCriteria as $criteria){
+            if($criteria instanceof BaseSearchCriteria){
+                $criteria->setData($data);
+                $this->rep->pushCriteria($criteria);
+            }
+        }
 
-        $this->rep->pushCriteria(new RouteParamsCriteria());
-        $this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules()));
-        $this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns()));
-        $this->rep->pushCriteria(new ModelWithCriteria($this->getSearchWith()));
-        $this->rep->pushCriteria(new ModelOrderCriteria($this->getSearchOrders()));
+        $this->rep->pushCriteria(new RouteParamsCriteria($data));
+        $this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules(), $data));
+        $this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns(), $data));
+        $this->rep->pushCriteria(new ModelWithCriteria($this->getSearchWith(), $data));
+        $this->rep->pushCriteria(new ModelOrderCriteria($this->getSearchOrders(), $data));
     }
 
     /**

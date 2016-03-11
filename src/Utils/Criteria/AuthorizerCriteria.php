@@ -2,16 +2,16 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use Illuminate\Support\Facades\Auth;
+use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 use Prettus\Repository\Contracts\RepositoryInterface;
 use Prettus\Repository\Contracts\CriteriaInterface;
 
-class MyCriteria implements CriteriaInterface
+class AuthorizerCriteria implements CriteriaInterface
 {
 
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('user_id', '=', Auth::user()->id);
+        return $model->where('user_id', '=', Authorizer::getResourceOwnerId());
     }
 
 }

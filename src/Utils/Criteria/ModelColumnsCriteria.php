@@ -2,10 +2,10 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use Prettus\Repository\Contracts\CriteriaInterface;
+use Illuminate\Support\Collection;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
-class ModelColumnsCriteria implements CriteriaInterface
+class ModelColumnsCriteria extends BaseSearchCriteria
 {
 
     /**
@@ -22,27 +22,26 @@ class ModelColumnsCriteria implements CriteriaInterface
 
     /**
      * @param array $allowColumns
+     * @param Collection $data
      */
-    public function __construct(array $allowColumns = [])
+    public function __construct(array $allowColumns = [], Collection $data = null)
     {
         $this->allowColumns = $allowColumns;
+        $this->data = is_null($data) ? collect(request()->only(['columns'])) : $data;
     }
 
     public function apply($model, RepositoryInterface $repository)
     {
-        if (empty($this->allowColumns)) {
+        if (empty($this->allowColumns))
             return $model;
-        }
 
-        if ($columns = request()->get('columns', false)) {
+        if ($columns = $this->data()->get('columns', false))
             $columns = array_intersect(explode(';', $columns), $this->allowColumns);
-        }
 
-        if ($columns && count($columns) > 0) {
+        if ($columns && count($columns) > 0)
             $model = $model->select($columns);
-        } else {
+        else
             $model = $model->select($this->allowColumns);
-        }
 
         return $model;
     }

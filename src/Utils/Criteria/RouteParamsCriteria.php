@@ -2,15 +2,23 @@
 
 namespace AoScrud\Utils\Criteria;
 
+use Illuminate\Support\Collection;
 use Prettus\Repository\Contracts\RepositoryInterface;
-use Prettus\Repository\Contracts\CriteriaInterface;
 
-class RouteParamsCriteria implements CriteriaInterface
+class RouteParamsCriteria extends BaseSearchCriteria
 {
+
+    /**
+     * @param Collection $data
+     */
+    public function __construct(Collection $data = null)
+    {
+        $this->data = is_null($data) ? collect(request()->route()->parameters()) : $data;
+    }
 
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where(request()->route()->parameters());
+        return $model->where($this->data()->only(array_keys(request()->route()->parameters()))->all());
     }
 
 }

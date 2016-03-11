@@ -31,13 +31,12 @@ trait Update
      * Main method to update in the repository.
      *
      * @param Collection $data
-     * @param Collection $keys
      * @return bool
      * @throws \Exception
      */
-    public function update(Collection $data, Collection $keys)
+    public function update(Collection $data)
     {
-        $obj = $this->updateSelect($keys);
+        $obj = $this->updateSelect($data);
 
         $this->updatePrepare($data, $obj);
 
@@ -60,12 +59,12 @@ trait Update
     /**
      * Return the object the should be updated.
      *
-     * @param Collection $keys
+     * @param Collection $data
      * @return Model $obj
      */
-    protected function updateSelect(Collection $keys)
+    protected function updateSelect(Collection $data)
     {
-        return $this->read($keys, false);
+        return $this->read(collect($data->all()), false);
     }
 
     /**

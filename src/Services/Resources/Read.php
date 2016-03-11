@@ -11,6 +11,13 @@ trait Read
 {
 
     /**
+     * The read's keys.
+     *
+     * @var array
+     */
+    protected $readKeys = ['id'];
+
+    /**
      * The read's criteria.
      *
      * @var array
@@ -38,17 +45,17 @@ trait Read
     /**
      * Main method to read in the repository.
      *
-     * @param Collection $keys
+     * @param Collection $data
      * @param bool $readonly
      * @return Model|null
      * @throws \Exception
      */
-    public function read(Collection $keys, $readonly = true)
+    public function read(Collection $data, $readonly = true)
     {
-        $this->readPrepare($keys, $readonly);
+        $this->readPrepare($data, $readonly);
 
         try {
-            $obj = $this->readExecute($keys);
+            $obj = $this->readExecute($data);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -63,13 +70,25 @@ trait Read
     /**
      * Run all preparations before read.
      *
-     * @param Collection $keys
+     * @param Collection $data
      * @param bool $readonly
      */
-    protected function readPrepare(Collection $keys, $readonly = true)
+    protected function readPrepare(Collection $data, $readonly = true)
     {
-        $this->readCriteria[] = new ModelColumnsCriteria($this->getReadColumns());
-        $this->readCriteria[] = new ModelWithCriteria($this->getReadWith());
+        $this->readCriteria(collect($data->all()), $readonly);
+        $this->readFilter($data, $readonly);
+    }
+
+    /**
+     * Apply criteria.
+     *
+     * @param Collection $data
+     * @param bool $readonly
+     */
+    protected function readCriteria(Collection $data, $readonly = true)
+    {
+        $this->readCriteria[] = new ModelColumnsCriteria($this->getReadColumns(), $data);
+        $this->readCriteria[] = new ModelWithCriteria($this->getReadWith(), $data);
 
         if ($readonly) {
             foreach ($this->readCriteria as $criteria)
@@ -85,14 +104,25 @@ trait Read
     }
 
     /**
+     * Apply key filter.
+     *
+     * @param Collection $data
+     * @param bool $readonly
+     */
+    protected function readFilter(Collection $data, $readonly = true)
+    {
+        $data->forget(array_diff($data->keys()->all(), $this->readKeys));
+    }
+
+    /**
      * Run find command in the repository.
      *
-     * @param Collection $keys
+     * @param Collection $data
      * @return Model|null
      */
-    protected function readExecute(Collection $keys)
+    protected function readExecute(Collection $data)
     {
-        $obj = $this->rep->findWhere($keys->all())->first();
+        $obj = $this->rep->findWhere($data->all())->first();
 
         if (is_null($obj))
             abort(404, 'Model not found');

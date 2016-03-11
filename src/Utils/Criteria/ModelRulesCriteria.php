@@ -4,10 +4,9 @@ namespace AoScrud\Utils\Criteria;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
-use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
-class ModelRulesCriteria implements CriteriaInterface
+class ModelRulesCriteria extends BaseSearchCriteria
 {
 
     /**
@@ -17,17 +16,18 @@ class ModelRulesCriteria implements CriteriaInterface
 
     /**
      * @param array $rules
+     * @param Collection $data
      */
-    public function __construct(array $rules = [])
+    public function __construct(array $rules = [], Collection $data = null)
     {
         $this->rules = $rules;
+        $this->data = is_null($data) ? collect(request()->only(['columns'])) : $data;
     }
 
     public function apply($model, RepositoryInterface $repository)
     {
-        if (empty($this->rules)) {
+        if (empty($this->rules))
             return $model;
-        }
 
         $model = $model->where(function ($query) {
             $this->rules($query, $this->rules);
@@ -96,7 +96,7 @@ class ModelRulesCriteria implements CriteriaInterface
     {
         $configs = $this->configs($rule);
 
-        $value = trim(request()->get($configs->get('get', $field), ''));
+        $value = trim($this->data()->get($configs->get('get', $field), ''));
         if ($value == '')
             return;
 
@@ -130,7 +130,7 @@ class ModelRulesCriteria implements CriteriaInterface
     {
         $configs = $this->configs($rule);
 
-        $value = trim(request()->get($configs->get('get', $field), ''));
+        $value = trim($this->data()->get($configs->get('get', $field), ''));
         if ($value == '')
             return;
 
