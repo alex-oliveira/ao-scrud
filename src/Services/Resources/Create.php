@@ -30,7 +30,7 @@ trait Create
     /**
      * Main method to registry in the repository.
      *
-     * @param Collection|null $data
+     * @param Collection $data
      * @return Model
      * @throws \Exception
      */

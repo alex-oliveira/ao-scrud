@@ -38,17 +38,17 @@ trait Read
     /**
      * Main method to read in the repository.
      *
-     * @param Collection $data
+     * @param Collection $keys
      * @param bool $readonly
      * @return Model|null
      * @throws \Exception
      */
-    public function read(Collection $data, $readonly = true)
+    public function read(Collection $keys, $readonly = true)
     {
-        $this->readPrepare($data, $readonly);
+        $this->readPrepare($keys, $readonly);
 
         try {
-            $obj = $this->readExecute($data);
+            $obj = $this->readExecute($keys);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -63,10 +63,10 @@ trait Read
     /**
      * Run all preparations before read.
      *
-     * @param Collection $data
+     * @param Collection $keys
      * @param bool $readonly
      */
-    protected function readPrepare(Collection $data, $readonly = true)
+    protected function readPrepare(Collection $keys, $readonly = true)
     {
         $this->readCriteria[] = new ModelColumnsCriteria($this->getReadColumns());
         $this->readCriteria[] = new ModelWithCriteria($this->getReadWith());
@@ -87,12 +87,12 @@ trait Read
     /**
      * Run find command in the repository.
      *
-     * @param Collection $data
+     * @param Collection $keys
      * @return Model|null
      */
-    protected function readExecute(Collection $data)
+    protected function readExecute(Collection $keys)
     {
-        $obj = $this->rep->findWhere($data->all())->first();
+        $obj = $this->rep->findWhere($keys->all())->first();
 
         if (is_null($obj))
             abort(404, 'Model not found');

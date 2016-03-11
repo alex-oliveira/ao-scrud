@@ -70,7 +70,7 @@ trait Search
      * Main method to read in the repository.
      *
      * @param Collection $data
-     * @return Model[]|null
+     * @return mixed
      * @throws \Exception
      */
     public function search(Collection $data)

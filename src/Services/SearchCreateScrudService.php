@@ -8,9 +8,9 @@ use AoScrud\Services\Resources\Read;
 use AoScrud\Services\Resources\Update;
 use AoScrud\Services\Resources\Destroy;
 
-abstract class ScrudService extends BaseScrudService
+abstract class SearchCreateScrudService extends BaseScrudService
 {
 
-    use Search, Create, Read, Update, Destroy;
+    use Search, Create;
 
 }
