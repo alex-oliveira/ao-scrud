@@ -103,7 +103,7 @@ trait Update
      */
     protected function updateExecute(Collection $data, Model $obj)
     {
-        $obj->fill($data->all()); // $data->only($this->updateFillable())
+        $obj->fill($data->only($this->updateFillable())->all());
         return $obj->isDirty() ? $obj->save() : false;
     }
 

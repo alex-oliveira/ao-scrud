@@ -87,7 +87,7 @@ trait Create
      */
     protected function createExecute(Collection $data)
     {
-        return $this->rep->create($data->all()); //$data->only($this->createFillable())
+        return $this->rep->create($data->only($this->createFillable())->all());
     }
 
 }
