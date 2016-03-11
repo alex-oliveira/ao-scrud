@@ -36,7 +36,7 @@ class ModelColumnsCriteria extends BaseSearchCriteria
             return $model;
 
         if ($columns = $this->data()->get('columns', false))
-            $columns = array_intersect(explode(';', $columns), $this->allowColumns);
+            $columns = array_intersect(explode(',', $columns), $this->allowColumns);
 
         if ($columns && count($columns) > 0)
             $model = $model->select($columns);

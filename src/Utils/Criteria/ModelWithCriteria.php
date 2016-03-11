@@ -35,11 +35,29 @@ class ModelWithCriteria extends BaseSearchCriteria
         if (empty($this->allowWith))
             return $model;
 
-        if ($with = $this->data()->get('with', false))
-            $with = array_intersect(explode(';', $with), $this->allowWith);
+        $approved = [];
 
-        if ($with && count($with) > 0)
-            $model = $model->with($with);
+        $withs = explode(';', $this->data()->get('with', ''));
+        foreach ($withs as $with) {
+            $parts = explode(':', $with);
+
+            if (!array_key_exists($parts[0], $this->allowWith))
+                continue;
+
+            $columns = $this->allowWith[$parts[0]];
+
+            if (isset($parts[1]) && strlen($parts[1]) > 0) {
+                $custom = array_intersect(explode(',', $parts[1]), $this->allowWith[$parts[0]]);
+                count($custom) > 0 ? $columns = $custom : null;
+            }
+
+            $approved[$parts[0]] = function ($query) use ($columns) {
+                $query->select($columns);
+            };
+        }
+
+        if (count($approved) > 0)
+            $model = $model->with($approved);
 
         return $model;
     }
