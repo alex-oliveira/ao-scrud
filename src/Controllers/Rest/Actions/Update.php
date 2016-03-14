@@ -8,7 +8,7 @@ trait Update
     public function update()
     {
         try {
-            $changed = $this->api->update(collect(array_merge(request()->all(), request()->route()->parameters())));
+            $changed = $this->api->update(array_merge(request()->all(), request()->route()->parameters()));
         } catch (\Exception $e) {
             throw $e;
         }

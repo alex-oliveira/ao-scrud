@@ -8,7 +8,7 @@ trait Index
     public function index()
     {
         try {
-            $data = $this->api->search(collect(array_merge(request()->all(), request()->route()->parameters())));
+            $data = $this->api->search(array_merge(request()->all(), request()->route()->parameters()));
         } catch (\Exception $e) {
             throw $e;
         }

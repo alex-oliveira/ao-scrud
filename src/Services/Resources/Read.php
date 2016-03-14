@@ -11,6 +11,13 @@ trait Read
 {
 
     /**
+     * Mark read como master resource in execution.
+     *
+     * @var bool
+     */
+    protected $readMaster = true;
+
+    /**
      * The read's keys.
      *
      * @var array
@@ -45,20 +52,26 @@ trait Read
     /**
      * Main method to read in the repository.
      *
-     * @param Collection $data
-     * @param bool $readonly
+     * @param array $data
+     * @param bool $master
      * @return Model|null
      * @throws \Exception
      */
-    public function read(Collection $data, $readonly = true)
+    public function read(array $data, $master = false)
     {
-        $this->readPrepare($data, $readonly);
+        $data = collect($data);
+        $this->readMaster = $master;
+        $this->readPrepare($data);
 
         try {
             $obj = $this->readExecute($data);
         } catch (\Exception $e) {
+            $this->modelReset();
             throw $e;
         }
+        $this->modelReset();
+
+        // DISPATCH EVENT
 
         return $obj;
     }
@@ -71,45 +84,42 @@ trait Read
      * Run all preparations before read.
      *
      * @param Collection $data
-     * @param bool $readonly
      */
-    protected function readPrepare(Collection $data, $readonly = true)
+    protected function readPrepare(Collection $data)
     {
-        $this->readCriteria(collect($data->all()), $readonly);
-        $this->readFilter($data, $readonly);
+        $this->readCriteria(collect($data->all()));
+        $this->readFilter($data);
     }
 
     /**
      * Apply criteria.
      *
      * @param Collection $data
-     * @param bool $readonly
      */
-    protected function readCriteria(Collection $data, $readonly = true)
+    protected function readCriteria(Collection $data)
     {
-        $this->readCriteria[] = new ModelColumnsCriteria($this->getReadColumns(), $data);
-        $this->readCriteria[] = new ModelWithCriteria($this->getReadWith(), $data);
-
-        if ($readonly) {
-            foreach ($this->readCriteria as $criteria)
-                $this->rep->pushCriteria($criteria);
-        } else {
-            foreach ($this->readCriteria as $criteria) {
-                if (isset($criteria->readonly) && $criteria->readonly == true)
-                    continue;
-
-                $this->rep->pushCriteria($criteria);
-            }
-        }
+//        $this->readCriteria[] = new ModelColumnsCriteria($this->readColumns, $data);
+//        $this->readCriteria[] = new ModelWithCriteria($this->readWith, $data);
+//
+//        if ($master) {
+//            foreach ($this->readCriteria as $criteria)
+//                $this->rep->pushCriteria($criteria);
+//        } else {
+//            foreach ($this->readCriteria as $criteria) {
+//                if (isset($criteria->readonly) && $criteria->readonly == true)
+//                    continue;
+//
+//                $this->rep->pushCriteria($criteria);
+//            }
+//        }
     }
 
     /**
      * Apply key filter.
      *
      * @param Collection $data
-     * @param bool $readonly
      */
-    protected function readFilter(Collection $data, $readonly = true)
+    protected function readFilter(Collection $data)
     {
         $data->forget(array_diff($data->keys()->all(), $this->readKeys));
     }
@@ -122,36 +132,12 @@ trait Read
      */
     protected function readExecute(Collection $data)
     {
-        $obj = $this->rep->findWhere($data->all())->first();
+        $obj = $this->model()->where($data->all())->first();
 
         if (is_null($obj))
             abort(404, 'Model not found');
 
         return $obj;
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    // AUXILIARY METHODS
-    //------------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Return the columns' names allowed.
-     *
-     * @return array
-     */
-    public function getReadColumns()
-    {
-        return $this->readColumns;
-    }
-
-    /**
-     * Return the withs' names allowed.
-     *
-     * @return array
-     */
-    public function getReadWith()
-    {
-        return $this->readWith;
     }
 
 }

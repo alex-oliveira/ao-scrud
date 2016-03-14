@@ -2,19 +2,12 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Interceptors\SaveInterceptor;
+use AoScrud\Utils\Interceptors\BaseInterceptor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 trait Create
 {
-
-    /**
-     * The allow fields to create.
-     *
-     * @var array
-     */
-    protected $createFillable = [];
 
     /**
      * The interceptor class to registry in the repository.
@@ -23,6 +16,13 @@ trait Create
      */
     protected $createInterceptors = [];
 
+    /**
+     * The allow fields to create.
+     *
+     * @var array
+     */
+    protected $createFillable = [];
+
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
@@ -30,12 +30,13 @@ trait Create
     /**
      * Main method to registry in the repository.
      *
-     * @param Collection $data
+     * @param array $data
      * @return Model
      * @throws \Exception
      */
-    public function create(Collection $data)
+    public function create(array $data)
     {
+        $data = collect($data);
         $this->createPrepare($data);
 
         $this->tBegin();
@@ -43,9 +44,13 @@ trait Create
             $obj = $this->createExecute($data);
         } catch (\Exception $e) {
             $this->tRollBack();
+            $this->modelReset();
             throw $e;
         }
         $this->tCommit();
+        $this->modelReset();
+
+        // DISPATCH EVENT
 
         return $obj;
     }
@@ -61,13 +66,45 @@ trait Create
      */
     protected function createPrepare(Collection $data)
     {
+        $this->createInterceptors($data);
+    }
+
+    /**
+     * Apply interceptors to create.
+     *
+     * @param Collection $data
+     */
+    protected function createInterceptors(Collection $data)
+    {
         foreach ($this->createInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class))
+            if (is_string($interceptor) && is_subclass_of($interceptor, BaseInterceptor::class))
                 $this->createInterceptors[$key] = $interceptor = app($interceptor);
 
-            if (is_object($interceptor) && $interceptor instanceof SaveInterceptor)
-                $interceptor->apply($data);
+            if (is_object($interceptor) && $interceptor instanceof BaseInterceptor)
+                $interceptor->apply($this, $data);
         }
+    }
+
+    /**
+     * Apply validation to create.
+     *
+     * @param Collection $data
+     * @return array
+     */
+    protected function createValidate(Collection $data)
+    {
+        validate($data->all(), $this->createRules($data));
+    }
+
+    /**
+     * Return the validation rules to create.
+     *
+     * @param Collection $data
+     * @return array
+     */
+    protected function createRules(Collection $data)
+    {
+        return [];
     }
 
     /**
@@ -88,7 +125,7 @@ trait Create
      */
     protected function createExecute(Collection $data)
     {
-        return $this->rep->create($data->only($this->createFillable())->all());
+        return $this->model()->create($data->only($this->createFillable())->all());
     }
 
 }

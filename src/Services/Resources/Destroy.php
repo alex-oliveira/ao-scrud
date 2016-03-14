@@ -2,7 +2,7 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Interceptors\DestroyInterceptor;
+use AoScrud\Utils\Interceptors\BaseInterceptor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -23,24 +23,27 @@ trait Destroy
     /**
      * Main method to registry in the repository.
      *
-     * @param Collection $data
+     * @param array $data
      * @return bool
      * @throws \Exception
      */
-    public function destroy(Collection $data)
+    public function destroy(array $data)
     {
+        $data = collect($data);
         $obj = $this->destroySelect($data);
 
-        $this->destroyPrepare($obj);
+        $this->destroyPrepare($data, $obj);
 
         $this->tBegin();
         try {
             $status = $this->destroyExecute($obj);
         } catch (\Exception $e) {
             $this->tRollBack();
+            $this->modelReset();
             throw $e;
         }
         $this->tCommit();
+        $this->modelReset();
 
         return $status;
     }
@@ -57,22 +60,34 @@ trait Destroy
      */
     protected function destroySelect(Collection $data)
     {
-        return $this->read(collect($data->all()), false);
+        return $this->read($data->all());
     }
 
     /**
      * Run all preparations before destroy.
      *
+     * @param Collection $data
      * @param Model $obj
-     * @return bool
      */
-    protected function destroyPrepare(Model $obj)
+    protected function destroyPrepare(Collection $data, Model $obj)
+    {
+        $this->destroyInterceptors($data, $obj);
+    }
+
+    /**
+     * Apply interceptors to destroy.
+     *
+     * @param Collection $data
+     * @param Model $obj
+     */
+    protected function destroyInterceptors(Collection $data, Model $obj)
     {
         foreach ($this->destroyInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, DestroyInterceptor::class))
+            if (is_string($interceptor) && is_subclass_of($interceptor, BaseInterceptor::class))
                 $this->destroyInterceptors[$key] = $interceptor = app($interceptor);
 
-            is_object($interceptor) && $interceptor instanceof DestroyInterceptor ? $interceptor->apply($obj) : null;
+            if (is_object($interceptor) && $interceptor instanceof BaseInterceptor)
+                $interceptor->apply($this, $data, $obj);
         }
     }
 

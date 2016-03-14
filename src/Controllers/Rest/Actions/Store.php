@@ -8,7 +8,7 @@ trait Store
     public function store()
     {
         try {
-            $data = $this->api->create(collect(array_merge(request()->all(), request()->route()->parameters())));
+            $data = $this->api->create(array_merge(request()->all(), request()->route()->parameters()));
         } catch (\Exception $e) {
             throw $e;
         }

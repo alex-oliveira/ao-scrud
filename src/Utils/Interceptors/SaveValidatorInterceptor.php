@@ -2,51 +2,29 @@
 
 namespace AoScrud\Utils\Interceptors;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-
 abstract class SaveValidatorInterceptor extends SaveInterceptor
 {
 
-    protected $names;
-    protected $messages;
-
     /**
-     * @param $data Collection
-     * @param $obj Model
+     * Return rules to validation.
+     *
+     * @param $service \AoScrud\Services\BaseScrudService
+     * @param $data \Illuminate\Support\Collection
+     * @param $obj \Illuminate\Database\Eloquent\Model|mull
      * @return array
      */
-    abstract protected function rules(Collection $data, Model $obj = null);
+    abstract protected function rules($service, $data, $obj = null);
 
     /**
-     * @return \Illuminate\Validation\Factory
-     */
-    protected function validator()
-    {
-        return app('validator');
-    }
-
-    /**
-     * Responsible method for validate the data of the registry.
+     * Main method to intercept data.
      *
-     * @param $data Collection
-     * @param $obj Model
+     * @param $service \AoScrud\Services\BaseScrudService
+     * @param $data \Illuminate\Support\Collection
+     * @param $obj \Illuminate\Database\Eloquent\Model|mull
      */
-    public function apply(Collection $data, Model $obj = null)
+    public function apply($service, $data, $obj = null)
     {
-        $validator = $this->validator()->make($data->all(), $this->rules($data, $obj), $this->messages(), $this->names());
-        if ($validator->fails())
-            abort(412, json_encode($validator->errors()->all()));
-    }
-
-    protected function names()
-    {
-        return [];
-    }
-
-    protected function messages()
-    {
-        return [];
+        validate($data->all(), $this->rules($service, $data, $obj)); // , $service->messages(), $service->labels());
     }
 
 }

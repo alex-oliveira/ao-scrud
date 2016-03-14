@@ -70,12 +70,13 @@ trait Search
     /**
      * Main method to read in the repository.
      *
-     * @param Collection $data
+     * @param array $data
      * @return mixed
      * @throws \Exception
      */
-    public function search(Collection $data)
+    public function search(array $data)
     {
+        $data = collect($data);
         $this->searchPrepare($data);
 
         try {
@@ -98,8 +99,8 @@ trait Search
      */
     protected function searchPrepare(Collection $data)
     {
-        foreach ($this->searchCriteria as $criteria){
-            if($criteria instanceof BaseSearchCriteria){
+        foreach ($this->searchCriteria as $criteria) {
+            if ($criteria instanceof BaseSearchCriteria) {
                 $criteria->setData($data);
                 $this->rep->pushCriteria($criteria);
             }
