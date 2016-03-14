@@ -69,9 +69,9 @@ trait Destroy
     protected function destroyPrepare(Model $obj)
     {
         foreach ($this->destroyInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, DestroyInterceptor::class)) {
+            if (is_string($interceptor) && is_subclass_of($interceptor, DestroyInterceptor::class))
                 $this->destroyInterceptors[$key] = $interceptor = app($interceptor);
-            }
+
             is_object($interceptor) && $interceptor instanceof DestroyInterceptor ? $interceptor->apply($obj) : null;
         }
     }

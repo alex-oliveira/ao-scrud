@@ -49,6 +49,10 @@ trait Update
         }
         $this->tCommit();
 
+        if ($status) {
+            // dispatch event
+        }
+
         return $status;
     }
 
@@ -76,10 +80,11 @@ trait Update
     protected function updatePrepare(Collection $data, Model $obj)
     {
         foreach ($this->updateInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class)) {
+            if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class))
                 $this->updateInterceptors[$key] = $interceptor = app($interceptor);
-            }
-            is_object($interceptor) && $interceptor instanceof SaveInterceptor ? $interceptor->apply($data, $obj) : null;
+
+            if (is_object($interceptor) && $interceptor instanceof SaveInterceptor)
+                $interceptor->apply($data, $obj);
         }
     }
 

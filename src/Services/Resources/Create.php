@@ -62,10 +62,11 @@ trait Create
     protected function createPrepare(Collection $data)
     {
         foreach ($this->createInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class)) {
+            if (is_string($interceptor) && is_subclass_of($interceptor, SaveInterceptor::class))
                 $this->createInterceptors[$key] = $interceptor = app($interceptor);
-            }
-            is_object($interceptor) && $interceptor instanceof SaveInterceptor ? $interceptor->apply($data) : null;
+
+            if (is_object($interceptor) && $interceptor instanceof SaveInterceptor)
+                $interceptor->apply($data);
         }
     }
 

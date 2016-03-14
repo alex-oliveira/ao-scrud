@@ -14,6 +14,7 @@ trait Update
         }
 
         return response()->json([], ($changed ? 200 : 204));
+        //return response()->json([], 204)->header('x-changed', $changed);
     }
 
 }

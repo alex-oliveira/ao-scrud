@@ -23,3 +23,24 @@ if (!function_exists('validator')) {
     }
 
 }
+
+if (!function_exists('validate')) {
+
+    /**
+     * @param array $data
+     * @param array $rules
+     * @param array $messages
+     * @param array $labels
+     * @return \Illuminate\Validation\Validator
+     */
+    function validate(array $data, array $rules, array $messages = [], array $labels = [])
+    {
+        $validator = app('validator')->make($data, $rules, $messages, $labels);
+
+        if ($validator->fails())
+            abort(412, json_encode($validator->errors()->all()));
+
+        return $validator;
+    }
+
+}

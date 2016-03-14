@@ -95,9 +95,9 @@ trait Read
                 $this->rep->pushCriteria($criteria);
         } else {
             foreach ($this->readCriteria as $criteria) {
-                if (isset($criteria->readonly) && $criteria->readonly == true) {
+                if (isset($criteria->readonly) && $criteria->readonly == true)
                     continue;
-                }
+
                 $this->rep->pushCriteria($criteria);
             }
         }
