@@ -2,7 +2,7 @@
 
 namespace AoScrud\Utils\Interceptors;
 
-abstract class SaveValidatorInterceptor extends SaveInterceptor
+abstract class ValidatorInterceptor extends BaseInterceptor
 {
 
     /**

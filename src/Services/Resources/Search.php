@@ -9,6 +9,7 @@ use AoScrud\Utils\Criteria\ModelRulesCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
 use AoScrud\Utils\Criteria\RouteParamsCriteria;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 trait Search
@@ -77,10 +78,12 @@ trait Search
     public function search(array $data)
     {
         $data = collect($data);
-        $this->searchPrepare($data);
+        $model = $this->model();
+
+        $this->searchPrepare($model, $data);
 
         try {
-            $result = $this->searchExecute();
+            $result = $this->searchExecute($model);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -95,45 +98,48 @@ trait Search
     /**
      * Run all preparations before search.
      *
+     * @param Model $model
      * @param Collection $data
      */
-    protected function searchPrepare(Collection $data)
+    protected function searchPrepare(Model $model, Collection $data)
     {
-        foreach ($this->searchCriteria as $criteria) {
-            if ($criteria instanceof BaseSearchCriteria) {
-                $criteria->setData($data);
-                $this->rep->pushCriteria($criteria);
-            }
-        }
+//        foreach ($this->searchCriteria as $criteria) {
+//            if ($criteria instanceof BaseSearchCriteria) {
+//                $criteria->setData($data);
+//                $this->rep->pushCriteria($criteria);
+//            }
+//        }
+//
+//        $this->rep->pushCriteria(new RouteParamsCriteria($data));
+//        $this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules(), $data));
+//        $this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns(), $data));
+//        $this->rep->pushCriteria(new ModelWithCriteria($this->getSearchWith(), $data));
+//        $this->rep->pushCriteria(new ModelOrderCriteria($this->getSearchOrders(), $data));
 
-        $this->rep->pushCriteria(new RouteParamsCriteria($data));
-        $this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules(), $data));
-        $this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns(), $data));
-        $this->rep->pushCriteria(new ModelWithCriteria($this->getSearchWith(), $data));
-        $this->rep->pushCriteria(new ModelOrderCriteria($this->getSearchOrders(), $data));
+        $this->searchLimit($data);
+    }
+
+    /**
+     * Return the search's limit required.
+     *
+     * @param Collection $data
+     */
+    protected function searchLimit(Collection $data)
+    {
+        $limit = $data->get('limit', false);
+        if ($limit && is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= $this->searchLimitMax)
+            $this->searchLimit = $limit;
     }
 
     /**
      * Run find command in the repository.
      *
-     * @return Model[]|null
+     * @param Model $model
+     * @return LengthAwarePaginator
      */
-    protected function searchExecute()
+    protected function searchExecute(Model $model)
     {
-        return $this->rep->paginate($this->searchLimit());
-    }
-
-    /**
-     * Return the search's limit required.
-     * @return int|string
-     */
-    protected function searchLimit()
-    {
-        $limit = request()->get('limit', false);
-        if ($limit && is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= $this->searchLimitMax) {
-            $this->searchLimit = $limit;
-        }
-        return $this->searchLimit;
+        return $model->paginate($this->searchLimit);
     }
 
     //------------------------------------------------------------------------------------------------------------------

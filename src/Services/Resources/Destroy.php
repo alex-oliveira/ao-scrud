@@ -12,7 +12,7 @@ trait Destroy
     /**
      * The interceptor class to registry in the repository.
      *
-     * @var DestroyInterceptor[]
+     * @var BaseInterceptor[]
      */
     protected $destroyInterceptors = [];
 
@@ -39,11 +39,9 @@ trait Destroy
             $status = $this->destroyExecute($obj);
         } catch (\Exception $e) {
             $this->tRollBack();
-            $this->modelReset();
             throw $e;
         }
         $this->tCommit();
-        $this->modelReset();
 
         return $status;
     }

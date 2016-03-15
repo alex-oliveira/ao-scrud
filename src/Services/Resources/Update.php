@@ -12,7 +12,7 @@ trait Update
     /**
      * The interceptor class to update in the repository.
      *
-     * @var SaveInterceptor[]
+     * @var BaseInterceptor[]
      */
     protected $updateInterceptors = [];
 
@@ -45,11 +45,9 @@ trait Update
             $status = $this->updateExecute($data, $obj);
         } catch (\Exception $e) {
             $this->tRollBack();
-            $this->modelReset();
             throw $e;
         }
         $this->tCommit();
-        $this->modelReset();
 
         // DISPATCH EVENT
 

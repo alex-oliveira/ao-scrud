@@ -8,13 +8,12 @@ trait Destroy
     public function destroy()
     {
         try {
-            $changed = $this->api->destroy(array_merge(request()->all(), request()->route()->parameters()));
+            $deleted = $this->api->destroy(array_merge(request()->all(), request()->route()->parameters()));
         } catch (\Exception $e) {
             throw $e;
         }
 
-        return response()->json([], ($changed ? 200 : 204));
-        //return response()->json([], 204)->header('x-changed', $changed);
+        return response()->json(['message' => 'None was deleted.'], ($deleted ? 204 : 200));
     }
 
 }

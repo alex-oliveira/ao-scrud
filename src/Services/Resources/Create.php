@@ -12,7 +12,7 @@ trait Create
     /**
      * The interceptor class to registry in the repository.
      *
-     * @var SaveInterceptor[]
+     * @var BaseInterceptor[]
      */
     protected $createInterceptors = [];
 
@@ -44,11 +44,9 @@ trait Create
             $obj = $this->createExecute($data);
         } catch (\Exception $e) {
             $this->tRollBack();
-            $this->modelReset();
             throw $e;
         }
         $this->tCommit();
-        $this->modelReset();
 
         // DISPATCH EVENT
 

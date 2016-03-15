@@ -8,13 +8,12 @@ trait Update
     public function update()
     {
         try {
-            $changed = $this->api->update(array_merge(request()->all(), request()->route()->parameters()));
+            $updated = $this->api->update(array_merge(request()->all(), request()->route()->parameters()));
         } catch (\Exception $e) {
             throw $e;
         }
 
-        return response()->json([], ($changed ? 200 : 204));
-        //return response()->json([], 204)->header('x-changed', $changed);
+        return response()->json(['message' => 'None was changed.'], ($updated ? 204 : 200));
     }
 
 }

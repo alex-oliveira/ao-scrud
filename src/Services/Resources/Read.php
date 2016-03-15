@@ -59,17 +59,18 @@ trait Read
      */
     public function read(array $data, $master = false)
     {
-        $data = collect($data);
         $this->readMaster = $master;
-        $this->readPrepare($data);
+
+        $model = $this->model();
+        $data = collect($data);
+
+        $this->readPrepare($model, $data);
 
         try {
-            $obj = $this->readExecute($data);
+            $obj = $this->readExecute($model, $data);
         } catch (\Exception $e) {
-            $this->modelReset();
             throw $e;
         }
-        $this->modelReset();
 
         // DISPATCH EVENT
 
@@ -84,10 +85,11 @@ trait Read
      * Run all preparations before read.
      *
      * @param Collection $data
+     * @param Model $model
      */
-    protected function readPrepare(Collection $data)
+    protected function readPrepare(Model $model, Collection $data)
     {
-        $this->readCriteria(collect($data->all()));
+        $this->readCriteria($model, collect($data->all()));
         $this->readFilter($data);
     }
 
@@ -95,11 +97,12 @@ trait Read
      * Apply criteria.
      *
      * @param Collection $data
+     * @param Model $model
      */
-    protected function readCriteria(Collection $data)
+    protected function readCriteria(Model $model, Collection $data)
     {
-//        $this->readCriteria[] = new ModelColumnsCriteria($this->readColumns, $data);
-//        $this->readCriteria[] = new ModelWithCriteria($this->readWith, $data);
+//        $this->readCriteria[] = new ModelColumnsCriteria($model, $this->readColumns, $data);
+//        $this->readCriteria[] = new ModelWithCriteria($model, $this->readWith, $data);
 //
 //        if ($master) {
 //            foreach ($this->readCriteria as $criteria)
@@ -128,11 +131,12 @@ trait Read
      * Run find command in the repository.
      *
      * @param Collection $data
-     * @return Model|null
+     * @param Model $model
+     * @return Model
      */
-    protected function readExecute(Collection $data)
+    protected function readExecute(Model $model, Collection $data)
     {
-        $obj = $this->model()->where($data->all())->first();
+        $obj = $model->where($data->all())->first();
 
         if (is_null($obj))
             abort(404, 'Model not found');

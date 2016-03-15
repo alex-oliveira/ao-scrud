@@ -11,21 +11,21 @@ abstract class BaseScrudService
 
     use Transactions;
 
-    // CONSTRUCT //-----------------------------------------------------------------------------------------------------
-
-    public function __construct()
-    {
-        $this->modelReset();
-    }
-
     // MODEL //---------------------------------------------------------------------------------------------------------
 
     /**
-     * Attribute that store model.
+     * The model.
      *
      * @var Model
      */
-    protected $model;
+    private $model;
+
+    /**
+     * The name model.
+     *
+     * @var Model
+     */
+    protected $modelName;
 
     /**
      * Return the model.
@@ -34,22 +34,7 @@ abstract class BaseScrudService
      */
     public function model()
     {
-        return $this->model;
-    }
-
-    /**
-     * Return the model name.
-     *
-     * @return string
-     */
-    abstract public function modelName();
-
-    /**
-     * Reset the model.
-     */
-    public function modelReset()
-    {
-        $this->model = app()->make($this->modelName());
+        return is_null($this->model) ? $this->model = app()->make($this->modelName) : $this->model;
     }
 
 }
