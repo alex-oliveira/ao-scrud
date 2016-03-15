@@ -2,7 +2,7 @@
 
 namespace AoScrud\Utils\Criteria;
 
-abstract class BaseCriteria
+class RouteParamsCriteria extends BaseCriteria
 {
 
     /**
@@ -11,6 +11,9 @@ abstract class BaseCriteria
      * @param \AoScrud\Services\ScrudService $service
      * @return mixed
      */
-    abstract public function apply($query, $data, $service);
+    public function apply($query, $data, $service)
+    {
+        return $query->where($data->only(array_keys(request()->route()->parameters()))->all());
+    }
 
 }

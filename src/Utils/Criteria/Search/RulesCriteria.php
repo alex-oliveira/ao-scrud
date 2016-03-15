@@ -1,45 +1,47 @@
 <?php
 
-namespace AoScrud\Utils\Criteria;
+namespace AoScrud\Utils\Criteria\Search;
 
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
-use Prettus\Repository\Contracts\RepositoryInterface;
+use AoScrud\Utils\Criteria\BaseCriteria;
 
-class ModelRulesCriteria extends BaseSearchCriteria
+class RulesCriteria extends BaseCriteria
 {
 
     /**
-     * @var array;
+     * @var \Illuminate\Support\Collection
      */
-    protected $rules;
+    private $data;
 
     /**
-     * @param array $rules
-     * @param Collection $data
+     * @var array
      */
-    public function __construct(array $rules = [], Collection $data = null)
-    {
-        $this->rules = $rules;
-        $this->data = is_null($data) ? collect(request()->only(['columns'])) : $data;
-    }
+    private $rules;
 
-    public function apply($model, RepositoryInterface $repository)
+    /**
+     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
+     * @param \Illuminate\Support\Collection $data
+     * @param \AoScrud\Services\ScrudService $service
+     * @return mixed
+     */
+    public function apply($query, $data, $service)
     {
+        $this->data = $data;
+        $this->rules = $service->getSearchRules();
+
         if (empty($this->rules))
-            return $model;
+            return $query;
 
-        $model = $model->where(function ($query) {
+        $query = $query->where(function ($query) {
             $this->rules($query, $this->rules);
         });
 
-        //echo $model->toSql(); exit;
+        //echo $query->toSql(); exit;
 
-        return $model;
+        return $query;
     }
 
     /**
-     * @param Builder $query
+     * @param \Illuminate\Database\Query\Builder $query
      * @param array $rules
      * @param string $where
      */
@@ -71,7 +73,7 @@ class ModelRulesCriteria extends BaseSearchCriteria
 
     /**
      * @param mixed $rules
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     protected function configs($rules = null)
     {
@@ -88,7 +90,7 @@ class ModelRulesCriteria extends BaseSearchCriteria
     }
 
     /**
-     * @param Builder $query
+     * @param \Illuminate\Database\Query\Builder $query
      * @param string $field
      * @param array $rule
      */
@@ -96,33 +98,31 @@ class ModelRulesCriteria extends BaseSearchCriteria
     {
         $configs = $this->configs($rule);
 
-        $value = trim($this->data()->get($configs->get('get', $field), ''));
+        $value = trim($this->data->get($configs->get('get', $field), ''));
         if ($value == '')
             return;
 
         $condition = $configs->get('options');
         $condition = array_shift($condition);
 
-        if (in_array($condition, ['=', '<', '>', '<>', '<=', '>='])) {
+        if (in_array($condition, ['=', '<', '>', '<>', '<=', '>=']))
             $query->where($field, $condition, $value);
 
-        } elseif ($condition == '%like%') {
+        elseif ($condition == '%like%')
             $query->where($field, 'like', "%{$value}%");
 
-        } elseif ($condition == 'like%') {
+        elseif ($condition == 'like%')
             $query->where($field, 'like', "{$value}%");
 
-        } elseif ($condition == '%like') {
+        elseif ($condition == '%like')
             $query->where($field, 'like', "%{$value}");
 
-        } elseif ($condition == 'like') {
+        elseif ($condition == 'like')
             $query->where($field, 'like', "{$value}");
-
-        }
     }
 
     /**
-     * @param Builder $query
+     * @param \Illuminate\Database\Query\Builder $query
      * @param string $field
      * @param array $rule
      */
@@ -130,29 +130,27 @@ class ModelRulesCriteria extends BaseSearchCriteria
     {
         $configs = $this->configs($rule);
 
-        $value = trim($this->data()->get($configs->get('get', $field), ''));
+        $value = trim($this->data->get($configs->get('get', $field), ''));
         if ($value == '')
             return;
 
         $condition = $configs->get('options');
         $condition = array_shift($condition);
 
-        if (in_array($condition, ['=', '<', '>', '<>', '<=', '>='])) {
+        if (in_array($condition, ['=', '<', '>', '<>', '<=', '>=']))
             $query->orWhere($field, $condition, $value);
 
-        } elseif ($condition == '%like%') {
+        elseif ($condition == '%like%')
             $query->orWhere($field, 'like', "%{$value}%");
 
-        } elseif ($condition == 'like%') {
+        elseif ($condition == 'like%')
             $query->orWhere($field, 'like', "{$value}%");
 
-        } elseif ($condition == '%like') {
+        elseif ($condition == '%like')
             $query->orWhere($field, 'like', "%{$value}");
 
-        } elseif ($condition == 'like') {
+        elseif ($condition == 'like')
             $query->orWhere($field, 'like', "{$value}");
-
-        }
     }
 
 }

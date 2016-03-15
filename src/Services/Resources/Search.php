@@ -135,20 +135,6 @@ trait Search
             if ($criteria instanceof BaseCriteria)
                 $this->searchModel = $criteria->apply($this->searchModel, $data, $this);
         }
-
-//        foreach ($this->searchCriteria as $criteria) {
-//            if ($criteria instanceof BaseSearchCriteria) {
-//                $criteria->setData($data);
-//                $this->rep->pushCriteria($criteria);
-//            }
-//        }
-
-        //
-        //$this->rep->pushCriteria(new RouteParamsCriteria($data));
-        //$this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules(), $data));
-        //$this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns(), $data));
-        //$this->rep->pushCriteria(new ModelWithCriteria($this->getSearchWith(), $data));
-        //$this->rep->pushCriteria(new ModelOrderCriteria($this->getSearchOrders(), $data));
     }
 
     /**

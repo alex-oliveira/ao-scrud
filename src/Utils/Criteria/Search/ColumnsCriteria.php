@@ -4,7 +4,7 @@ namespace AoScrud\Utils\Criteria\Search;
 
 use AoScrud\Utils\Criteria\BaseCriteria;
 
-class OrderByCriteria extends BaseCriteria
+class ColumnsCriteria extends BaseCriteria
 {
 
     /**
@@ -15,16 +15,19 @@ class OrderByCriteria extends BaseCriteria
      */
     public function apply($query, $data, $service)
     {
-        $allowOrders = $service->getSearchOrders();
+        $allowColumns = $service->getSearchColumns();
 
-        if (empty($allowOrders))
+        if (empty($allowColumns))
             return $query;
 
-        $order = $allowOrders[0];
-        if (($o = $data->get('order', false)) && in_array($o, $allowOrders))
-            $order = $o;
+        if ($columns = $data->get('columns', false))
+            $columns = array_intersect(explode(',', $columns), $allowColumns);
 
-        return $query->orderBy($order, ($data->get('sort') == 'desc' ? 'desc' : 'asc'));
+        $query = $columns && count($columns) > 0
+            ? $query->select($columns)
+            : $query->select($allowColumns);
+
+        return $query;
     }
 
 }
