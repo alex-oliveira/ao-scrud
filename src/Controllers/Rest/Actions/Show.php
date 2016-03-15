@@ -7,12 +7,7 @@ trait Show
 
     public function show()
     {
-        try {
-            $data = $this->api->read(array_merge(request()->all(), request()->route()->parameters()), true);
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
+        $data = $this->api->read(array_merge(request()->all(), request()->route()->parameters()), true);
         return response()->json($this->toArray($data), 200);
     }
 
