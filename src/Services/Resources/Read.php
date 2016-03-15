@@ -10,6 +10,12 @@ use Illuminate\Support\Collection;
 
 trait Read
 {
+    /**
+     * The object to read.
+     *
+     * @var Model/Relation
+     */
+    protected $readModel;
 
     /**
      * Mark read como master resource in execution.
@@ -62,9 +68,9 @@ trait Read
         $data = collect($data);
         $this->readMaster = $master;
 
-        $query = $this->readQuery();
-        $this->readPrepare($query, $data);
-        $obj = $this->readExecute($query, $data);
+        $this->searchModel($data);
+        $this->readPrepare($data);
+        $obj = $this->readExecute($data);
 
         // DISPATCH EVENT
 
@@ -78,32 +84,30 @@ trait Read
     /**
      * Return the model to read.
      *
-     * @return Model|Relation
+     * @param Collection $data
      */
-    protected function readQuery()
+    protected function readQuery(Collection $data)
     {
-        return $this->model();
+        $this->readModel = $this->model();
     }
 
     /**
      * Run all preparations before read.
      *
-     * @param Model|Relation
      * @param Collection $data
      */
-    protected function readPrepare($query, Collection $data)
+    protected function readPrepare(Collection $data)
     {
-        $this->readCriteria($query, collect($data->all()));
+        $this->readCriteria(collect($data->all()));
         $this->readFilter($data);
     }
 
     /**
      * Apply criteria.
      *
-     * @param Model|Relation
      * @param Collection $data
      */
-    protected function readCriteria($query, Collection $data)
+    protected function readCriteria(Collection $data)
     {
         //$this->readCriteria[] = new ModelColumnsCriteria($model, $this->readColumns, $data);
         //$this->readCriteria[] = new ModelWithCriteria($model, $this->readWith, $data);
@@ -134,13 +138,12 @@ trait Read
     /**
      * Run find command in the repository.
      *
-     * @param Model|Relation $query
      * @param Collection $data
      * @return Model
      */
-    protected function readExecute($query, Collection $data)
+    protected function readExecute(Collection $data)
     {
-        $obj = $query->where($data->all())->first();
+        $obj = $this->readModel->where($data->all())->first();
 
         if (is_null($obj))
             abort(404, 'Model not found');

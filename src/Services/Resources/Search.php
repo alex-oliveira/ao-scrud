@@ -17,6 +17,13 @@ trait Search
 {
 
     /**
+     * The object to search.
+     *
+     * @var Model/Relation
+     */
+    protected $searchModel;
+
+    /**
      * The search's criteria.
      *
      * @var array
@@ -79,9 +86,9 @@ trait Search
     {
         $data = collect($data);
 
-        $query = $this->searchQuery();
-        $this->searchPrepare($query, $data);
-        $result = $this->searchExecute($query);
+        $this->searchModel($data);
+        $this->searchPrepare($data);
+        $result = $this->searchExecute();
 
         // DISPATCH EVENT
 
@@ -95,32 +102,30 @@ trait Search
     /**
      * Return the model to search.
      *
-     * @return Model|Relation
+     * @param Collection $data
      */
-    protected function searchQuery()
+    protected function searchModel(Collection $data)
     {
-        return $this->model();
+        $this->searchModel = $this->model();
     }
 
     /**
      * Run all preparations before search.
      *
-     * @param Model|Relation $query
      * @param Collection $data
      */
-    protected function searchPrepare($query, Collection $data)
+    protected function searchPrepare(Collection $data)
     {
-        $this->searchCriteria($query, $data);
+        $this->searchCriteria($data);
         $this->searchLimit($data);
     }
 
     /**
      * Apply criteria.
      *
-     * @param Model|Relation
      * @param Collection $data
      */
-    protected function searchCriteria($query, Collection $data)
+    protected function searchCriteria(Collection $data)
     {
         //foreach ($this->searchCriteria as $criteria) {
         //    if ($criteria instanceof BaseSearchCriteria) {
@@ -151,12 +156,11 @@ trait Search
     /**
      * Run find command in the repository.
      *
-     * @param Model|Relation $query
      * @return LengthAwarePaginator
      */
-    protected function searchExecute($query)
+    protected function searchExecute()
     {
-        return $query->paginate($this->searchLimit);
+        return $this->searchModel->paginate($this->searchLimit);
     }
 
     //------------------------------------------------------------------------------------------------------------------
