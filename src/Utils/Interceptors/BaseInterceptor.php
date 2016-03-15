@@ -8,9 +8,9 @@ abstract class BaseInterceptor
     /**
      * Main method to intercept data.
      *
-     * @param $service \AoScrud\Services\BaseScrudService
-     * @param $data \Illuminate\Support\Collection
-     * @param $obj \Illuminate\Database\Eloquent\Model|mull
+     * @param \AoScrud\Services\ScrudService $service
+     * @param \Illuminate\Support\Collection $data
+     * @param \Illuminate\Database\Eloquent\Model|mull $obj
      */
     abstract public function apply($service, $data, $obj = null);
 

@@ -2,7 +2,7 @@
 
 namespace AoScrud\Utils\Criteria;
 
-class AuthCriteria extends BaseCriteria
+abstract class BaseCriteria
 {
 
     /**
@@ -11,9 +11,6 @@ class AuthCriteria extends BaseCriteria
      * @param \Illuminate\Support\Collection $data
      * @return mixed
      */
-    public function apply($query, $data, $service)
-    {
-        return $query->where('user_id', USER_ID);
-    }
+    abstract public function apply($query, $data, $service);
 
 }

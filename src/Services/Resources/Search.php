@@ -2,6 +2,7 @@
 
 namespace AoScrud\Services\Resources;
 
+use AoScrud\Utils\Criteria\BaseCriteria;
 use AoScrud\Utils\Criteria\BaseSearchCriteria;
 use AoScrud\Utils\Criteria\ModelColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelOrderCriteria;
@@ -127,12 +128,20 @@ trait Search
      */
     protected function searchCriteria(Collection $data)
     {
-        foreach ($this->searchCriteria as $criteria) {
-            if ($criteria instanceof BaseSearchCriteria) {
-                $criteria->setData($data);
-                $this->rep->pushCriteria($criteria);
-            }
+        foreach ($this->searchCriteria as $key => $criteria) {
+            if (is_string($criteria) && is_subclass_of($criteria, BaseCriteria::class))
+                $this->searchCriteria[$key] = $criteria = app($criteria);
+
+            if ($criteria instanceof BaseCriteria)
+                $this->searchModel = $criteria->apply($this->searchModel, $data, $this);
         }
+
+//        foreach ($this->searchCriteria as $criteria) {
+//            if ($criteria instanceof BaseSearchCriteria) {
+//                $criteria->setData($data);
+//                $this->rep->pushCriteria($criteria);
+//            }
+//        }
 
         //
         //$this->rep->pushCriteria(new RouteParamsCriteria($data));
