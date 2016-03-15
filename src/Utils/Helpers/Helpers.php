@@ -38,7 +38,7 @@ if (!function_exists('validate')) {
         $validator = app('validator')->make($data, $rules, $messages, $labels);
 
         if ($validator->fails())
-            abort(412, json_encode($validator->errors()->all()));
+            abort(400, json_encode($validator->errors()->all()));
 
         return $validator;
     }

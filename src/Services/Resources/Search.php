@@ -127,12 +127,13 @@ trait Search
      */
     protected function searchCriteria(Collection $data)
     {
-        //foreach ($this->searchCriteria as $criteria) {
-        //    if ($criteria instanceof BaseSearchCriteria) {
-        //        $criteria->setData($data);
-        //        $this->rep->pushCriteria($criteria);
-        //    }
-        //}
+        foreach ($this->searchCriteria as $criteria) {
+            if ($criteria instanceof BaseSearchCriteria) {
+                $criteria->setData($data);
+                $this->rep->pushCriteria($criteria);
+            }
+        }
+
         //
         //$this->rep->pushCriteria(new RouteParamsCriteria($data));
         //$this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules(), $data));
