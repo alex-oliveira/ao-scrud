@@ -9,6 +9,7 @@ use AoScrud\Utils\Criteria\ModelRulesCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
 use AoScrud\Utils\Criteria\RouteParamsCriteria;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -73,20 +74,16 @@ trait Search
      *
      * @param array $data
      * @return mixed
-     * @throws \Exception
      */
     public function search(array $data)
     {
         $data = collect($data);
-        $model = $this->model();
 
-        $this->searchPrepare($model, $data);
+        $query = $this->searchQuery();
+        $this->searchPrepare($query, $data);
+        $result = $this->searchExecute($query);
 
-        try {
-            $result = $this->searchExecute($model);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        // DISPATCH EVENT
 
         return $result;
     }
@@ -96,27 +93,47 @@ trait Search
     //------------------------------------------------------------------------------------------------------------------
 
     /**
+     * Return the model to search.
+     *
+     * @return Model|Relation
+     */
+    protected function searchQuery()
+    {
+        return $this->model();
+    }
+
+    /**
      * Run all preparations before search.
      *
-     * @param Model $model
+     * @param Model|Relation $query
      * @param Collection $data
      */
-    protected function searchPrepare(Model $model, Collection $data)
+    protected function searchPrepare($query, Collection $data)
     {
-//        foreach ($this->searchCriteria as $criteria) {
-//            if ($criteria instanceof BaseSearchCriteria) {
-//                $criteria->setData($data);
-//                $this->rep->pushCriteria($criteria);
-//            }
-//        }
-//
-//        $this->rep->pushCriteria(new RouteParamsCriteria($data));
-//        $this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules(), $data));
-//        $this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns(), $data));
-//        $this->rep->pushCriteria(new ModelWithCriteria($this->getSearchWith(), $data));
-//        $this->rep->pushCriteria(new ModelOrderCriteria($this->getSearchOrders(), $data));
-
+        $this->searchCriteria($query, $data);
         $this->searchLimit($data);
+    }
+
+    /**
+     * Apply criteria.
+     *
+     * @param Model|Relation
+     * @param Collection $data
+     */
+    protected function searchCriteria($query, Collection $data)
+    {
+        //foreach ($this->searchCriteria as $criteria) {
+        //    if ($criteria instanceof BaseSearchCriteria) {
+        //        $criteria->setData($data);
+        //        $this->rep->pushCriteria($criteria);
+        //    }
+        //}
+        //
+        //$this->rep->pushCriteria(new RouteParamsCriteria($data));
+        //$this->rep->pushCriteria(new ModelRulesCriteria($this->getSearchRules(), $data));
+        //$this->rep->pushCriteria(new ModelColumnsCriteria($this->getSearchColumns(), $data));
+        //$this->rep->pushCriteria(new ModelWithCriteria($this->getSearchWith(), $data));
+        //$this->rep->pushCriteria(new ModelOrderCriteria($this->getSearchOrders(), $data));
     }
 
     /**
@@ -134,12 +151,12 @@ trait Search
     /**
      * Run find command in the repository.
      *
-     * @param Model $model
+     * @param Model|Relation $query
      * @return LengthAwarePaginator
      */
-    protected function searchExecute(Model $model)
+    protected function searchExecute($query)
     {
-        return $model->paginate($this->searchLimit);
+        return $query->paginate($this->searchLimit);
     }
 
     //------------------------------------------------------------------------------------------------------------------

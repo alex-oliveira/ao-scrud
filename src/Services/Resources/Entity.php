@@ -1,17 +1,11 @@
 <?php
 
-namespace AoScrud\Services;
+namespace AoScrud\Services\Resources;
 
-use AoScrud\Repositories\ScrudRepository;
-use AoScrud\Utils\Traits\Transactions;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class BaseScrudService
+trait Entity
 {
-
-    use Transactions;
-
-    // MODEL //---------------------------------------------------------------------------------------------------------
 
     /**
      * The model.

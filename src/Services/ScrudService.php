@@ -2,15 +2,12 @@
 
 namespace AoScrud\Services;
 
-use AoScrud\Services\Resources\Search;
-use AoScrud\Services\Resources\Create;
-use AoScrud\Services\Resources\Read;
-use AoScrud\Services\Resources\Update;
-use AoScrud\Services\Resources\Destroy;
+use AoScrud\Services\Resources\Entity;
+use AoScrud\Utils\Traits\Transactions;
 
-abstract class ScrudService extends BaseScrudService
+abstract class ScrudService
 {
 
-    use Search, Create, Read, Update, Destroy;
+    use Transactions, Entity;
 
 }

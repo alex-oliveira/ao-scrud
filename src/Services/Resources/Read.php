@@ -5,6 +5,7 @@ namespace AoScrud\Services\Resources;
 use AoScrud\Utils\Criteria\ModelColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 
 trait Read
@@ -54,23 +55,16 @@ trait Read
      *
      * @param array $data
      * @param bool $master
-     * @return Model|null
-     * @throws \Exception
+     * @return mixed
      */
     public function read(array $data, $master = false)
     {
+        $data = collect($data);
         $this->readMaster = $master;
 
-        $model = $this->model();
-        $data = collect($data);
-
-        $this->readPrepare($model, $data);
-
-        try {
-            $obj = $this->readExecute($model, $data);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        $query = $this->readQuery();
+        $this->readPrepare($query, $data);
+        $obj = $this->readExecute($query, $data);
 
         // DISPATCH EVENT
 
@@ -82,39 +76,49 @@ trait Read
     //------------------------------------------------------------------------------------------------------------------
 
     /**
+     * Return the model to read.
+     *
+     * @return Model|Relation
+     */
+    protected function readQuery()
+    {
+        return $this->model();
+    }
+
+    /**
      * Run all preparations before read.
      *
+     * @param Model|Relation
      * @param Collection $data
-     * @param Model $model
      */
-    protected function readPrepare(Model $model, Collection $data)
+    protected function readPrepare($query, Collection $data)
     {
-        $this->readCriteria($model, collect($data->all()));
+        $this->readCriteria($query, collect($data->all()));
         $this->readFilter($data);
     }
 
     /**
      * Apply criteria.
      *
+     * @param Model|Relation
      * @param Collection $data
-     * @param Model $model
      */
-    protected function readCriteria(Model $model, Collection $data)
+    protected function readCriteria($query, Collection $data)
     {
-//        $this->readCriteria[] = new ModelColumnsCriteria($model, $this->readColumns, $data);
-//        $this->readCriteria[] = new ModelWithCriteria($model, $this->readWith, $data);
-//
-//        if ($master) {
-//            foreach ($this->readCriteria as $criteria)
-//                $this->rep->pushCriteria($criteria);
-//        } else {
-//            foreach ($this->readCriteria as $criteria) {
-//                if (isset($criteria->readonly) && $criteria->readonly == true)
-//                    continue;
-//
-//                $this->rep->pushCriteria($criteria);
-//            }
-//        }
+        //$this->readCriteria[] = new ModelColumnsCriteria($model, $this->readColumns, $data);
+        //$this->readCriteria[] = new ModelWithCriteria($model, $this->readWith, $data);
+        //
+        //if ($master) {
+        //    foreach ($this->readCriteria as $criteria)
+        //        $this->rep->pushCriteria($criteria);
+        //} else {
+        //    foreach ($this->readCriteria as $criteria) {
+        //        if (isset($criteria->readonly) && $criteria->readonly == true)
+        //            continue;
+        //
+        //        $this->rep->pushCriteria($criteria);
+        //    }
+        //}
     }
 
     /**
@@ -130,13 +134,13 @@ trait Read
     /**
      * Run find command in the repository.
      *
+     * @param Model|Relation $query
      * @param Collection $data
-     * @param Model $model
      * @return Model
      */
-    protected function readExecute(Model $model, Collection $data)
+    protected function readExecute($query, Collection $data)
     {
-        $obj = $model->where($data->all())->first();
+        $obj = $query->where($data->all())->first();
 
         if (is_null($obj))
             abort(404, 'Model not found');
