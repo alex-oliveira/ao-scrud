@@ -1,31 +1,39 @@
 <?php
 
-namespace AoScrud\Utils\Criteria\Search;
-
-use AoScrud\Utils\Criteria\BaseCriteria;
+namespace AoScrud\Utils\Criteria;
 
 class ColumnsCriteria extends BaseCriteria
 {
 
     /**
+     * @var array
+     */
+    private $allowColumns;
+
+    /**
+     * @param array $allowColumns
+     */
+    public function __construct(array $allowColumns)
+    {
+        $this->allowColumns = $allowColumns;
+    }
+
+    /**
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
      * @param \Illuminate\Support\Collection $data
-     * @param \AoScrud\Services\ScrudService $service
      * @return mixed
      */
-    public function apply($query, $data, $service)
+    public function apply($query, $data)
     {
-        $allowColumns = $service->getSearchColumns();
-
-        if (empty($allowColumns))
+        if (empty($this->allowColumns))
             return $query;
 
         if ($columns = $data->get('columns', false))
-            $columns = array_intersect(explode(',', $columns), $allowColumns);
+            $columns = array_intersect(explode(',', $columns), $this->allowColumns);
 
         $query = $columns && count($columns) > 0
             ? $query->select($columns)
-            : $query->select($allowColumns);
+            : $query->select($this->allowColumns);
 
         return $query;
     }

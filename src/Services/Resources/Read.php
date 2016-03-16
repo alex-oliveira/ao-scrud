@@ -2,10 +2,11 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Criteria\ModelColumnsCriteria;
-use AoScrud\Utils\Criteria\ModelWithCriteria;
+use AoScrud\Utils\Criteria\BaseCriteria;
+use AoScrud\Utils\Criteria\ColumnsCriteria;
+use AoScrud\Utils\Criteria\RouteParamsCriteria;
+use AoScrud\Utils\Criteria\WithCriteria;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 
 trait Read
@@ -29,7 +30,7 @@ trait Read
      *
      * @var array
      */
-    protected $readKeys = ['id'];
+    protected $readRouteKeys = ['id'];
 
     /**
      * The read's criteria.
@@ -68,7 +69,7 @@ trait Read
         $data = collect($data);
         $this->readMaster = $master;
 
-        $this->searchModel($data);
+        $this->readModel($data);
         $this->readPrepare($data);
         $obj = $this->readExecute($data);
 
@@ -86,7 +87,7 @@ trait Read
      *
      * @param Collection $data
      */
-    protected function readQuery(Collection $data)
+    protected function readModel(Collection $data)
     {
         $this->readModel = $this->model();
     }
@@ -99,7 +100,7 @@ trait Read
     protected function readPrepare(Collection $data)
     {
         $this->readCriteria(collect($data->all()));
-        $this->readFilter($data);
+        $this->readApplyCriteria(collect($data->all()));
     }
 
     /**
@@ -109,30 +110,25 @@ trait Read
      */
     protected function readCriteria(Collection $data)
     {
-        //$this->readCriteria[] = new ModelColumnsCriteria($model, $this->readColumns, $data);
-        //$this->readCriteria[] = new ModelWithCriteria($model, $this->readWith, $data);
-        //
-        //if ($master) {
-        //    foreach ($this->readCriteria as $criteria)
-        //        $this->rep->pushCriteria($criteria);
-        //} else {
-        //    foreach ($this->readCriteria as $criteria) {
-        //        if (isset($criteria->readonly) && $criteria->readonly == true)
-        //            continue;
-        //
-        //        $this->rep->pushCriteria($criteria);
-        //    }
-        //}
+        $this->readCriteria[] = new RouteParamsCriteria($this->readRouteKeys);
+        $this->readCriteria[] = new ColumnsCriteria($this->readColumns);
+        $this->readCriteria[] = new WithCriteria($this->readWith);
     }
 
     /**
-     * Apply key filter.
+     * Apply criteria.
      *
      * @param Collection $data
      */
-    protected function readFilter(Collection $data)
+    protected function readApplyCriteria(Collection $data)
     {
-        $data->forget(array_diff($data->keys()->all(), $this->readKeys));
+        foreach ($this->readCriteria as $key => $criteria) {
+            if (is_string($criteria) && is_subclass_of($criteria, BaseCriteria::class))
+                $this->readCriteria[$key] = $criteria = app($criteria);
+
+            if ($criteria instanceof BaseCriteria)
+                $this->readModel = $criteria->apply($this->readModel, $data);
+        }
     }
 
     /**
@@ -143,7 +139,7 @@ trait Read
      */
     protected function readExecute(Collection $data)
     {
-        $obj = $this->readModel->where($data->all())->first();
+        $obj = $this->readModel->first();
 
         if (is_null($obj))
             abort(404, 'Model not found');

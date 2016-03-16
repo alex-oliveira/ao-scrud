@@ -6,14 +6,33 @@ class RouteParamsCriteria extends BaseCriteria
 {
 
     /**
+     * @var array
+     */
+    private $routeKeys;
+
+    /**
+     * @param array $routeKeys
+     */
+    public function __construct(array $routeKeys)
+    {
+        $this->routeKeys = $routeKeys;
+    }
+
+    /**
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
      * @param \Illuminate\Support\Collection $data
-     * @param \AoScrud\Services\ScrudService $service
      * @return mixed
      */
-    public function apply($query, $data, $service)
+    public function apply($query, $data)
     {
-        return $query->where($data->only(array_keys(request()->route()->parameters()))->all());
+        if (empty($this->routeKeys))
+            return $query;
+
+        $where = $data->only($this->routeKeys)->all();
+        if (is_array($where) && count($where) > 0)
+            return $query->where($where);
+
+        return $query;
     }
 
 }

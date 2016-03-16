@@ -1,23 +1,31 @@
 <?php
 
-namespace AoScrud\Utils\Criteria\Search;
-
-use AoScrud\Utils\Criteria\BaseCriteria;
+namespace AoScrud\Utils\Criteria;
 
 class WithCriteria extends BaseCriteria
 {
 
     /**
+     * @var array
+     */
+    private $allowWith;
+
+    /**
+     * @param array $allowWith
+     */
+    public function __construct(array $allowWith)
+    {
+        $this->allowWith = $allowWith;
+    }
+
+    /**
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
      * @param \Illuminate\Support\Collection $data
-     * @param \AoScrud\Services\ScrudService $service
      * @return mixed
      */
-    public function apply($query, $data, $service)
+    public function apply($query, $data)
     {
-        $allowWith = $service->getSearchWith();
-
-        if (empty($allowWith))
+        if (empty($this->allowWith))
             return $query;
 
         $approved = [];
@@ -26,13 +34,13 @@ class WithCriteria extends BaseCriteria
         foreach ($withs as $with) {
             $parts = explode(':', $with);
 
-            if (!array_key_exists($parts[0], $allowWith))
+            if (!array_key_exists($parts[0], $this->allowWith))
                 continue;
 
-            $columns = $allowWith[$parts[0]];
+            $columns = $this->allowWith[$parts[0]];
 
             if (isset($parts[1]) && strlen($parts[1]) > 0) {
-                $custom = array_intersect(explode(',', $parts[1]), $allowWith[$parts[0]]);
+                $custom = array_intersect(explode(',', $parts[1]), $this->allowWith[$parts[0]]);
                 count($custom) > 0 ? $columns = $custom : null;
             }
 

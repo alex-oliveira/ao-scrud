@@ -4,11 +4,15 @@ namespace AoScrud\Services\Resources;
 
 use AoScrud\Utils\Criteria\BaseCriteria;
 use AoScrud\Utils\Criteria\BaseSearchCriteria;
+use AoScrud\Utils\Criteria\ColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelColumnsCriteria;
 use AoScrud\Utils\Criteria\ModelOrderCriteria;
 use AoScrud\Utils\Criteria\ModelRulesCriteria;
 use AoScrud\Utils\Criteria\ModelWithCriteria;
+use AoScrud\Utils\Criteria\OrderByCriteria;
 use AoScrud\Utils\Criteria\RouteParamsCriteria;
+use AoScrud\Utils\Criteria\RulesCriteria;
+use AoScrud\Utils\Criteria\WithCriteria;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -23,6 +27,13 @@ trait Search
      * @var Model/Relation
      */
     protected $searchModel;
+
+    /**
+     * The keys names used om the route.
+     *
+     * @var array
+     */
+    protected $searchRouteKeys = [];
 
     /**
      * The search's criteria.
@@ -118,7 +129,22 @@ trait Search
     protected function searchPrepare(Collection $data)
     {
         $this->searchCriteria($data);
+        $this->searchApplyCriteria($data);
         $this->searchLimit($data);
+    }
+
+    /**
+     * Start default criteria.
+     *
+     * @param Collection $data
+     */
+    protected function searchCriteria(Collection $data)
+    {
+        $this->searchCriteria[] = new RouteParamsCriteria($this->searchRouteKeys);
+        $this->searchCriteria[] = new RulesCriteria($this->searchRules);
+        $this->searchCriteria[] = new ColumnsCriteria($this->searchColumns);
+        $this->searchCriteria[] = new WithCriteria($this->searchWith);
+        $this->searchCriteria[] = new OrderByCriteria($this->searchOrders);
     }
 
     /**
@@ -126,14 +152,14 @@ trait Search
      *
      * @param Collection $data
      */
-    protected function searchCriteria(Collection $data)
+    protected function searchApplyCriteria(Collection $data)
     {
         foreach ($this->searchCriteria as $key => $criteria) {
             if (is_string($criteria) && is_subclass_of($criteria, BaseCriteria::class))
                 $this->searchCriteria[$key] = $criteria = app($criteria);
 
             if ($criteria instanceof BaseCriteria)
-                $this->searchModel = $criteria->apply($this->searchModel, $data, $this);
+                $this->searchModel = $criteria->apply($this->searchModel, $data);
         }
     }
 

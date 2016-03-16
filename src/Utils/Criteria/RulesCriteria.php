@@ -1,8 +1,6 @@
 <?php
 
-namespace AoScrud\Utils\Criteria\Search;
-
-use AoScrud\Utils\Criteria\BaseCriteria;
+namespace AoScrud\Utils\Criteria;
 
 class RulesCriteria extends BaseCriteria
 {
@@ -18,21 +16,27 @@ class RulesCriteria extends BaseCriteria
     private $rules;
 
     /**
+     * @param array $rules
+     */
+    public function __construct(array $rules)
+    {
+        $this->rules = $rules;
+    }
+
+    /**
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
      * @param \Illuminate\Support\Collection $data
-     * @param \AoScrud\Services\ScrudService $service
      * @return mixed
      */
-    public function apply($query, $data, $service)
+    public function apply($query, $data)
     {
-        $this->data = $data;
-        $this->rules = $service->getSearchRules();
-
         if (empty($this->rules))
             return $query;
 
-        $query = $query->where(function ($query) {
-            $this->rules($query, $this->rules);
+        $this->data = $data;
+
+        $query = $query->where(function ($q) {
+            $this->rules($q, $this->rules);
         });
 
         //echo $query->toSql(); exit;
