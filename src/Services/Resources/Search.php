@@ -3,18 +3,12 @@
 namespace AoScrud\Services\Resources;
 
 use AoScrud\Utils\Criteria\BaseCriteria;
-use AoScrud\Utils\Criteria\BaseSearchCriteria;
 use AoScrud\Utils\Criteria\ColumnsCriteria;
-use AoScrud\Utils\Criteria\ModelColumnsCriteria;
-use AoScrud\Utils\Criteria\ModelOrderCriteria;
-use AoScrud\Utils\Criteria\ModelRulesCriteria;
-use AoScrud\Utils\Criteria\ModelWithCriteria;
 use AoScrud\Utils\Criteria\OrderByCriteria;
 use AoScrud\Utils\Criteria\RouteParamsCriteria;
 use AoScrud\Utils\Criteria\RulesCriteria;
 use AoScrud\Utils\Criteria\WithCriteria;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 

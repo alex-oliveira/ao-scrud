@@ -8,7 +8,7 @@ trait Destroy
     public function destroy()
     {
         $deleted = $this->api->destroy(array_merge(request()->all(), request()->route()->parameters()));
-        return response()->json([], ($deleted ? 204 : 200));
+        return response()->json(['deleted' => false], ($deleted ? 204 : 200));
     }
 
 }

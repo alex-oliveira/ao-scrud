@@ -33,7 +33,7 @@ abstract class BaseController extends Controller
         if (is_array($data))
             return $data;
 
-        if ($data instanceof Model)
+        if (is_object($data) && method_exists($data, 'toArray'))
             return $data->toArray();
 
         if ($data instanceof Collection)
