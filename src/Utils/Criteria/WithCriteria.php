@@ -30,7 +30,7 @@ class WithCriteria extends BaseCriteria
 
         $approved = [];
 
-        $withs = explode(';', $data->get('with', ''));
+        $withs = explode('|', $data->get('with', ''));
         foreach ($withs as $with) {
 //            if (in_array($with, $this->allowWith)) {
 //                $approved[] = $with;
