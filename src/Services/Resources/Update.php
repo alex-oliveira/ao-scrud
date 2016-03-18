@@ -37,6 +37,7 @@ trait Update
     public function update(array $data)
     {
         $data = collect($data);
+
         $obj = $this->updateSelect($data);
         $this->updatePrepare($data, $obj);
 
