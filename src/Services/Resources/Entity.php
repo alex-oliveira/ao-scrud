@@ -8,18 +8,18 @@ trait Entity
 {
 
     /**
-     * The model.
-     *
-     * @var Model
-     */
-    private $model;
-
-    /**
      * The name model.
      *
      * @var Model
      */
     protected $modelName;
+
+    /**
+     * The model.
+     *
+     * @var Model
+     */
+    private $model;
 
     /**
      * Return the model.

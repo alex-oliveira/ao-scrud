@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers\Site\Actions;
+namespace AoScrud\Actions\Site;
 
 trait Update
 {
@@ -11,7 +11,7 @@ trait Update
     public function update()
     {
         try {
-            $changed = $this->api->update();
+            $changed = $this->service->tEnable()->update();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->routes . '.edit', params()->all());

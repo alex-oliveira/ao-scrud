@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers\Site\Actions;
+namespace AoScrud\Actions\Site;
 
 
 trait Delete
@@ -12,7 +12,7 @@ trait Delete
     public function delete()
     {
         try {
-            $data = $this->api->delete();
+            $data = $this->service->tEnable()->delete();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->routes . '.index', params()->forget('id'));

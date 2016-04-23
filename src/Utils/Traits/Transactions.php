@@ -5,7 +5,7 @@ namespace AoScrud\Utils\Traits;
 trait Transactions
 {
 
-    protected $transaction = true;
+    protected $transaction = false;
 
     public function tEnable()
     {

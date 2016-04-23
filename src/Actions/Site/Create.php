@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers\Site\Actions;
+namespace AoScrud\Actions\Site;
 
 trait Create
 {

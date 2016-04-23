@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers\Site\Actions;
+namespace AoScrud\Actions\Site;
 
 trait Index
 {
@@ -11,7 +11,7 @@ trait Index
     public function index()
     {
         try {
-            $result = $this->api->search();
+            $result = $this->service->tEnable()->search();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->route($this->main);

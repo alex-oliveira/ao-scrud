@@ -14,19 +14,9 @@ abstract class BaseController extends Controller
     /**
      * The object responsible by manager the resources.
      *
-     * @var ScrudRepository|ScrudService
+     * @var ScrudService
      */
-    protected $api;
-
-    /**
-     * @var string
-     */
-    protected $views = 'ao-scrud::controllers';
-
-    /**
-     * @var string
-     */
-    protected $langs = 'ao-scrud::controllers';
+    protected $service;
 
     public function toArray($data)
     {

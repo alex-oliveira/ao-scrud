@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers\Site\Actions;
+namespace AoScrud\Actions\Site;
 
 trait Destroy
 {
@@ -11,7 +11,7 @@ trait Destroy
     public function destroy()
     {
         try {
-            $status = $this->api->destroy();
+            $status = $this->service->tEnable()->destroy();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->back();

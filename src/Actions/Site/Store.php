@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers\Site\Actions;
+namespace AoScrud\Actions\Site;
 
 trait Store
 {
@@ -11,7 +11,7 @@ trait Store
     public function store()
     {
         try {
-            $obj = $this->api->create();
+            $obj = $this->service->tEnable()->create();
         } catch (\Exception $e) {
             alert()->danger($e->getMessage());
             return redirect()->back()->withInput();
