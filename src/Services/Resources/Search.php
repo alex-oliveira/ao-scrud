@@ -44,11 +44,18 @@ trait Search
     protected $searchRules = [];
 
     /**
-     * The columns' names allowed.
+     * The columns' names default.
      *
      * @var array
      */
     protected $searchColumns = [];
+
+    /**
+     * The columns' names allowed.
+     *
+     * @var array
+     */
+    protected $searchColumnsAllowed = [];
 
     /**
      * The columns' names allowed to order.
@@ -136,7 +143,7 @@ trait Search
     {
         $this->searchCriteria[] = new RouteParamsCriteria($this->searchRouteKeys);
         $this->searchCriteria[] = new RulesCriteria($this->searchRules);
-        $this->searchCriteria[] = new ColumnsCriteria($this->searchColumns);
+        $this->searchCriteria[] = new ColumnsCriteria($this->searchColumns, $this->searchColumnsAllowed);
         $this->searchCriteria[] = new WithCriteria($this->searchWith);
         $this->searchCriteria[] = new OrderByCriteria($this->searchOrders);
     }

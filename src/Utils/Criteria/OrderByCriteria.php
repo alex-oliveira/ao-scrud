@@ -32,7 +32,8 @@ class OrderByCriteria extends BaseCriteria
         if (($o = $data->get('order', false)) && in_array($o, $this->allowOrders))
             $order = $o;
 
-        return $query->orderBy($order, ($data->get('sort') == 'desc' ? 'desc' : 'asc'));
+        $sort = $data->get('sort') == 'desc' ? 'desc' : 'asc';
+        return $query->orderBy($order, $sort)->orderBy('id', $sort);
     }
 
 }

@@ -8,14 +8,21 @@ class ColumnsCriteria extends BaseCriteria
     /**
      * @var array
      */
+    private $columns;
+
+    /**
+     * @var array
+     */
     private $allowColumns;
 
     /**
+     * @param array $columns
      * @param array $allowColumns
      */
-    public function __construct(array $allowColumns)
+    public function __construct(array $columns, array $allowColumns)
     {
-        $this->allowColumns = $allowColumns;
+        $this->columns = $columns;
+        $this->allowColumns = empty($allowColumns) ? $columns : $allowColumns;
     }
 
     /**
@@ -33,7 +40,7 @@ class ColumnsCriteria extends BaseCriteria
 
         $query = $columns && count($columns) > 0
             ? $query->select($columns)
-            : $query->select($this->allowColumns);
+            : $query->select($this->columns);
 
         return $query;
     }
