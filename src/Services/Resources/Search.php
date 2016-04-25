@@ -3,7 +3,7 @@
 namespace AoScrud\Services\Resources;
 
 use AoScrud\Utils\Criteria\BaseCriteria;
-use AoScrud\Utils\Criteria\ColumnsCriteria;
+use AoScrud\Utils\Criteria\ColumnsAllowedCriteria;
 use AoScrud\Utils\Criteria\OrderByCriteria;
 use AoScrud\Utils\Criteria\RouteParamsCriteria;
 use AoScrud\Utils\Criteria\RulesCriteria;
@@ -143,7 +143,7 @@ trait Search
     {
         $this->searchCriteria[] = new RouteParamsCriteria($this->searchRouteKeys);
         $this->searchCriteria[] = new RulesCriteria($this->searchRules);
-        $this->searchCriteria[] = new ColumnsCriteria($this->searchColumns, $this->searchColumnsAllowed);
+        $this->searchCriteria[] = new ColumnsAllowedCriteria($this->searchColumns, $this->searchColumnsAllowed);
         $this->searchCriteria[] = new WithCriteria($this->searchWith);
         $this->searchCriteria[] = new OrderByCriteria($this->searchOrders);
     }

@@ -2,7 +2,7 @@
 
 namespace AoScrud\Utils\Criteria;
 
-class ColumnsCriteria extends BaseCriteria
+class ColumnsAllowedCriteria extends BaseCriteria
 {
 
     /**
@@ -11,11 +11,18 @@ class ColumnsCriteria extends BaseCriteria
     private $columns;
 
     /**
-     * @param array $columns
+     * @var array
      */
-    public function __construct(array $columns)
+    private $allowColumns;
+
+    /**
+     * @param array $columns
+     * @param array $allowColumns
+     */
+    public function __construct(array $columns, array $allowColumns)
     {
         $this->columns = $columns;
+        $this->allowColumns = empty($allowColumns) ? $columns : $allowColumns;
     }
 
     /**
@@ -25,11 +32,11 @@ class ColumnsCriteria extends BaseCriteria
      */
     public function apply($query, $data)
     {
-        if (empty($this->columns))
+        if (empty($this->allowColumns))
             return $query;
 
         if ($columns = $data->get('columns', false))
-            $columns = array_intersect(explode(',', $columns), $this->columns);
+            $columns = array_intersect(explode(',', $columns), $this->allowColumns);
 
         $query = $columns && count($columns) > 0
             ? $query->select($columns)
