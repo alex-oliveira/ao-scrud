@@ -16,7 +16,7 @@ class ColumnsCriteria extends ScrudRepositoryCriteria
     public function apply($rep, $query, $data)
     {
         $allowed = $rep->columns();
-        $rep instanceof OtherColumnsInterface ? $allowed->merge($rep->otherColumns()) : null;
+        $allowed = $rep instanceof OtherColumnsInterface ? $allowed->merge($rep->otherColumns()->all())->unique() : $allowed;
 
         if ($allowed->count() == 0)
             return $query;
