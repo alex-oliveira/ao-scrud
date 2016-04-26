@@ -8,6 +8,7 @@ use AoScrud\Repositories\Criteria\RouteParamsCriteria;
 use AoScrud\Repositories\Criteria\RulesCriteria;
 use AoScrud\Repositories\Criteria\ScrudRepositoryCriteria;
 use AoScrud\Repositories\Criteria\WithCriteria;
+use AoScrud\Repositories\Interfaces\Repositories\SearchRepositoryInterface;
 use AoScrud\Repositories\Traits\Columns;
 use AoScrud\Repositories\Traits\Criteria;
 use AoScrud\Repositories\Traits\Limit;
@@ -19,7 +20,7 @@ use AoScrud\Repositories\Traits\Total;
 use AoScrud\Repositories\Traits\With;
 use Illuminate\Support\Collection;
 
-class SearchRepository extends ScrudRepository
+class SearchRepository extends ScrudRepository implements SearchRepositoryInterface
 {
 
     use Columns, Criteria, Limit, Orders, OtherColumns, RouteParams, Rules, Total, With;
