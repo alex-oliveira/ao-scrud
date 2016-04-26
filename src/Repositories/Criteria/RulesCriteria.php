@@ -11,33 +11,21 @@ class RulesCriteria extends ScrudRepositoryCriteria
     private $data;
 
     /**
-     * @var array
-     */
-    private $rules;
-
-    /**
-     * @param array $rules
-     */
-    public function __construct(array $rules)
-    {
-        $this->rules = $rules;
-    }
-
-    /**
+     * @param \AoScrud\Repositories\ScrudRepository
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
      * @param \Illuminate\Support\Collection $data
      * @return mixed
      */
-    public function apply($query, $data)
+    public function apply($rep, $query, $data)
     {
-        if (empty($this->rules))
-            return $query;
-
-        $this->data = $data;
-
-        $query = $query->where(function ($q) {
-            $this->rules($q, $this->rules);
-        });
+//        if (empty($this->rules))
+//            return $query;
+//
+//        $this->data = $data;
+//
+//        $query = $query->where(function ($q) {
+//            $this->rules($q, $this->rules);
+//        });
 
         //echo $query->toSql(); exit;
 

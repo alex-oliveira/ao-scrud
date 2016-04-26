@@ -6,24 +6,12 @@ class ColumnsCriteria extends ScrudRepositoryCriteria
 {
 
     /**
-     * @var array
-     */
-    private $columns;
-
-    /**
-     * @param array $columns
-     */
-    public function __construct(array $columns)
-    {
-        $this->columns = $columns;
-    }
-
-    /**
+     * @param \AoScrud\Repositories\ScrudRepository
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
      * @param \Illuminate\Support\Collection $data
      * @return mixed
      */
-    public function apply($query, $data)
+    public function apply($rep, $query, $data)
     {
         if (empty($this->columns))
             return $query;
@@ -33,7 +21,7 @@ class ColumnsCriteria extends ScrudRepositoryCriteria
 
         $query = $columns && count($columns) > 0
             ? $query->select($columns)
-            : $query->select($this->columns);
+            : $query->select($rep->columns());
 
         return $query;
     }
