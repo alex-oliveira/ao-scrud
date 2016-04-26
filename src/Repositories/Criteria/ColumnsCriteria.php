@@ -2,14 +2,13 @@
 
 namespace AoScrud\Repositories\Criteria;
 
-use AoScrud\Repositories\Interfaces\Methods\ColumnsInterface;
 use AoScrud\Repositories\Interfaces\Methods\OtherColumnsInterface;
 
 class ColumnsCriteria extends ScrudRepositoryCriteria
 {
 
     /**
-     * @param ColumnsInterface $rep
+     * @param \AoScrud\Repositories\Interfaces\Methods\ColumnsInterface $rep
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
      * @param \Illuminate\Support\Collection $data
      * @return mixed

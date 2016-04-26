@@ -11,21 +11,21 @@ class RulesCriteria extends ScrudRepositoryCriteria
     private $data;
 
     /**
-     * @param \AoScrud\Repositories\ScrudRepository
+     * @param \AoScrud\Repositories\Interfaces\Methods\RulesInterface $rep
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
      * @param \Illuminate\Support\Collection $data
      * @return mixed
      */
     public function apply($rep, $query, $data)
     {
-//        if (empty($this->rules))
-//            return $query;
-//
-//        $this->data = $data;
-//
-//        $query = $query->where(function ($q) {
-//            $this->rules($q, $this->rules);
-//        });
+        if ($rep->rules()->isEmpty())
+            return $query;
+
+        $this->data = $data;
+
+        $query = $query->where(function ($q) use ($rep) {
+            $this->rules($q, $rep->rules()->toArray());
+        });
 
         //echo $query->toSql(); exit;
 
