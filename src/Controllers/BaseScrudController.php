@@ -2,13 +2,11 @@
 
 namespace AoScrud\Controllers;
 
-use AoScrud\Repositories\ScrudRepository;
 use AoScrud\Services\ScrudService;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 
-abstract class BaseController extends Controller
+abstract class BaseScrudController extends Controller
 {
 
     /**

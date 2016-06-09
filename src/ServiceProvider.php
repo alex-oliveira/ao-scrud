@@ -2,6 +2,8 @@
 
 namespace AoScrud;
 
+use AoScrud\Utils\Facades\TransactionFacade;
+use AoScrud\Utils\Facades\ValidateFacade;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
@@ -14,8 +16,12 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__ . '/Utils/Views', 'ao-scrud');
-        $this->loadTranslationsFrom(__DIR__ . '/Utils/Langs', 'ao-scrud');
+        $this->app->singleton('transaction', function ($app) {
+            return new TransactionFacade();
+        });
+        $this->app->singleton('validate', function ($app) {
+            return new ValidateFacade();
+        });
     }
 
     /**
@@ -25,7 +31,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-
+        require_once(__DIR__ . '/Helpers.php');
     }
 
 }

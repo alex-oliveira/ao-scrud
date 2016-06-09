@@ -65,16 +65,4 @@ trait Data
         return implode($glue, self::keys());
     }
 
-//    /**
-//     * @param string $value
-//     * @param string $key
-//     * @return string
-//     */
-//    public static function options($value = 'name', $key = 'id')
-//    {
-//        return self::collect()->keyBy($key)->transform(function ($item, $key) use ($value) {
-//            return $item[$value];
-//        })->all();
-//    }
-
 }

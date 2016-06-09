@@ -1,1 +1,0 @@
-<h1>Formulário de Cadastro</h1>
