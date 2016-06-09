@@ -3,11 +3,26 @@
 namespace AoScrud\Services;
 
 use AoScrud\Services\Resources\Entity;
-use AoScrud\Utils\Traits\Transactions;
+use Illuminate\Database\Eloquent\Model;
 
-abstract class BaseService
+abstract class BaseScrudService
 {
 
-    use Transactions, Entity;
+    /**
+     * The model name.
+     *
+     * @var string
+     */
+    protected $model;
+
+    /**
+     * Return the model.
+     *
+     * @return Model
+     */
+    protected function model()
+    {
+        return app()->make($this->model);
+    }
 
 }

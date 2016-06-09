@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 
 trait Read
 {
+
     /**
      * The object to read.
      *

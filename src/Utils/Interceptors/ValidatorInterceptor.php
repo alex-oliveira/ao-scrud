@@ -2,9 +2,6 @@
 
 namespace AoScrud\Utils\Interceptors;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-
 abstract class ValidatorInterceptor extends BaseInterceptor
 {
 
@@ -12,20 +9,21 @@ abstract class ValidatorInterceptor extends BaseInterceptor
      * Return rules to validation.
      *
      * @param mixed $actor
-     * @param $data Collection
-     * @param $obj Model|mull
+     * @param $data \Illuminate\Support\Collection
+     * @param $obj \Illuminate\Database\Eloquent\Model|null
      * @return array
      */
     abstract protected function rules($actor, $data, $obj = null);
 
     /**
      * @param mixed $actor
-     * @param Collection $data
-     * @param Model|null $obj
+     * @param \Illuminate\Support\Collection $data
+     * @param \Illuminate\Database\Eloquent\Model|null $obj
+     * @return mixed|void
      */
     public function apply($actor, $data, $obj = null)
     {
-        validate($data->all(), $this->rules($actor, $data, $obj));
+        return $this->rules($actor, $data, $obj);
     }
 
 }

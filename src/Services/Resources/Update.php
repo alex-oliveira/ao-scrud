@@ -10,14 +10,14 @@ trait Update
 {
 
     /**
-     * The interceptor class to update in the repository.
+     * The validation rules to update or an interceptor class that return an array.
      *
-     * @var BaseInterceptor[]
+     * @var array|BaseInterceptor
      */
-    protected $updateInterceptors = [];
+    protected $updateRules = [];
 
     /**
-     * The allow fields to update.
+     * The allowed fields to update.
      *
      * @var array
      */
@@ -41,16 +41,14 @@ trait Update
         $obj = $this->updateSelect($data);
         $this->updatePrepare($data, $obj);
 
-        $this->tBegin();
+        $t = Transaction()->begin();
         try {
-            $status = $this->updateExecute($data, $obj);
+            $status = $this->updateRun($data, $obj);
         } catch (\Exception $e) {
-            $this->tRollBack();
+            Transaction()->rollBack($t);
             throw $e;
         }
-        $this->tCommit();
-
-        // DISPATCH EVENT
+        Transaction()->commit($t);
 
         return $status;
     }
@@ -67,36 +65,29 @@ trait Update
      */
     protected function updateSelect(Collection $data)
     {
-        return $this->read($data->all());
+        return $this->model()->find($data->get('id'));
     }
 
     /**
-     * Run all preparations before update.
+     * Rum the preparations to update.
      *
      * @param Collection $data
      * @param Model $obj
      */
     protected function updatePrepare(Collection $data, Model $obj)
     {
-        $this->updateInterceptors($data, $obj);
         $this->updateValidate($data, $obj);
+        $this->updateFilter($data);
     }
 
     /**
-     * Apply interceptors to update.
+     * Define the rule fields to update.
      *
-     * @param Collection $data
-     * @param Model $obj
+     * @return array
      */
-    protected function updateInterceptors(Collection $data, Model $obj)
+    protected function updateRules()
     {
-        foreach ($this->updateInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, BaseInterceptor::class))
-                $this->updateInterceptors[$key] = $interceptor = app($interceptor);
-
-            if (is_object($interceptor) && $interceptor instanceof BaseInterceptor)
-                $interceptor->apply($this, $data, $obj);
-        }
+        return $this->updateRules;
     }
 
     /**
@@ -104,23 +95,10 @@ trait Update
      *
      * @param Collection $data
      * @param Model $obj
-     * @return array
      */
     protected function updateValidate(Collection $data, Model $obj)
     {
-        validate($data->all(), $this->updateRules($data, $obj));
-    }
-
-    /**
-     * Return the validation rules to update.
-     *
-     * @param Collection $data
-     * @param Model $obj
-     * @return array
-     */
-    protected function updateRules(Collection $data, Model $obj)
-    {
-        return [];
+        Validate()->actor($this)->obj($obj)->data($data)->rules($this->updateRules())->run();
     }
 
     /**
@@ -134,15 +112,25 @@ trait Update
     }
 
     /**
-     * Run update command in the repository.
+     * Apply filter returning only the allowed fields to update.
+     *
+     * @param Collection $data
+     */
+    protected function updateFilter(Collection $data)
+    {
+        $data = $data->only($this->updateFillable());
+    }
+
+    /**
+     * Run update command in the service.
      *
      * @param Collection $data
      * @param Model $obj
-     * @return bool
+     * @return Model
      */
-    protected function updateExecute(Collection $data, Model $obj)
+    protected function updateRun(Collection $data, Model $obj)
     {
-        $obj->fill($data->only($this->updateFillable())->all());
+        $obj->fill($data->all());
         return $obj->isDirty() ? $obj->save() : false;
     }
 

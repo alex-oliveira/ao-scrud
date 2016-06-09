@@ -10,14 +10,14 @@ trait Create
 {
 
     /**
-     * The interceptor class to registry in the repository.
+     * The validation rules to create or an interceptor class that return an array.
      *
-     * @var BaseInterceptor[]
+     * @var array|BaseInterceptor
      */
-    protected $createInterceptors = [];
+    protected $createRules = [];
 
     /**
-     * The allow fields to create.
+     * The allowed fields to create.
      *
      * @var array
      */
@@ -39,16 +39,14 @@ trait Create
         $data = collect($data);
         $this->createPrepare($data);
 
-        $this->tBegin();
+        $t = Transaction()->begin();
         try {
-            $obj = $this->createExecute($data);
+            $obj = $this->createRun($data);
         } catch (\Exception $e) {
-            $this->tRollBack();
+            Transaction()->rollBack($t);
             throw $e;
         }
-        $this->tCommit();
-
-        // DISPATCH EVENT
+        Transaction()->commit($t);
 
         return $obj;
     }
@@ -58,51 +56,34 @@ trait Create
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Run all preparations before create.
+     * Rum the preparations to create.
      *
      * @param Collection $data
      */
     protected function createPrepare(Collection $data)
     {
-        $this->createInterceptors($data);
+        $this->createValidate($data);
+        $this->createFilter($data);
     }
 
     /**
-     * Apply interceptors to create.
+     * Define the rule fields to create.
      *
-     * @param Collection $data
+     * @return array
      */
-    protected function createInterceptors(Collection $data)
+    protected function createRules()
     {
-        foreach ($this->createInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, BaseInterceptor::class))
-                $this->createInterceptors[$key] = $interceptor = app($interceptor);
-
-            if (is_object($interceptor) && $interceptor instanceof BaseInterceptor)
-                $interceptor->apply($this, $data);
-        }
+        return $this->createRules;
     }
 
     /**
      * Apply validation to create.
      *
      * @param Collection $data
-     * @return array
      */
     protected function createValidate(Collection $data)
     {
-        validate($data->all(), $this->createRules($data));
-    }
-
-    /**
-     * Return the validation rules to create.
-     *
-     * @param Collection $data
-     * @return array
-     */
-    protected function createRules(Collection $data)
-    {
-        return [];
+        Validate()->actor($this)->data($data)->rules($this->createRules())->run();
     }
 
     /**
@@ -116,14 +97,34 @@ trait Create
     }
 
     /**
-     * Run create command in the repository.
+     * Apply filter returning only the allowed fields to create.
+     *
+     * @param Collection $data
+     */
+    protected function createFilter(Collection $data)
+    {
+        $data = $data->only($this->createFillable());
+    }
+
+    /**
+     * Return the model to create.
+     *
+     * @return mixed
+     */
+    protected function createModel()
+    {
+        return $this->model();
+    }
+
+    /**
+     * Run create command in the service.
      *
      * @param Collection $data
      * @return Model
      */
-    protected function createExecute(Collection $data)
+    protected function createRun(Collection $data)
     {
-        return $this->model()->create($data->only($this->createFillable())->all());
+        return $this->createModel()->create($data->all());
     }
 
 }
