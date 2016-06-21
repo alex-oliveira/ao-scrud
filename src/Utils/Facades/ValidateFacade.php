@@ -103,7 +103,7 @@ class ValidateFacade
     public function run()
     {
         if (is_string($this->rules) && is_subclass_of($this->rules, BaseInterceptor::class))
-            $this->rules = app($this->rules)->apply($this->actor, $this->data);
+            $this->rules = app($this->rules)->apply($this->actor, $this->data, $this->obj);
 
         $validator = app('validator')->make($this->data->all(), $this->rules, $this->messages, $this->labels);
 
