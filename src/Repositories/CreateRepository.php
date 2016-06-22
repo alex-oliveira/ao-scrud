@@ -66,7 +66,7 @@ class CreateRepository extends BaseRepository implements CreateRepositoryInterfa
 
     public function filter()
     {
-        $this->data = $this->data->only($this->columns());
+        $this->data = $this->data->only($this->columns()->all());
     }
 
     public function execute()
