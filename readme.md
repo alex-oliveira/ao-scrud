@@ -2,6 +2,27 @@
 
 Resources for SCRUD with Laravel 5.1
 
+## SearchRepository
+````
+$rep = new SearchRepository();
+
+$rep->model(User::class)
+    ->data($data)
+    ->columns(['id', 'name'])
+    ->otherColumns(['description', 'created_at', 'updated_at'])
+    ->orders(['id', 'name', 'created_at', 'updated_at'])
+    ->limit(50)
+    ->criteria([
+        //
+    ])->rules([
+        //
+    ])->with([
+        //
+    ]);
+    
+$result = $rep->run();
+````
+
 ## CreateRepository
 ````
 $rep = new CreateRepository();
