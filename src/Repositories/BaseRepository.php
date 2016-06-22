@@ -10,9 +10,9 @@ abstract class BaseRepository
     use Model;
 
     /**
-     * @param array $config
      * @return mixed
+     * @throws \Exception
      */
-    abstract public function run(array $config = []);
+    abstract public function run();
 
 }

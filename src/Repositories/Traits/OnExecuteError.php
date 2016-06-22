@@ -23,7 +23,7 @@ trait OnExecuteError
     /**
      * @param \Exception $e
      */
-    protected function triggerOnExecuteError(\Exception $e)
+    public function triggerOnExecuteError(\Exception $e)
     {
         $closure = null;
 

@@ -20,7 +20,7 @@ trait OnPrepare
         return $this;
     }
 
-    protected function triggerOnPrepare()
+    public function triggerOnPrepare()
     {
         $closure = $this->onPrepare;
         is_null($closure) ? null : $closure($this);

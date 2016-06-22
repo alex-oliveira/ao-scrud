@@ -11,9 +11,27 @@ use AoScrud\Repositories\Interfaces\Methods\RouteParamsInterface;
 use AoScrud\Repositories\Interfaces\Methods\RulesInterface;
 use AoScrud\Repositories\Interfaces\Methods\TotalInterface;
 use AoScrud\Repositories\Interfaces\Methods\WithInterface;
+use AoScrud\Repositories\Interfaces\Methods\OnErrorInterface;
+use AoScrud\Repositories\Interfaces\Methods\OnExecuteEndInterface;
+use AoScrud\Repositories\Interfaces\Methods\OnExecuteErrorInterface;
+use AoScrud\Repositories\Interfaces\Methods\OnExecuteInterface;
+use AoScrud\Repositories\Interfaces\Methods\OnSuccessInterface;
 
-interface SearchRepositoryInterface extends ColumnsInterface, OtherColumnsInterface, CriteriaInterface, LimitInterface,
-    OrdersInterface, RouteParamsInterface, RulesInterface, TotalInterface, WithInterface
+interface SearchRepositoryInterface extends
+    ColumnsInterface,
+    OtherColumnsInterface,
+    CriteriaInterface,
+    LimitInterface,
+    OrdersInterface,
+    RouteParamsInterface,
+    RulesInterface,
+    TotalInterface,
+    WithInterface,
+    OnExecuteInterface,
+    OnExecuteEndInterface,
+    OnExecuteErrorInterface,
+    OnSuccessInterface,
+    OnErrorInterface
 {
 
 }

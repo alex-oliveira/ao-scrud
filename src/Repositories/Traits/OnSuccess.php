@@ -24,14 +24,10 @@ trait OnSuccess
      * @param mixed $result
      * @return mixed
      */
-    protected function triggerOnSuccess($result)
+    public function triggerOnSuccess($result)
     {
         $closure = $this->onSuccess;
-
-        if (is_null($closure))
-            return $result;
-
-        return $closure($this, $result);
+        return is_null($closure) ? $result : $closure($this, $result);
     }
 
 }

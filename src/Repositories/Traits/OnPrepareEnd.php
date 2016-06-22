@@ -20,7 +20,7 @@ trait OnPrepareEnd
         return $this;
     }
 
-    protected function triggerOnPrepareEnd()
+    public function triggerOnPrepareEnd()
     {
         $closure = $this->onPrepareEnd;
         is_null($closure) ? null : $closure($this);
