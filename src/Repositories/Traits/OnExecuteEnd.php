@@ -23,7 +23,7 @@ trait OnExecuteEnd
     /**
      * @param mixed $result
      */
-    protected function triggerOnExecuteEnd($result)
+    public function triggerOnExecuteEnd($result)
     {
         $closure = $this->onExecuteEnd;
         is_null($closure) ? null : $closure($this, $result);

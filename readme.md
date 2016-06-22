@@ -2,9 +2,7 @@
 
 Resources for SCRUD with Laravel 5.1
 
-# CreateRepository
-
-### Utilização básica
+## CreateRepository
 ````
 $rep = new CreateRepository();
 
@@ -19,40 +17,134 @@ $rep->model(User::class)
 $result = $rep->run();
 ````
 
-### Utilizando callbacks 
+## UpdateRepository
+````
+$rep = new UpdateRepository();
+
+$rep->model(User::class)
+    ->data($data)
+    ->columns(['name', 'description'])
+    ->rules([
+        'name' => 'required|max:100|unique:users,name',
+        'email' => 'required|email|unique:users,email'
+    ]);
+    
+$result = $rep->run();
+````
+
+##### Customizando select do update
+````
+$rep->select(function ($rep) {
+     return $rep->model()->find($rep->data()->get('id'));
+});
+````
+
+## Callbacks 
+
+### OnPrepare
+* Disparado quando a preparação é iniciada.
+* Available in: CreateRepository, UpdateRepository.
+
 ````
 $rep->onPrepare(function ($rep) {
 
-    // disparado quando a preparação é iniciada.
+    // TODO: your code.
     
-})->onPrepareEnd(function ($rep) {
+});
+````
+
+### OnPrepareEnd
+* Disparado quando a preparação é finalizada.
+* Available in: CreateRepository, UpdateRepository.
+
+````
+$rep->onPrepareEnd(function ($rep) {
+
+    // TODO: your code.
     
-    // disparado quando a preparação é finalizada.
-            
-})->onPrepareError(function ($rep, $exception) {
+})
+````
+
+### OnPrepareError
+* Disparado quando ocorre erro durante a preparação.
+* Available in: CreateRepository, UpdateRepository.
+
+````
+$rep->onPrepareError(function ($rep, $exception) {
+
+    // TODO: your code.
     
-    // disparado quando ocorre erro durante a preparação.
+})
+````
+
+### OnExecute
+* Disparado quando a execução é iniciada.
+* Available in: CreateRepository, UpdateRepository.
+
+````
+$rep->onExecute(function ($rep) {
+
+    // TODO: your code.
+    
+})
+````
+
+### OnExecuteEnd
+* Disparado quando a execução é finalizada.
+* Available in: CreateRepository, UpdateRepository.
+
+````
+$rep->onExecuteEnd(function ($rep, $result) {
+
+    // TODO: your code.
+      
+});
+````
+
+### OnExecuteEnd
+* Disparado quando a execução é finalizada.
+* Available in: CreateRepository, UpdateRepository.
+
+````
+$rep->onExecuteEnd(function ($rep, $result) {
+
+    // TODO: your code.
+      
+});
+````
+
+### OnExecuteError
+* Disparado quando ocorre erro durante a execução.
+* Available in: CreateRepository, UpdateRepository.
+
+````
+$rep->onExecuteError(function ($rep, $exception) {
+
+    // TODO: your code.
+       
+});
+````
+
+### OnSuccess
+* Disparado quando tudo é processado sem erros.
+* Available in: CreateRepository, UpdateRepository.
+
+````
+$rep->onSuccess(function ($rep, $result) {
+
+    // TODO: your code.
          
-})->onExecute(function ($rep) {
-    
-    // disparado quando a execução é iniciada.
-         
-})->onExecuteEnd(function ($rep, $result) {
-    
-    // disparado quando a execução é finalizada.
-         
-})->onExecuteError(function ($rep, $exception) {
-    
-    // disparado quando ocorre erro durante a execução.
-         
-})->onSuccess(function ($rep, $result) {
-    
-    // disparado quando tudo é processado sem erros.
-         
-})->onError(function ($rep, $exception) {
-    
-    // disparado quando qualquer erro ocorre
-    // desde que ele não possua callback de erro específico 
+});
+````
+
+### OnError
+* Disparado quando qualquer erro ocorre, desde que ele não possua callback de erro específico 
+* Available in: CreateRepository, UpdateRepository.
+
+````
+$rep->onError(function ($rep, $exception) {
+
+    // TODO: your code.
          
 });
 ````

@@ -21,11 +21,10 @@ class CreateRepository extends BaseRepository implements CreateRepositoryInterfa
     use Columns, Rules, Data, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     /**
-     * @param array $config
      * @return mixed
      * @throws \Exception
      */
-    public function run(array $config = [])
+    public function run()
     {
         $this->prepare();
 
@@ -66,7 +65,7 @@ class CreateRepository extends BaseRepository implements CreateRepositoryInterfa
 
     public function filter()
     {
-        $this->data = $this->data->only($this->columns());
+        $this->data = $this->data->only($this->columns()->all());
     }
 
     public function execute()

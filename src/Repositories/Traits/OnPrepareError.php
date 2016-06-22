@@ -23,7 +23,7 @@ trait OnPrepareError
     /**
      * @param \Exception $e
      */
-    protected function triggerOnPrepareError(\Exception $e)
+    public function triggerOnPrepareError(\Exception $e)
     {
         $closure = null;
 

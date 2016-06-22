@@ -23,7 +23,7 @@ trait OnError
     /**
      * @param \Exception $e
      */
-    protected function triggerOnError(\Exception $e)
+    public function triggerOnError(\Exception $e)
     {
         $closure = $this->onError;
         is_null($closure) ? null : $closure($this, $e);

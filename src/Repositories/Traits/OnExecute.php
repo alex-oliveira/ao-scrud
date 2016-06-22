@@ -20,7 +20,7 @@ trait OnExecute
         return $this;
     }
 
-    protected function triggerOnExecute()
+    public function triggerOnExecute()
     {
         $closure = $this->onExecute;
         is_null($closure) ? null : $closure($this);
