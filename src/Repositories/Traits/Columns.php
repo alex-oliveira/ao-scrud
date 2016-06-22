@@ -6,8 +6,9 @@ use Illuminate\Support\Collection;
 
 trait Columns
 {
+
     /**
-     * @var Collection
+     * @var null|Collection
      */
     protected $columns = null;
 
@@ -39,4 +40,5 @@ trait Columns
         $this->columns = collect($columns);
         return $this;
     }
+
 }

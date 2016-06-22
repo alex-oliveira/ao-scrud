@@ -16,17 +16,17 @@ class ValidateFacade
     /**
      * @var mixed
      */
-    protected $data = null;
+    protected $obj = null;
 
     /**
-     * @var array
+     * @var Collection
      */
-    protected $rules = [];
+    protected $data = null;
 
     /**
      * @var mixed
      */
-    protected $obj = null;
+    protected $rules = [];
 
     /**
      * @var array
@@ -49,6 +49,16 @@ class ValidateFacade
     }
 
     /**
+     * @param mixed $obj
+     * @return $this
+     */
+    public function obj($obj)
+    {
+        $this->obj = $obj;
+        return $this;
+    }
+
+    /**
      * @param Collection $data
      * @return $this
      */
@@ -59,22 +69,12 @@ class ValidateFacade
     }
 
     /**
-     * @param array|string $rules
+     * @param string|array|Collection $rules
      * @return $this
      */
     public function rules($rules)
     {
-        $this->rules = $rules;
-        return $this;
-    }
-
-    /**
-     * @param mixed $obj
-     * @return $this
-     */
-    public function obj($obj)
-    {
-        $this->obj = $obj;
+        $this->rules = $rules instanceof Collection ? $rules->all() : $rules;
         return $this;
     }
 
@@ -102,6 +102,9 @@ class ValidateFacade
 
     public function run()
     {
+        if($this->rules instanceof Collection)
+            $this->rules = $this->rules->all();
+
         if (is_string($this->rules) && is_subclass_of($this->rules, BaseInterceptor::class))
             $this->rules = app($this->rules)->apply($this->actor, $this->data, $this->obj);
 
