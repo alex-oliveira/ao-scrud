@@ -25,7 +25,7 @@ use AoScrud\Repositories\Traits\With;
 class ReadRepository extends BaseRepository implements ReadRepositoryInterface
 {
 
-    use Keys, Data, Columns, OtherColumns, Criteria, With, Select, Obj, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
+    use Data, Keys, Columns, OtherColumns, Select, Obj, Criteria, With, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     public function __construct()
     {

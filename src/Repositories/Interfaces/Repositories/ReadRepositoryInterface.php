@@ -11,7 +11,6 @@ use AoScrud\Repositories\Interfaces\Methods\OnPrepareEndInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnPrepareErrorInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnPrepareInterface;
 use AoScrud\Repositories\Interfaces\Methods\OtherColumnsInterface;
-use AoScrud\Repositories\Interfaces\Methods\RouteParamsInterface;
 use AoScrud\Repositories\Interfaces\Methods\SelectInterface;
 use AoScrud\Repositories\Interfaces\Methods\WithInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnErrorInterface;
@@ -21,14 +20,14 @@ use AoScrud\Repositories\Interfaces\Methods\OnExecuteInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnSuccessInterface;
 
 interface ReadRepositoryInterface extends
-    KeysInterface,
     DataInterface,
+    KeysInterface,
+    SelectInterface,
+    ObjInterface,
     ColumnsInterface,
     OtherColumnsInterface,
     CriteriaInterface,
     WithInterface,
-    SelectInterface,
-    ObjInterface,
     OnPrepareInterface,
     OnPrepareEndInterface,
     OnPrepareErrorInterface,

@@ -30,7 +30,7 @@ use AoScrud\Repositories\Traits\With;
 class SearchRepository extends BaseRepository implements SearchRepositoryInterface
 {
 
-    use Keys, Data, Columns, OtherColumns, Rules, Orders, Criteria, With, Total, Limit, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
+    use Data, Keys, Columns, OtherColumns, Rules, Orders, Criteria, With, Total, Limit, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     public function __construct()
     {

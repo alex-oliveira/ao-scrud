@@ -21,7 +21,7 @@ use AoScrud\Repositories\Traits\Select;
 class UpdateRepository extends BaseRepository implements UpdateRepositoryInterface
 {
 
-    use Keys, Data, Columns, Rules, Select, Obj, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
+    use Data, Keys, Columns, Rules, Select, Obj, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     /**
      * @return mixed

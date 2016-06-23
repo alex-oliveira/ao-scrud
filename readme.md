@@ -41,6 +41,7 @@ $result = $rep->run();
 $rep = new ReadRepository();
 $rep->model(User::class)
     ->data($data)
+    
     ->columns(['id', 'nickname'])
     ->otherColumns(['name', 'email', 'created_at', 'updated_at']);
         
@@ -56,7 +57,7 @@ $rep->model(User::class)
     ->columns(['name', 'nickname'])
     ->rules([
         'name' => 'required|max:100',
-        'nickname' => 'required|max:50|unique:users,nickname,' . $data['id']
+        'nickname' => 'required|max:50|unique:users,nickname,{{id}}' . $data['id']
     ]);
     
 $result = $rep->run();

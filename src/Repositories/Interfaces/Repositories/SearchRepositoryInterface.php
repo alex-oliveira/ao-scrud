@@ -22,8 +22,8 @@ use AoScrud\Repositories\Interfaces\Methods\OnExecuteInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnSuccessInterface;
 
 interface SearchRepositoryInterface extends
-    KeysInterface,
     DataInterface,
+    KeysInterface,
     ColumnsInterface,
     OtherColumnsInterface,
     RulesInterface,
