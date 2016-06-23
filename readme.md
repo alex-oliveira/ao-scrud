@@ -2,6 +2,25 @@
 
 Resources for SCRUD with Laravel 5.1
 
+# Installation
+
+### 1) Install
+````
+$ composer require alex-oliveira/ao-scrud
+````
+
+### 2) Configure "config/app.php" file
+````
+'providers' => [
+    /*
+     * Vendors Service Providers...
+     */
+    AoScrud\ServiceProvider::class,
+],
+````
+
+# Samples
+
 ## SearchRepository
 ````
 $rep = new SearchRepository();
@@ -72,109 +91,73 @@ $rep->select(function ($rep) {
 ## Callbacks 
 
 ### OnPrepare
-* Disparado quando a preparação é iniciada.
-* Available in: CreateRepository, UpdateRepository.
+It is dispatched when the "prepare" is started.
 
 ````
 $rep->onPrepare(function ($rep) {
-
-    // TODO: your code.
     
 });
 ````
 
 ### OnPrepareEnd
-* Disparado quando a preparação é finalizada.
-* Available in: CreateRepository, UpdateRepository.
+It is dispatched when the "prepare" is ended.
 
 ````
 $rep->onPrepareEnd(function ($rep) {
-
-    // TODO: your code.
     
 })
 ````
 
 ### OnPrepareError
-* Disparado quando ocorre erro durante a preparação.
-* Available in: CreateRepository, UpdateRepository.
+It is dispatched when happen error during the "prepare".
 
 ````
 $rep->onPrepareError(function ($rep, $exception) {
-
-    // TODO: your code.
     
 })
 ````
 
 ### OnExecute
-* Disparado quando a execução é iniciada.
-* Available in: CreateRepository, UpdateRepository.
+It is dispatched when the "execute" is started.
 
 ````
 $rep->onExecute(function ($rep) {
 
-    // TODO: your code.
-    
 })
 ````
 
 ### OnExecuteEnd
-* Disparado quando a execução é finalizada.
-* Available in: CreateRepository, UpdateRepository.
+It is dispatched when the "execute" is ended.
 
 ````
 $rep->onExecuteEnd(function ($rep, $result) {
 
-    // TODO: your code.
-      
-});
-````
-
-### OnExecuteEnd
-* Disparado quando a execução é finalizada.
-* Available in: CreateRepository, UpdateRepository.
-
-````
-$rep->onExecuteEnd(function ($rep, $result) {
-
-    // TODO: your code.
-      
 });
 ````
 
 ### OnExecuteError
-* Disparado quando ocorre erro durante a execução.
-* Available in: CreateRepository, UpdateRepository.
+It is dispatched when happen error during the "execute".
 
 ````
 $rep->onExecuteError(function ($rep, $exception) {
 
-    // TODO: your code.
-       
 });
 ````
 
 ### OnSuccess
-* Disparado quando tudo é processado sem erros.
-* Available in: CreateRepository, UpdateRepository.
+It is dispatched when all is processed without erros. 
 
 ````
 $rep->onSuccess(function ($rep, $result) {
 
-    // TODO: your code.
-         
 });
 ````
 
 ### OnError
-* Disparado quando qualquer erro ocorre, desde que ele não possua callback de erro específico 
-* Available in: CreateRepository, UpdateRepository.
+It is dispatched when any error happen, since that it not has a specific error callback. 
 
 ````
 $rep->onError(function ($rep, $exception) {
 
-    // TODO: your code.
-         
 });
 ````
