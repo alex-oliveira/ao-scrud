@@ -7,14 +7,25 @@ use AoScrud\Repositories\Criteria\RouteParamsCriteria;
 use AoScrud\Repositories\Interfaces\Repositories\ReadRepositoryInterface;
 use AoScrud\Repositories\Traits\Columns;
 use AoScrud\Repositories\Traits\Criteria;
+use AoScrud\Repositories\Traits\Data;
+use AoScrud\Repositories\Traits\Keys;
+use AoScrud\Repositories\Traits\Obj;
+use AoScrud\Repositories\Traits\OnError;
+use AoScrud\Repositories\Traits\OnExecute;
+use AoScrud\Repositories\Traits\OnExecuteEnd;
+use AoScrud\Repositories\Traits\OnExecuteError;
+use AoScrud\Repositories\Traits\OnPrepare;
+use AoScrud\Repositories\Traits\OnPrepareEnd;
+use AoScrud\Repositories\Traits\OnPrepareError;
+use AoScrud\Repositories\Traits\OnSuccess;
 use AoScrud\Repositories\Traits\OtherColumns;
-use AoScrud\Repositories\Traits\RouteParams;
+use AoScrud\Repositories\Traits\Select;
 use AoScrud\Repositories\Traits\With;
 
 class ReadRepository extends BaseRepository implements ReadRepositoryInterface
 {
 
-    use Columns, Criteria, OtherColumns, RouteParams, With;
+    use Keys, Data, Columns, OtherColumns, Criteria, With, Select, Obj, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     public function __construct()
     {
@@ -23,54 +34,43 @@ class ReadRepository extends BaseRepository implements ReadRepositoryInterface
     }
 
     /**
-     * @param array $data
      * @return mixed
+     * @throws \Exception
      */
-    public function run(array $data)
+    public function run()
     {
-//        $data = collect($data);
-//
-//        $model = $this->makeModel();
-//        $model = $this->makeCriteria($model, $data);
-//
-//        $result = $this->total()
-//            ? $model->paginate($this->makeLimit($data))
-//            : $model->paginate($this->makeLimit($data));
-//
-//        # TODO: OnReady or Event
-//
-//        return $result;
+        $this->prepare();
+
+        try {
+            $this->triggerOnExecute();
+            $result = $this->execute();
+            $this->triggerOnExecuteEnd($result);
+        } catch (\Exception $e) {
+            $this->triggerOnExecuteError($e);
+            throw $e;
+        }
+
+        $this->triggerOnSuccess($result);
+
+        return $result;
     }
 
-//    /**
-//     * @param mixed $model
-//     * @param Collection $data
-//     * @return mixed
-//     */
-//    protected function makeCriteria($model, Collection $data)
-//    {
-//        foreach ($this->criteria()->all() as $key => $criteria) {
-//            if (is_string($criteria) && is_subclass_of($criteria, ScrudRepositoryCriteria::class))
-//                $this->criteria->put($key, ($criteria = app($criteria)));
-//
-//            if ($criteria instanceof ScrudRepositoryCriteria)
-//                $model = $criteria->apply($this, $model, $data);
-//        }
-//        return $model;
-//    }
-//
-//    /**
-//     * @param Collection $data
-//     * @return int
-//     */
-//    protected function makeLimit(Collection $data)
-//    {
-//        $limit = $data->get('limit', false);
-//        $limit = $limit && is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= $this->limit()
-//            ? $limit
-//            : 24;
-//
-//        return $limit;
-//    }
+    public function prepare()
+    {
+        $this->triggerOnPrepare();
+        try {
+            $this->runCriteria();
+        } catch (\Exception $e) {
+            $this->triggerOnPrepareError($e);
+            throw $e;
+        }
+        $this->triggerOnPrepareEnd();
+    }
+
+    public function execute()
+    {
+        $this->obj($this->select());
+        return $this->obj();
+    }
 
 }

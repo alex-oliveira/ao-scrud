@@ -2,9 +2,10 @@
 
 namespace AoScrud\Repositories;
 
+use AoScrud\Repositories\Interfaces\Methods\ModelInterface;
 use AoScrud\Repositories\Traits\Model;
 
-abstract class BaseRepository
+abstract class BaseRepository implements ModelInterface
 {
 
     use Model;

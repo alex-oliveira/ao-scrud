@@ -6,24 +6,31 @@ use AoScrud\Repositories\Criteria\ColumnsCriteria;
 use AoScrud\Repositories\Criteria\OrdersCriteria;
 use AoScrud\Repositories\Criteria\RouteParamsCriteria;
 use AoScrud\Repositories\Criteria\RulesCriteria;
-use AoScrud\Repositories\Criteria\ScrudRepositoryCriteria;
 use AoScrud\Repositories\Criteria\WithCriteria;
 use AoScrud\Repositories\Interfaces\Repositories\SearchRepositoryInterface;
 use AoScrud\Repositories\Traits\Columns;
 use AoScrud\Repositories\Traits\Criteria;
+use AoScrud\Repositories\Traits\Data;
+use AoScrud\Repositories\Traits\Keys;
 use AoScrud\Repositories\Traits\Limit;
+use AoScrud\Repositories\Traits\OnError;
+use AoScrud\Repositories\Traits\OnExecute;
+use AoScrud\Repositories\Traits\OnExecuteEnd;
+use AoScrud\Repositories\Traits\OnExecuteError;
+use AoScrud\Repositories\Traits\OnPrepare;
+use AoScrud\Repositories\Traits\OnPrepareEnd;
+use AoScrud\Repositories\Traits\OnPrepareError;
+use AoScrud\Repositories\Traits\OnSuccess;
 use AoScrud\Repositories\Traits\Orders;
 use AoScrud\Repositories\Traits\OtherColumns;
-use AoScrud\Repositories\Traits\RouteParams;
 use AoScrud\Repositories\Traits\Rules;
 use AoScrud\Repositories\Traits\Total;
 use AoScrud\Repositories\Traits\With;
-use Illuminate\Support\Collection;
 
 class SearchRepository extends BaseRepository implements SearchRepositoryInterface
 {
 
-    use Columns, Criteria, Limit, Orders, OtherColumns, RouteParams, Rules, Total, With;
+    use Keys, Data, Columns, OtherColumns, Rules, Orders, Criteria, With, Total, Limit, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     public function __construct()
     {
@@ -35,54 +42,44 @@ class SearchRepository extends BaseRepository implements SearchRepositoryInterfa
     }
 
     /**
-     * @param array $data
      * @return mixed
+     * @throws \Exception
      */
-    public function run(array $data)
+    public function run()
     {
-        $data = collect($data);
+        $this->prepare();
 
-        $model = $this->makeModel();
-        $model = $this->makeCriteria($model, $data);
+        try {
+            $this->triggerOnExecute();
+            $result = $this->execute();
+            $this->triggerOnExecuteEnd($result);
+        } catch (\Exception $e) {
+            $this->triggerOnExecuteError($e);
+            throw $e;
+        }
 
-        $result = $this->total()
-            ? $model->paginate($this->makeLimit($data))
-            : $model->paginate($this->makeLimit($data));
-
-        # TODO: OnReady or Event
+        $this->triggerOnSuccess($result);
 
         return $result;
     }
 
-    /**
-     * @param mixed $model
-     * @param Collection $data
-     * @return mixed
-     */
-    protected function makeCriteria($model, Collection $data)
+    public function prepare()
     {
-        foreach ($this->criteria()->all() as $key => $criteria) {
-            if (is_string($criteria) && is_subclass_of($criteria, ScrudRepositoryCriteria::class))
-                $this->criteria->put($key, ($criteria = app($criteria)));
-
-            if ($criteria instanceof ScrudRepositoryCriteria)
-                $model = $criteria->apply($this, $model, $data);
+        $this->triggerOnPrepare();
+        try {
+            $this->runCriteria();
+        } catch (\Exception $e) {
+            $this->triggerOnPrepareError($e);
+            throw $e;
         }
-        return $model;
+        $this->triggerOnPrepareEnd();
     }
 
-    /**
-     * @param Collection $data
-     * @return int
-     */
-    protected function makeLimit(Collection $data)
+    public function execute()
     {
-        $limit = $data->get('limit', false);
-        $limit = $limit && is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= $this->limit()
-            ? $limit
-            : 24;
-
-        return $limit;
+        return $this->total()
+            ? $this->model()->paginate($this->limit())
+            : $this->model()->paginate($this->limit());
     }
 
 }

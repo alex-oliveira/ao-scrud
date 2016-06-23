@@ -2,33 +2,41 @@
 
 namespace AoScrud\Repositories\Criteria;
 
+use AoScrud\Repositories\Interfaces\Methods\ColumnsInterface;
+use AoScrud\Repositories\Interfaces\Methods\DataInterface;
+use AoScrud\Repositories\Interfaces\Methods\ModelInterface;
 use AoScrud\Repositories\Interfaces\Methods\OtherColumnsInterface;
 
-class ColumnsCriteria extends ScrudRepositoryCriteria
+class ColumnsCriteria extends BaseCriteria
 {
 
     /**
-     * @param \AoScrud\Repositories\Interfaces\Methods\ColumnsInterface $rep
-     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
-     * @param \Illuminate\Support\Collection $data
+     * @param \AoScrud\Repositories\BaseRepository $rep
      * @return mixed
      */
-    public function apply($rep, $query, $data)
+    public function apply($rep)
     {
+        if (!($rep instanceof ModelInterface && $rep instanceof ColumnsInterface && $rep instanceof DataInterface))
+            return;
+
         $allowed = $rep->columns();
-        $allowed = $rep instanceof OtherColumnsInterface ? $allowed->merge($rep->otherColumns()->all())->unique() : $allowed;
+
+        if ($rep instanceof OtherColumnsInterface)
+            $allowed = $allowed->merge($rep->otherColumns()->all())->unique();
 
         if ($allowed->count() == 0)
-            return $query;
+            return;
 
-        if ($columns = $data->get('columns', false))
+        if ($columns = $rep->data()->get('columns', false))
             $columns = $allowed->intersect(explode(',', $columns))->all();
 
-        $query = $columns && count($columns) > 0
-            ? $query->select($columns)
-            : $query->select($rep->columns()->all());
+        $model = $columns && count($columns) > 0
+            ? $rep->model()->select($columns)
+            : $rep->model()->select($rep->columns()->all());
 
-        return $query;
+        //echo $model->toSql(); exit;
+
+        $rep->model($model);
     }
 
 }

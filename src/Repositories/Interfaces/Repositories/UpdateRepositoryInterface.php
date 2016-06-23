@@ -4,6 +4,7 @@ namespace AoScrud\Repositories\Interfaces\Repositories;
 
 use AoScrud\Repositories\Interfaces\Methods\ColumnsInterface;
 use AoScrud\Repositories\Interfaces\Methods\DataInterface;
+use AoScrud\Repositories\Interfaces\Methods\KeysInterface;
 use AoScrud\Repositories\Interfaces\Methods\RulesInterface;
 use AoScrud\Repositories\Interfaces\Methods\ObjInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnErrorInterface;
@@ -17,6 +18,7 @@ use AoScrud\Repositories\Interfaces\Methods\OnSuccessInterface;
 use AoScrud\Repositories\Interfaces\Methods\SelectInterface;
 
 interface UpdateRepositoryInterface extends
+    KeysInterface,
     SelectInterface,
     ObjInterface,
     ColumnsInterface,

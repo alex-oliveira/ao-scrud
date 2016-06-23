@@ -26,6 +26,20 @@ trait Limit
      */
     public function getLimit()
     {
+//    /**
+//     * @param Collection $data
+//     * @return int
+//     */
+//    protected function makeLimit(Collection $data)
+//    {
+//        $limit = $data->get('limit', false);
+//        $limit = $limit && is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= $this->limit()
+//            ? $limit
+//            : 24;
+//
+//        return $limit;
+//    }
+
         return $this->limit;
     }
 

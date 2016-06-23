@@ -2,6 +2,7 @@
 
 namespace AoScrud\Repositories\Traits;
 
+use AoScrud\Repositories\Criteria\BaseCriteria;
 use Illuminate\Support\Collection;
 
 trait Criteria
@@ -39,6 +40,17 @@ trait Criteria
     {
         $this->criteria = collect($criteria);
         return $this;
+    }
+
+    public function runCriteria()
+    {
+        foreach ($this->criteria()->all() as $key => $criteria) {
+            if (is_string($criteria) && is_subclass_of($criteria, BaseCriteria::class))
+                $this->criteria->put($key, ($criteria = app($criteria)));
+
+            if ($criteria instanceof BaseCriteria)
+                $criteria->apply($this);
+        }
     }
 
 }

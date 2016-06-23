@@ -2,7 +2,11 @@
 
 namespace AoScrud\Repositories\Criteria;
 
-class RulesCriteria extends ScrudRepositoryCriteria
+use AoScrud\Repositories\Interfaces\Methods\DataInterface;
+use AoScrud\Repositories\Interfaces\Methods\ModelInterface;
+use AoScrud\Repositories\Interfaces\Methods\RulesInterface;
+
+class RulesCriteria extends BaseCriteria
 {
 
     /**
@@ -11,20 +15,30 @@ class RulesCriteria extends ScrudRepositoryCriteria
     private $data;
 
     /**
-     * @param \AoScrud\Repositories\Interfaces\Methods\RulesInterface $rep
-     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
-     * @param \Illuminate\Support\Collection $data
+     * @param \AoScrud\Repositories\BaseRepository $rep
      * @return mixed
      */
-    public function apply($rep, $query, $data)
+    public function apply($rep)
     {
+        if (!($rep instanceof ModelInterface && $rep instanceof RulesInterface && $rep instanceof DataInterface))
+            return;
+
         if ($rep->rules()->isEmpty())
-            return $query;
+            return;
 
-        $this->data = $data;
+        $this->data = $rep->data();
+        $rep->model($this->run($rep->rules(), $rep->model()));
+    }
 
-        $query = $query->where(function ($q) use ($rep) {
-            $this->rules($q, $rep->rules()->toArray());
+    /**
+     * @param \Illuminate\Support\Collection $rules
+     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder
+     */
+    protected function run($rules, $query)
+    {
+        $query = $query->where(function ($q) use ($rules) {
+            $this->rules($q, $rules->toArray());
         });
 
         //echo $query->toSql(); exit;
