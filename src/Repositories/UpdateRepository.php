@@ -5,6 +5,7 @@ namespace AoScrud\Repositories;
 use AoScrud\Repositories\Interfaces\Repositories\UpdateRepositoryInterface;
 use AoScrud\Repositories\Traits\Columns;
 use AoScrud\Repositories\Traits\Data;
+use AoScrud\Repositories\Traits\Keys;
 use AoScrud\Repositories\Traits\Obj;
 use AoScrud\Repositories\Traits\OnError;
 use AoScrud\Repositories\Traits\OnExecute;
@@ -20,14 +21,7 @@ use AoScrud\Repositories\Traits\Select;
 class UpdateRepository extends BaseRepository implements UpdateRepositoryInterface
 {
 
-    use Select, Obj, Columns, Rules, Data, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
-
-    public function __construct()
-    {
-        $this->select(function ($rep) {
-            return $rep->model()->find($rep->data()->get('id'));
-        });
-    }
+    use Keys, Data, Columns, Rules, Select, Obj, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     /**
      * @return mixed

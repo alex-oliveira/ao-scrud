@@ -2,6 +2,8 @@
 
 namespace AoScrud\Repositories\Traits;
 
+use AoScrud\Repositories\Interfaces\Methods\KeysInterface;
+
 trait Select
 {
 
@@ -27,10 +29,28 @@ trait Select
     public function getSelect()
     {
         if (is_null($this->select))
-            return null;
+            $closure = $this->getSelectDefault();
+        else
+            $closure = $this->select;
 
-        $closure = $this->select;
         return $closure($this);
+    }
+
+    /**
+     * @return \Closure
+     */
+    public function getSelectDefault()
+    {
+        return function ($rep) {
+            if (!($rep instanceof KeysInterface))
+                return $rep->model()->find($rep->data()->get('id'));
+
+            $model = $rep->model();
+            foreach ($rep->keys() as $key)
+                $model = $model->where($key, $rep->data()->get($key));
+
+            return $model->first();
+        };
     }
 
     /**

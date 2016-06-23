@@ -2,25 +2,23 @@
 
 namespace AoScrud\Repositories\Criteria;
 
-class RouteParamsCriteria extends ScrudRepositoryCriteria
+class RouteParamsCriteria extends BaseCriteria
 {
 
     /**
-     * @param \AoScrud\Repositories\Interfaces\Methods\RouteParamsInterface $rep
-     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
-     * @param \Illuminate\Support\Collection $data
+     * @param \AoScrud\Repositories\BaseRepository $rep
      * @return mixed
      */
-    public function apply($rep, $query, $data)
+    public function apply($rep)
     {
-        if ($rep->routeParams()->isEmpty())
-            return $query;
-
-        $where = $data->only($rep->routeParams()->all())->all();
-        if (is_array($where) && count($where) > 0)
-            return $query->where($where);
-
-        return $query;
+//        if ($rep->routeParams()->isEmpty())
+//            return $query;
+//
+//        $where = $data->only($rep->routeParams()->all())->all();
+//        if (is_array($where) && count($where) > 0)
+//            return $query->where($where);
+//
+//        return $query;
     }
 
 }

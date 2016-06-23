@@ -2,18 +2,48 @@
 
 Resources for SCRUD with Laravel 5.1
 
+## SearchRepository
+````
+$rep = new SearchRepository();
+$rep->model(User::class)
+    ->data($data)
+    ->columns(['id', 'nickname'])
+    ->otherColumns(['name', 'email', 'created_at', 'updated_at'])
+    ->orders(['id', 'name', 'nickname', 'email', 'created_at', 'updated_at'])
+    ->rules([
+        ['id' => '='],
+        ['email' => '%like%'],
+        ['name' => '%like%|get:search'],
+        ['nickname' => '%like%|get:search']
+    ]);
+    
+$result = $rep->run();
+````
+
 ## CreateRepository
 ````
 $rep = new CreateRepository();
 
 $rep->model(User::class)
     ->data($data)
-    ->columns(['name', 'description'])
+    ->columns(['name', 'nickname', 'email'])
     ->rules([
-        'name' => 'required|max:100|unique:users,name',
+        'name' => 'required|max:100',
+        'nickname' => 'required|max:50|unique:users,nickname',
         'email' => 'required|email|unique:users,email'
     ]);
     
+$result = $rep->run();
+````
+
+## ReadRepository
+````
+$rep = new ReadRepository();
+$rep->model(User::class)
+    ->data($data)
+    ->columns(['id', 'nickname'])
+    ->otherColumns(['name', 'email', 'created_at', 'updated_at']);
+        
 $result = $rep->run();
 ````
 
@@ -23,10 +53,10 @@ $rep = new UpdateRepository();
 
 $rep->model(User::class)
     ->data($data)
-    ->columns(['name', 'description'])
+    ->columns(['name', 'nickname'])
     ->rules([
-        'name' => 'required|max:100|unique:users,name',
-        'email' => 'required|email|unique:users,email'
+        'name' => 'required|max:100',
+        'nickname' => 'required|max:50|unique:users,nickname,' . $data['id']
     ]);
     
 $result = $rep->run();
