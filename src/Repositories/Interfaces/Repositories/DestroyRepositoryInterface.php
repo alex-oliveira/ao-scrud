@@ -13,14 +13,18 @@ use AoScrud\Repositories\Interfaces\Methods\OnExecuteErrorInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnExecuteInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnSuccessInterface;
 use AoScrud\Repositories\Interfaces\Methods\SoftInterface;
+use AoScrud\Repositories\Interfaces\Methods\TitleInterface;
+use AoScrud\Repositories\Interfaces\Methods\TypeInterface;
 
 interface DestroyRepositoryInterface extends
     DataInterface,
     KeysInterface,
+    TitleInterface,
     BlockInterface,
     DissociateInterface,
     CascadeInterface,
     SoftInterface,
+    TypeInterface,
     OnExecuteInterface,
     OnExecuteEndInterface,
     OnExecuteErrorInterface,

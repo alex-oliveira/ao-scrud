@@ -42,7 +42,9 @@ trait Select
     public function getSelectDefault()
     {
         return function ($rep) {
-            if (!($rep instanceof KeysInterface))
+            $keys = $rep instanceof KeysInterface ? $rep->keys() : [];
+
+            if (empty($keys))
                 return $rep->model()->find($rep->data()->get('id'));
 
             $model = $rep->model();

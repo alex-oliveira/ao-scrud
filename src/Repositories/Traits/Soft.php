@@ -16,10 +16,10 @@ trait Soft
      */
     public function soft($active = null)
     {
-        if (!is_null($active))
-            $active ? $this->withSoftDelete() : $this->withoutSoftDelete();
-
-        return $this->soft;
+        if (is_null($active))
+            return $this->soft;
+        $active ? $this->withSoftDelete() : $this->withoutSoftDelete();
+        return $this;
     }
 
     /**

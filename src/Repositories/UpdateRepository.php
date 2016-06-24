@@ -29,8 +29,6 @@ class UpdateRepository extends BaseRepository implements UpdateRepositoryInterfa
      */
     public function run()
     {
-        $this->obj($this->select());
-
         $this->prepare();
 
         $t = Transaction()->begin();
@@ -54,6 +52,7 @@ class UpdateRepository extends BaseRepository implements UpdateRepositoryInterfa
     {
         $this->triggerOnPrepare();
         try {
+            $this->read();
             $this->validate();
             $this->filter();
         } catch (\Exception $e) {
@@ -61,6 +60,12 @@ class UpdateRepository extends BaseRepository implements UpdateRepositoryInterfa
             throw $e;
         }
         $this->triggerOnPrepareEnd();
+    }
+
+    public function read()
+    {
+        $obj = $this->select();
+        $obj ? $this->obj($obj) : abort(404);
     }
 
     public function validate()
