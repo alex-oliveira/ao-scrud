@@ -96,7 +96,7 @@ $rep = new DestroyRepository();
 $rep->model(User::class)
     ->data($data)
     ->title('usuário')
-    ->block(['requests', 'logs'])
+    ->block(['requests' => 'pedido', 'logs' => 'log'])
     ->dissociate(['groups', 'routes'])
     ->cascade(['accounts', 'contacts', 'files'])
     ->soft(true);
