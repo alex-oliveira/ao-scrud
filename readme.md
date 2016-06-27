@@ -60,6 +60,7 @@ $result = $rep->run();
 $rep = new ReadRepository();
 $rep->model(User::class)
     ->data($data)
+    
     ->columns(['id', 'nickname'])
     ->otherColumns(['name', 'email', 'created_at', 'updated_at']);
         
@@ -75,7 +76,7 @@ $rep->model(User::class)
     ->columns(['name', 'nickname'])
     ->rules([
         'name' => 'required|max:100',
-        'nickname' => 'required|max:50|unique:users,nickname,' . $data['id']
+        'nickname' => 'required|max:50|unique:users,nickname,{{id}}' . $data['id']
     ]);
     
 $result = $rep->run();
@@ -86,6 +87,31 @@ $result = $rep->run();
 $rep->select(function ($rep) {
      return $rep->model()->find($rep->data()->get('id'));
 });
+````
+
+## DestroyRepository
+````
+$rep = new DestroyRepository();
+
+$rep->model(User::class)
+    ->data($data)
+    ->title('usuário')
+    ->block(['requests' => 'pedido', 'logs' => 'log'])
+    ->dissociate(['groups', 'routes'])
+    ->cascade(['accounts', 'contacts', 'files'])
+    ->soft(true);
+    
+$result = $rep->run();
+````
+
+## RestoreRepository
+````
+$rep = new RestoreRepository();
+
+$rep->model(Group::class)
+    ->data($data);
+    
+$result = $rep->run();
 ````
 
 ## Callbacks 
