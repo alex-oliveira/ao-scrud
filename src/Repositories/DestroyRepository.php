@@ -22,6 +22,8 @@ use AoScrud\Repositories\Traits\Soft;
 use AoScrud\Repositories\Traits\Title;
 use AoScrud\Repositories\Traits\Type;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class DestroyRepository extends BaseRepository implements DestroyRepositoryInterface
 {
@@ -103,6 +105,7 @@ class DestroyRepository extends BaseRepository implements DestroyRepositoryInter
 
     public function execute()
     {
+        $this->deleteAssociations();
         $this->deleteCascade();
 
         if (!$this->soft())
@@ -112,6 +115,25 @@ class DestroyRepository extends BaseRepository implements DestroyRepositoryInter
             return $this->obj()->forceDelete();
 
         return $this->obj()->delete();
+    }
+
+    public function deleteAssociations()
+    {
+        if ($this->soft() && $this->type() == self::LOGICAL_EXCLUSION)
+            return;
+
+        $obj = $this->obj();
+        foreach ($this->dissociate() as $method) {
+            $items = $obj->{$method}();
+
+            if ($items instanceof BelongsToMany) {
+                $items->sync([]);
+            } elseif ($items instanceof BelongsTo) {
+                $items->dissociate();
+            } else {
+                dd('DISSOCIATE TYPE NOT IMPLEMENTED');
+            }
+        }
     }
 
     public function deleteCascade()
