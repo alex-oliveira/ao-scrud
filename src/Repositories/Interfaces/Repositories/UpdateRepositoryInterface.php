@@ -18,12 +18,12 @@ use AoScrud\Repositories\Interfaces\Methods\OnSuccessInterface;
 use AoScrud\Repositories\Interfaces\Methods\SelectInterface;
 
 interface UpdateRepositoryInterface extends
+    DataInterface,
     KeysInterface,
     SelectInterface,
-    ObjInterface,
     ColumnsInterface,
     RulesInterface,
-    DataInterface,
+    ObjInterface,
     OnPrepareInterface,
     OnPrepareEndInterface,
     OnPrepareErrorInterface,

@@ -15,9 +15,9 @@ use AoScrud\Repositories\Interfaces\Methods\OnPrepareInterface;
 use AoScrud\Repositories\Interfaces\Methods\OnSuccessInterface;
 
 interface CreateRepositoryInterface extends
+    DataInterface,
     ColumnsInterface,
     RulesInterface,
-    DataInterface,
     OnPrepareInterface,
     OnPrepareEndInterface,
     OnPrepareErrorInterface,

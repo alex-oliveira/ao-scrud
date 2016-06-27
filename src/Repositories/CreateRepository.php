@@ -18,7 +18,7 @@ use AoScrud\Repositories\Traits\Rules;
 class CreateRepository extends BaseRepository implements CreateRepositoryInterface
 {
 
-    use Columns, Rules, Data, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
+    use Data, Columns, Rules, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     /**
      * @return mixed
