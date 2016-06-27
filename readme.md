@@ -70,6 +70,31 @@ $rep->select(function ($rep) {
 });
 ````
 
+## DestroyRepository
+````
+$rep = new DestroyRepository();
+
+$rep->model(User::class)
+    ->data($data)
+    ->title('usuário')
+    ->block(['requests', 'logs'])
+    ->dissociate(['groups', 'routes'])
+    ->cascade(['accounts', 'contacts', 'files'])
+    ->soft(true);
+    
+$result = $rep->run();
+````
+
+## RestoreRepository
+````
+$rep = new RestoreRepository();
+
+$rep->model(Group::class)
+    ->data($data);
+    
+$result = $rep->run();
+````
+
 ## Callbacks 
 
 ### OnPrepare

@@ -21,32 +21,14 @@ class RestoreRepository extends BaseRepository implements RestoreRepositoryInter
 
     use Data, Keys, Select, Obj, OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
-    public function __construct()
-    {
-        $this->model($this->model()->onlyTrashed());
-
-//        $this->select(function(){
-//            return function ($rep) {
-//                $keys = $rep instanceof KeysInterface ? $rep->keys() : [];
-//
-//                if (empty($keys))
-//                    return $rep->model()->find($rep->data()->get('id'));
-//
-//                $model = $rep->model();
-//                foreach ($rep->keys() as $key)
-//                    $model = $model->where($key, $rep->data()->get($key));
-//
-//                return $model->first();
-//            };
-//        });
-    }
-
     /**
      * @return mixed
      * @throws \Exception
      */
     public function run()
     {
+        $this->model($this->model()->onlyTrashed());
+
         $this->prepare();
 
         $t = Transaction()->begin();
@@ -86,7 +68,6 @@ class RestoreRepository extends BaseRepository implements RestoreRepositoryInter
 
     public function execute()
     {
-        dd($this->obj());
         return $this->obj()->restore();
     }
 
