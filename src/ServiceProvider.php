@@ -5,6 +5,7 @@ namespace AoScrud;
 use AoScrud\Utils\Facades\TransactionFacade;
 use AoScrud\Utils\Facades\ValidateFacade;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Validator;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -16,6 +17,10 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
+        Validator::extend('cep', 'AoScrud\Utils\Validators\CepValidator@validate');
+        Validator::extend('cpf', 'AoScrud\Utils\Validators\CpfValidator@validate');
+        Validator::extend('cnpj', 'AoScrud\Utils\Validators\CnpjValidator@validate');
+
         $this->app->singleton('transaction', function ($app) {
             return new TransactionFacade();
         });
