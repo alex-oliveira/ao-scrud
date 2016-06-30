@@ -42,6 +42,9 @@ trait With
         if ($this->with instanceof Collection)
             return $this->with;
 
+        if (is_null($this->with))
+            return $this->with = collect([]);
+
         if (is_array($this->with))
             return $this->with = collect($this->with);
 

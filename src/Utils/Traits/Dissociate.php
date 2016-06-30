@@ -42,6 +42,9 @@ trait Dissociate
         if ($this->dissociate instanceof Collection)
             return $this->dissociate;
 
+        if (is_null($this->dissociate))
+            return $this->dissociate = collect([]);
+
         if (is_array($this->dissociate))
             return $this->dissociate = collect($this->dissociate);
 
