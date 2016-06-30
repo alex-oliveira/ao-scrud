@@ -150,6 +150,34 @@ $this->restore
     ->model(Group::class);
 ````
 
+## Customizations
+
+### Select
+````
+$config->select(function ($config) {
+     return User::find(1);
+});
+````
+````
+$config->select(function ($config) {
+     return $config->model()->find($config->data()->get('id'));
+});
+````
+
+### Roles
+````
+$config->rules([
+    'nickname' => 'required|max:50|unique:users,nickname'
+]);
+````
+````
+$config->rules(function($config){
+    return [
+        'nickname' => 'required|max:50|unique:users,nickname,' . $config->data()->get('id')
+    ]
+});
+````
+
 ## Callbacks 
 
 ### OnPrepare
@@ -221,33 +249,5 @@ It is dispatched when any error happen, since that it not has a specific error c
 ````
 $config->onError(function ($config, $exception) {
 
-});
-````
-
-## Customizations
-
-### Select
-````
-$config->select(function ($config) {
-     return User::find(1);
-});
-````
-````
-$config->select(function ($config) {
-     return $config->model()->find($config->data()->get('id'));
-});
-````
-
-### Roles
-````
-$config->rules([
-    'nickname' => 'required|max:50|unique:users,nickname'
-]);
-````
-````
-$config->rules(function($config){
-    return [
-        'nickname' => 'required|max:50|unique:users,nickname,' . $config->data()->get('id')
-    ]
 });
 ````
