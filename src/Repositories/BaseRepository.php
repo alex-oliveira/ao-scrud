@@ -2,8 +2,8 @@
 
 namespace AoScrud\Repositories;
 
-use AoScrud\Repositories\Interfaces\Methods\ModelInterface;
-use AoScrud\Repositories\Traits\Model;
+use AoScrud\Utils\Interfaces\Traits\ModelInterface;
+use AoScrud\Utils\Traits\Model;
 
 abstract class BaseRepository implements ModelInterface
 {

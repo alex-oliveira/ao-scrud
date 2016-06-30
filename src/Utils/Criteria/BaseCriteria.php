@@ -6,10 +6,9 @@ abstract class BaseCriteria
 {
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
-     * @param \Illuminate\Support\Collection $data
+     * @param mixed
      * @return mixed
      */
-    abstract public function apply($query, $data);
+    abstract public function apply($rep);
 
 }

@@ -2,40 +2,41 @@
 
 namespace AoScrud\Utils\Criteria;
 
+use AoScrud\Utils\Interfaces\Traits\ColumnsInterface;
+use AoScrud\Utils\Interfaces\Traits\DataInterface;
+use AoScrud\Utils\Interfaces\Traits\ModelInterface;
+use AoScrud\Utils\Interfaces\Traits\OtherColumnsInterface;
+
 class ColumnsCriteria extends BaseCriteria
 {
 
     /**
-     * @var array
-     */
-    private $columns;
-
-    /**
-     * @param array $columns
-     */
-    public function __construct(array $columns)
-    {
-        $this->columns = $columns;
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
-     * @param \Illuminate\Support\Collection $data
+     * @param mixed
      * @return mixed
      */
-    public function apply($query, $data)
+    public function apply($rep)
     {
-        if (empty($this->columns))
-            return $query;
+        if (!($rep instanceof ModelInterface && $rep instanceof ColumnsInterface && $rep instanceof DataInterface))
+            return;
 
-        if ($columns = $data->get('columns', false))
-            $columns = array_intersect(explode(',', $columns), $this->columns);
+        $allowed = $rep->columns();
 
-        $query = $columns && count($columns) > 0
-            ? $query->select($columns)
-            : $query->select($this->columns);
+        if ($rep instanceof OtherColumnsInterface)
+            $allowed = $allowed->merge($rep->otherColumns()->all())->unique();
 
-        return $query;
+        if ($allowed->count() == 0)
+            return;
+
+        if ($columns = $rep->data()->get('columns', false))
+            $columns = $allowed->intersect(explode(',', $columns))->all();
+
+        $model = $columns && count($columns) > 0
+            ? $rep->model()->select($columns)
+            : $rep->model()->select($rep->columns()->all());
+
+        //echo $model->toSql(); exit;
+
+        $rep->model($model);
     }
 
 }

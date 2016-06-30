@@ -2,30 +2,30 @@
 
 namespace AoScrud\Repositories;
 
-use AoScrud\Repositories\Criteria\ColumnsCriteria;
-use AoScrud\Repositories\Criteria\OrdersCriteria;
-use AoScrud\Repositories\Criteria\RouteParamsCriteria;
-use AoScrud\Repositories\Criteria\RulesCriteria;
-use AoScrud\Repositories\Criteria\WithCriteria;
-use AoScrud\Repositories\Interfaces\Repositories\SearchRepositoryInterface;
-use AoScrud\Repositories\Traits\Columns;
-use AoScrud\Repositories\Traits\Criteria;
-use AoScrud\Repositories\Traits\Data;
-use AoScrud\Repositories\Traits\Keys;
-use AoScrud\Repositories\Traits\Limit;
-use AoScrud\Repositories\Traits\OnError;
-use AoScrud\Repositories\Traits\OnExecute;
-use AoScrud\Repositories\Traits\OnExecuteEnd;
-use AoScrud\Repositories\Traits\OnExecuteError;
-use AoScrud\Repositories\Traits\OnPrepare;
-use AoScrud\Repositories\Traits\OnPrepareEnd;
-use AoScrud\Repositories\Traits\OnPrepareError;
-use AoScrud\Repositories\Traits\OnSuccess;
-use AoScrud\Repositories\Traits\Orders;
-use AoScrud\Repositories\Traits\OtherColumns;
-use AoScrud\Repositories\Traits\Rules;
-use AoScrud\Repositories\Traits\Total;
-use AoScrud\Repositories\Traits\With;
+use AoScrud\Interfaces\Repositories\SearchRepositoryInterface;
+use AoScrud\Utils\Criteria\ColumnsCriteria;
+use AoScrud\Utils\Criteria\OrdersCriteria;
+use AoScrud\Utils\Criteria\RouteParamsCriteria;
+use AoScrud\Utils\Criteria\RulesCriteria;
+use AoScrud\Utils\Criteria\WithCriteria;
+use AoScrud\Utils\Traits\Columns;
+use AoScrud\Utils\Traits\Criteria;
+use AoScrud\Utils\Traits\Data;
+use AoScrud\Utils\Traits\Keys;
+use AoScrud\Utils\Traits\Limit;
+use AoScrud\Utils\Traits\OnError;
+use AoScrud\Utils\Traits\OnExecute;
+use AoScrud\Utils\Traits\OnExecuteEnd;
+use AoScrud\Utils\Traits\OnExecuteError;
+use AoScrud\Utils\Traits\OnPrepare;
+use AoScrud\Utils\Traits\OnPrepareEnd;
+use AoScrud\Utils\Traits\OnPrepareError;
+use AoScrud\Utils\Traits\OnSuccess;
+use AoScrud\Utils\Traits\Orders;
+use AoScrud\Utils\Traits\OtherColumns;
+use AoScrud\Utils\Traits\Rules;
+use AoScrud\Utils\Traits\Total;
+use AoScrud\Utils\Traits\With;
 
 class SearchRepository extends BaseRepository implements SearchRepositoryInterface
 {

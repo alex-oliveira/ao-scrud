@@ -2,19 +2,19 @@
 
 namespace AoScrud\Repositories;
 
-use AoScrud\Repositories\Interfaces\Repositories\RestoreRepositoryInterface;
-use AoScrud\Repositories\Traits\Data;
-use AoScrud\Repositories\Traits\Keys;
-use AoScrud\Repositories\Traits\Obj;
-use AoScrud\Repositories\Traits\OnError;
-use AoScrud\Repositories\Traits\OnExecute;
-use AoScrud\Repositories\Traits\OnExecuteEnd;
-use AoScrud\Repositories\Traits\OnExecuteError;
-use AoScrud\Repositories\Traits\OnPrepare;
-use AoScrud\Repositories\Traits\OnPrepareEnd;
-use AoScrud\Repositories\Traits\OnPrepareError;
-use AoScrud\Repositories\Traits\OnSuccess;
-use AoScrud\Repositories\Traits\Select;
+use AoScrud\Interfaces\Repositories\RestoreRepositoryInterface;
+use AoScrud\Utils\Traits\Data;
+use AoScrud\Utils\Traits\Keys;
+use AoScrud\Utils\Traits\Obj;
+use AoScrud\Utils\Traits\OnError;
+use AoScrud\Utils\Traits\OnExecute;
+use AoScrud\Utils\Traits\OnExecuteEnd;
+use AoScrud\Utils\Traits\OnExecuteError;
+use AoScrud\Utils\Traits\OnPrepare;
+use AoScrud\Utils\Traits\OnPrepareEnd;
+use AoScrud\Utils\Traits\OnPrepareError;
+use AoScrud\Utils\Traits\OnSuccess;
+use AoScrud\Utils\Traits\Select;
 
 class RestoreRepository extends BaseRepository implements RestoreRepositoryInterface
 {
