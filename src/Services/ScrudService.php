@@ -14,8 +14,15 @@ use AoScrud\Services\Resources\Read;
 use AoScrud\Services\Resources\Update;
 use AoScrud\Services\Resources\Search;
 use AoScrud\Services\Resources\Restore;
+use AoScrud\Utils\Interfaces\Resources\CreateResourceInterface;
+use AoScrud\Utils\Interfaces\Resources\DestroyResourceInterface;
+use AoScrud\Utils\Interfaces\Resources\ReadResourceInterface;
+use AoScrud\Utils\Interfaces\Resources\RestoreResourceInterface;
+use AoScrud\Utils\Interfaces\Resources\SearchResourceInterface;
+use AoScrud\Utils\Interfaces\Resources\UpdateResourceInterface;
 
-abstract class ScrudService
+class ScrudService implements SearchResourceInterface, CreateResourceInterface, ReadResourceInterface,
+    UpdateResourceInterface, DestroyResourceInterface, RestoreResourceInterface
 {
 
     use Search, Create, Read, Update, Destroy, Restore;

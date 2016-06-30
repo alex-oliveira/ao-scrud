@@ -9,16 +9,26 @@ trait Search
 {
 
     /**
+     * Configs to search.
+     *
      * @var SearchConfig
      */
     protected $search;
+
+    /**
+     * Return the configs to search.
+     */
+    public function searchConfig()
+    {
+        return $this->search;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Main method to read in the repository.
+     * Main method to read.
      *
      * @param array $data
      * @return mixed
@@ -26,14 +36,12 @@ trait Search
     public function search(array $data)
     {
         $this->search->data($data);
-
         $this->searchPrepare();
-
         return $this->searchExecute();
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // SECONDARY METHODS
+    // AUXILIARY METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -45,7 +53,7 @@ trait Search
     }
 
     /**
-     * Run find command in the repository.
+     * Run paginate command in the model.
      *
      * @return LengthAwarePaginator
      */

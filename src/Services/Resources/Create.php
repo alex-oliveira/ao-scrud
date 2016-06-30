@@ -9,19 +9,29 @@ trait Create
 {
 
     /**
+     * Configs to create.
+     *
      * @var CreateConfig
      */
     protected $create;
+
+    /**
+     * Return the configs to create.
+     */
+    public function createConfig()
+    {
+        return $this->create;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Main method to registry in the repository.
+     * Main method to registry.
      *
-     * @param array $data
-     * @return Model
+     * @param null|array $data
+     * @return CreateConfig|Model
      * @throws \Exception
      */
     public function create(array $data)
@@ -32,14 +42,14 @@ trait Create
 
         $t = Transaction()->begin();
         try {
-            $obj = $this->createExecute();
+            $result = $this->createExecute();
         } catch (\Exception $e) {
             Transaction()->rollBack($t);
             throw $e;
         }
         Transaction()->commit($t);
 
-        return $obj;
+        return $result;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -47,7 +57,7 @@ trait Create
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Rum the preparations to create.
+     * Run all preparations before create.
      */
     protected function createPrepare()
     {
@@ -59,7 +69,10 @@ trait Create
      */
     protected function createValidate()
     {
-        Validate()->actor($this)->data($this->create->data())->rules($this->create->rules())->run();
+        Validate()->actor($this)
+            ->data($this->create->data())
+            ->rules($this->create->rules())
+            ->run();
     }
 
     /**
@@ -73,7 +86,7 @@ trait Create
     }
 
     /**
-     * Run create command in the service.
+     * Run create command in the model.
      *
      * @return Model
      */
