@@ -150,80 +150,6 @@ $this->restore
     ->model(Group::class);
 ````
 
-## Callbacks 
-
-### OnPrepare
-It is dispatched when the "prepare" is started.
-
-````
-$config->onPrepare(function ($rep) {
-    
-});
-````
-
-### OnPrepareEnd
-It is dispatched when the "prepare" is ended.
-
-````
-$config->onPrepareEnd(function ($rep) {
-    
-})
-````
-
-### OnPrepareError
-It is dispatched when happen error during the "prepare".
-
-````
-$config->onPrepareError(function ($rep, $exception) {
-    
-})
-````
-
-### OnExecute
-It is dispatched when the "execute" is started.
-
-````
-$config->onExecute(function ($rep) {
-
-})
-````
-
-### OnExecuteEnd
-It is dispatched when the "execute" is ended.
-
-````
-$config->onExecuteEnd(function ($rep, $result) {
-
-});
-````
-
-### OnExecuteError
-It is dispatched when happen error during the "execute".
-
-````
-$config->onExecuteError(function ($rep, $exception) {
-
-});
-````
-
-### OnSuccess
-It is dispatched when all is processed without erros. 
-
-````
-$config->onSuccess(function ($rep, $result) {
-
-});
-````
-
-### OnError
-It is dispatched when any error happen, since that it not has a specific error callback. 
-
-````
-$config->onError(function ($rep, $exception) {
-
-});
-````
-
 ## Customizations
 
 ### Select
@@ -249,5 +175,79 @@ $config->rules(function($config){
     return [
         'nickname' => 'required|max:50|unique:users,nickname,' . $config->data()->get('id')
     ]
+});
+````
+
+## Callbacks 
+
+### OnPrepare
+It is dispatched when the "prepare" is started.
+
+````
+$config->onPrepare(function ($config) {
+    
+});
+````
+
+### OnPrepareEnd
+It is dispatched when the "prepare" is ended.
+
+````
+$config->onPrepareEnd(function ($config) {
+    
+})
+````
+
+### OnPrepareError
+It is dispatched when happen error during the "prepare".
+
+````
+$config->onPrepareError(function ($config, $exception) {
+    
+})
+````
+
+### OnExecute
+It is dispatched when the "execute" is started.
+
+````
+$config->onExecute(function ($config) {
+
+})
+````
+
+### OnExecuteEnd
+It is dispatched when the "execute" is ended.
+
+````
+$config->onExecuteEnd(function ($config, $result) {
+
+});
+````
+
+### OnExecuteError
+It is dispatched when happen error during the "execute".
+
+````
+$config->onExecuteError(function ($config, $exception) {
+
+});
+````
+
+### OnSuccess
+It is dispatched when all is processed without erros. 
+
+````
+$config->onSuccess(function ($config, $result) {
+
+});
+````
+
+### OnError
+It is dispatched when any error happen, since that it not has a specific error callback. 
+
+````
+$config->onError(function ($config, $exception) {
+
 });
 ````
