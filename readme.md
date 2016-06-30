@@ -156,7 +156,7 @@ $this->restore
 It is dispatched when the "prepare" is started.
 
 ````
-$config->onPrepare(function ($rep) {
+$config->onPrepare(function ($config) {
     
 });
 ````
@@ -165,7 +165,7 @@ $config->onPrepare(function ($rep) {
 It is dispatched when the "prepare" is ended.
 
 ````
-$config->onPrepareEnd(function ($rep) {
+$config->onPrepareEnd(function ($config) {
     
 })
 ````
@@ -174,7 +174,7 @@ $config->onPrepareEnd(function ($rep) {
 It is dispatched when happen error during the "prepare".
 
 ````
-$config->onPrepareError(function ($rep, $exception) {
+$config->onPrepareError(function ($config, $exception) {
     
 })
 ````
@@ -183,7 +183,7 @@ $config->onPrepareError(function ($rep, $exception) {
 It is dispatched when the "execute" is started.
 
 ````
-$config->onExecute(function ($rep) {
+$config->onExecute(function ($config) {
 
 })
 ````
@@ -192,7 +192,7 @@ $config->onExecute(function ($rep) {
 It is dispatched when the "execute" is ended.
 
 ````
-$config->onExecuteEnd(function ($rep, $result) {
+$config->onExecuteEnd(function ($config, $result) {
 
 });
 ````
@@ -201,7 +201,7 @@ $config->onExecuteEnd(function ($rep, $result) {
 It is dispatched when happen error during the "execute".
 
 ````
-$config->onExecuteError(function ($rep, $exception) {
+$config->onExecuteError(function ($config, $exception) {
 
 });
 ````
@@ -210,7 +210,7 @@ $config->onExecuteError(function ($rep, $exception) {
 It is dispatched when all is processed without erros. 
 
 ````
-$config->onSuccess(function ($rep, $result) {
+$config->onSuccess(function ($config, $result) {
 
 });
 ````
@@ -219,7 +219,7 @@ $config->onSuccess(function ($rep, $result) {
 It is dispatched when any error happen, since that it not has a specific error callback. 
 
 ````
-$config->onError(function ($rep, $exception) {
+$config->onError(function ($config, $exception) {
 
 });
 ````
