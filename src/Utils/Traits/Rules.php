@@ -42,6 +42,9 @@ trait Rules
         if ($this->rules instanceof Collection)
             return $this->rules;
 
+        if (is_null($this->rules))
+            return $this->rules = collect([]);
+
         if (is_array($this->rules))
             return $this->rules = collect($this->rules);
 

@@ -42,6 +42,9 @@ trait Orders
         if ($this->orders instanceof Collection)
             return $this->orders;
 
+        if (is_null($this->orders))
+            return $this->orders = collect([]);
+
         if (is_array($this->orders))
             return $this->orders = collect($this->orders);
 

@@ -42,6 +42,9 @@ trait OtherColumns
         if ($this->otherColumns instanceof Collection)
             return $this->otherColumns;
 
+        if (is_null($this->otherColumns))
+            return $this->otherColumns = collect([]);
+
         if (is_array($this->otherColumns))
             return $this->otherColumns = collect($this->otherColumns);
 

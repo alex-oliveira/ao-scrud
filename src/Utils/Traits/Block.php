@@ -42,6 +42,9 @@ trait Block
         if ($this->block instanceof Collection)
             return $this->block;
 
+        if (is_null($this->block))
+            return $this->block = collect([]);
+
         if (is_array($this->block))
             return $this->block = collect($this->block);
 

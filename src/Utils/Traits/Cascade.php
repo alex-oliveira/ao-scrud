@@ -42,6 +42,9 @@ trait Cascade
         if ($this->cascade instanceof Collection)
             return $this->cascade;
 
+        if (is_null($this->cascade))
+            return $this->cascade = collect([]);
+
         if (is_array($this->cascade))
             return $this->cascade = collect($this->cascade);
 

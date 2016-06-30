@@ -43,6 +43,9 @@ trait Criteria
         if ($this->criteria instanceof Collection)
             return $this->criteria;
 
+        if (is_null($this->criteria))
+            return $this->criteria = collect([]);
+
         if (is_array($this->criteria))
             return $this->criteria = collect($this->criteria);
 

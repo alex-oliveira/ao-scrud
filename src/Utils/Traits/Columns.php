@@ -42,6 +42,9 @@ trait Columns
         if ($this->columns instanceof Collection)
             return $this->columns;
 
+        if (is_null($this->columns))
+            return $this->columns = collect([]);
+
         if (is_array($this->columns))
             return $this->columns = collect($this->columns);
 
