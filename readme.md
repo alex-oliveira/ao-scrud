@@ -21,7 +21,7 @@ $ composer require alex-oliveira/ao-scrud
 
 # Samples
 
-Bellow, do you can see some fast samples, but if you need more information click **here**.
+Bellow, do you can see some fast samples, but if you need more information [**open the wikie**](https://github.com/alex-oliveira/ao-scrud/wiki).
 
 ## Controllers
 
