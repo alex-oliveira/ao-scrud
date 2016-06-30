@@ -2,7 +2,7 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Interceptors\BaseInterceptor;
+use AoScrud\Services\Configs\UpdateConfig;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -10,25 +10,26 @@ trait Update
 {
 
     /**
-     * The validation rules to update or an interceptor class that return an array.
+     * Configs to update.
      *
-     * @var array|BaseInterceptor
+     * @var UpdateConfig
      */
-    protected $updateRules = [];
+    protected $update;
 
     /**
-     * The allowed fields to update.
-     *
-     * @var array
+     * Return the configs to update.
      */
-    protected $updateFillable = [];
+    public function updateConfig()
+    {
+        return $this->update;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Main method to update in the repository.
+     * Main method to update.
      *
      * @param array $data
      * @return bool
@@ -36,101 +37,87 @@ trait Update
      */
     public function update(array $data)
     {
-        $data = collect($data);
+        $this->update->data($data);
 
-        $obj = $this->updateSelect($data);
-        $this->updatePrepare($data, $obj);
+        $this->updatePrepare();
 
         $t = Transaction()->begin();
         try {
-            $status = $this->updateRun($data, $obj);
+            $this->update->triggerOnExecute();
+            $result = $this->updateExecute();
+            $this->update->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
             Transaction()->rollBack($t);
+            $this->update->triggerOnExecuteError($e);
             throw $e;
         }
         Transaction()->commit($t);
 
-        return $status;
+        $this->update->triggerOnSuccess($result);
+
+        return $result;
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // SECONDARY METHODS
+    // AUXILIARY METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Return the object the should be updated.
-     *
-     * @param Collection $data
-     * @return Model $obj
+     * Run all preparations before update.
      */
-    protected function updateSelect(Collection $data)
+    protected function updatePrepare()
     {
-        return $this->model()->find($data->get('id'));
+        $this->update->triggerOnPrepare();
+        try {
+            $this->updateSelect();
+            $this->updateValidate();
+        } catch (\Exception $e) {
+            $this->update->triggerOnPrepareError($e);
+            throw $e;
+        }
+        $this->update->triggerOnPrepareEnd();
     }
 
     /**
-     * Rum the preparations to update.
-     *
-     * @param Collection $data
-     * @param Model $obj
+     * Select the object to update.
      */
-    protected function updatePrepare(Collection $data, Model $obj)
+    protected function updateSelect()
     {
-        $this->updateValidate($data, $obj);
-        $this->updateFilter($data);
-    }
-
-    /**
-     * Define the rule fields to update.
-     *
-     * @return array
-     */
-    protected function updateRules()
-    {
-        return $this->updateRules;
+        $obj = $this->update->select();
+        $obj ? $this->update->obj($obj) : abort(404);
     }
 
     /**
      * Apply validation to update.
-     *
-     * @param Collection $data
-     * @param Model $obj
      */
-    protected function updateValidate(Collection $data, Model $obj)
+    protected function updateValidate()
     {
-        Validate()->actor($this)->obj($obj)->data($data)->rules($this->updateRules())->run();
-    }
-
-    /**
-     * Define the allow fields to update.
-     *
-     * @return array
-     */
-    protected function updateFillable()
-    {
-        return $this->updateFillable;
+        Validate()->actor($this)
+            ->obj($this->update->obj())
+            ->data($this->update->data())
+            ->rules($this->update->rules())
+            ->run();
     }
 
     /**
      * Apply filter returning only the allowed fields to update.
      *
-     * @param Collection $data
+     * @return array
      */
-    protected function updateFilter(Collection $data)
+    protected function updateFilter()
     {
-        $data = $data->only($this->updateFillable());
+        return $this->update->data()->only($this->update->columns()->all())->all();
     }
 
     /**
-     * Run update command in the service.
+     * Run update command in the model.
      *
-     * @param Collection $data
-     * @param Model $obj
      * @return Model
      */
-    protected function updateRun(Collection $data, Model $obj)
+    protected function updateExecute()
     {
-        $obj->fill($data->all());
+        $obj = $this->update->obj();
+        $obj->fill($this->updateFilter());
         return $obj->isDirty() ? $obj->save() : false;
     }
 

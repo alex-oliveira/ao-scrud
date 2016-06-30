@@ -2,67 +2,43 @@
 
 namespace AoScrud\Utils\Traits;
 
+use Illuminate\Support\Collection;
+
 trait Data
 {
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @var null|Collection
      */
-    public static function collect()
-    {
-        static $collection = null;
-        return is_null($collection) ? $collection = collect(self::$data) : $collection;
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
+    protected $data = null;
 
     /**
-     * @return array
+     * @param null|array $data
+     * @return $this|Collection
      */
-    public static function data()
+    public function data(array $data = null)
     {
-        return self::$data;
+        if (is_null($data))
+            return $this->getData();
+        return $this->setData($data);
     }
 
     /**
-     * @return bool
+     * @param array $data
+     * @return $this
      */
-    public static function has($key)
+    public function setData(array $data)
     {
-        return isset(self::$data[$key]);
+        $this->data = collect($data);
+        return $this;
     }
 
     /**
-     * @return array
+     * @return Collection
      */
-    public static function get($id)
+    public function getData()
     {
-        return (object)self::$data[$id];
-    }
-
-    /**
-     * @return bool
-     */
-    public static function in($value)
-    {
-        return in_array($value, self::$data);
-    }
-
-    /**
-     * @return array
-     */
-    public static function keys()
-    {
-        return array_keys(self::$data);
-    }
-
-    /**
-     * @param string $glue
-     * @return string
-     */
-    public static function implode($glue = ',')
-    {
-        return implode($glue, self::keys());
+        return is_null($this->data) ? $this->data = collect([]) : $this->data;
     }
 
 }

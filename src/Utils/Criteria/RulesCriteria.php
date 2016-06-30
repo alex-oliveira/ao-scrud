@@ -2,6 +2,10 @@
 
 namespace AoScrud\Utils\Criteria;
 
+use AoScrud\Utils\Interfaces\Traits\DataInterface;
+use AoScrud\Utils\Interfaces\Traits\ModelInterface;
+use AoScrud\Utils\Interfaces\Traits\RulesInterface;
+
 class RulesCriteria extends BaseCriteria
 {
 
@@ -11,32 +15,30 @@ class RulesCriteria extends BaseCriteria
     private $data;
 
     /**
-     * @var array
+     * @param mixed
+     * @return mixed
      */
-    private $rules;
-
-    /**
-     * @param array $rules
-     */
-    public function __construct(array $rules)
+    public function apply($rep)
     {
-        $this->rules = $rules;
+        if (!($rep instanceof ModelInterface && $rep instanceof RulesInterface && $rep instanceof DataInterface))
+            return;
+
+        if ($rep->rules()->isEmpty())
+            return;
+
+        $this->data = $rep->data();
+        $rep->model($this->run($rep->rules(), $rep->model()));
     }
 
     /**
+     * @param \Illuminate\Support\Collection $rules
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder $query
-     * @param \Illuminate\Support\Collection $data
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder
      */
-    public function apply($query, $data)
+    protected function run($rules, $query)
     {
-        if (empty($this->rules))
-            return $query;
-
-        $this->data = $data;
-
-        $query = $query->where(function ($q) {
-            $this->rules($q, $this->rules);
+        $query = $query->where(function ($q) use ($rules) {
+            $this->rules($q, $rules->toArray());
         });
 
         //echo $query->toSql(); exit;

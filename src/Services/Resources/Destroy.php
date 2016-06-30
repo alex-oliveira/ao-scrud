@@ -2,26 +2,35 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Interceptors\BaseInterceptor;
-use Illuminate\Database\Eloquent\Model;
+use AoScrud\Services\Configs\DestroyConfig;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
 trait Destroy
 {
 
     /**
-     * The interceptor class to registry in the repository.
+     * Configs to destroy.
      *
-     * @var BaseInterceptor[]
+     * @var DestroyConfig
      */
-    protected $destroyInterceptors = [];
+    protected $destroy;
+
+    /**
+     * Return the configs to destroy.
+     */
+    public function destroyConfig()
+    {
+        return $this->destroy;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Main method to registry in the repository.
+     * Main method to destroy.
      *
      * @param array $data
      * @return bool
@@ -29,75 +38,142 @@ trait Destroy
      */
     public function destroy(array $data)
     {
-        $data = collect($data);
-        $obj = $this->destroySelect($data);
+        $this->destroy->data($data);
 
-        $this->destroyPrepare($data, $obj);
+        $this->destroyPrepare();
 
-        $this->tBegin();
+        $t = Transaction()->begin();
         try {
-            $status = $this->destroyExecute($obj);
+            $this->destroy->triggerOnExecute();
+            $result = $this->destroyExecute();
+            $this->destroy->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
-            $this->tRollBack();
+            Transaction()->rollBack($t);
+            $this->destroy->triggerOnExecuteError($e);
             throw $e;
         }
-        $this->tCommit();
+        Transaction()->commit($t);
 
-        return $status;
+        $this->destroy->triggerOnSuccess($result);
+
+        return $result;
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // SECONDARY METHODS
+    // AUXILIARY METHODS
     //------------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Return the object the should be destroyed.
-     *
-     * @param Collection $data
-     * @return Model $obj
-     */
-    protected function destroySelect(Collection $data)
-    {
-        return $this->read($data->all());
-    }
 
     /**
      * Run all preparations before destroy.
-     *
-     * @param Collection $data
-     * @param Model $obj
      */
-    protected function destroyPrepare(Collection $data, Model $obj)
+    protected function destroyPrepare()
     {
-        $this->destroyInterceptors($data, $obj);
+        $this->destroy->triggerOnPrepare();
+        try {
+            $this->destroySelect();
+            $this->destroyValidate();
+        } catch (\Exception $e) {
+            $this->destroy->triggerOnPrepareError($e);
+            throw $e;
+        }
+        $this->destroy->triggerOnPrepareEnd();
     }
 
     /**
-     * Apply interceptors to destroy.
-     *
-     * @param Collection $data
-     * @param Model $obj
+     * Select the object to destroy.
      */
-    protected function destroyInterceptors(Collection $data, Model $obj)
+    protected function destroySelect()
     {
-        foreach ($this->destroyInterceptors as $key => $interceptor) {
-            if (is_string($interceptor) && is_subclass_of($interceptor, BaseInterceptor::class))
-                $this->destroyInterceptors[$key] = $interceptor = app($interceptor);
+        $obj = $this->destroy->select();
+        $obj ? $this->destroy->obj($obj) : abort(404);
+    }
 
-            if (is_object($interceptor) && $interceptor instanceof BaseInterceptor)
-                $interceptor->apply($this, $data, $obj);
+    /**
+     * Validate possible destroy.
+     */
+    protected function destroyValidate()
+    {
+        $this->destroy->type(0); // self::PHYSICAL_EXCLUSION
+
+        $obj = $this->destroy->obj();
+        foreach ($this->destroy->block() as $method => $label) {
+            $items = $obj->{$method};
+            if (is_null($items) || ($items instanceof Collection && $items->isEmpty()))
+                continue;
+
+            if ($this->destroy->soft()) {
+                $this->destroy->type(1); // self::LOGICAL_EXCLUSION
+                break;
+
+            } else {
+                $message = 'do registro de ' . $this->destroy->title() . ' #' . $obj->id . '.';
+                if ($items instanceof Collection) {
+                    $message = 'Há ' . $items->count() . ' registro(s) de ' . $label . ' dependendo ' . $message;
+                } else {
+                    $message = 'O registro de ' . $label . ' #' . $items->id . ' depende ' . $message;
+                }
+                abort(412, $message);
+            }
         }
     }
 
     /**
-     * Run delete command in the repository.
+     * Run delete command in the model.
      *
-     * @param Model $obj
      * @return bool|null
      */
-    protected function destroyExecute(Model $obj)
+    protected function destroyExecute()
     {
-        return $obj->delete();
+        $this->deleteAssociations();
+        $this->deleteCascade();
+
+        if (!$this->destroy->soft())
+            return $this->destroy->obj()->delete();
+
+        if ($this->destroy->type() == 0) // ScrudService::PHYSICAL_EXCLUSION
+            return $this->destroy->obj()->forceDelete();
+
+        return $this->destroy->obj()->delete();
+    }
+
+    /**
+     * Destroy relationships.
+     */
+    public function deleteAssociations()
+    {
+        if ($this->destroy->soft() && $this->destroy->type() == 1) // ScrudService::LOGICAL_EXCLUSION
+            return;
+
+        $obj = $this->destroy->obj();
+        foreach ($this->destroy->dissociate() as $method) {
+            $items = $obj->{$method}();
+
+            if ($items instanceof BelongsToMany) {
+                $items->sync([]);
+            } elseif ($items instanceof BelongsTo) {
+                $items->dissociate();
+            } else {
+                dd('DISSOCIATE TYPE NOT IMPLEMENTED');
+            }
+        }
+    }
+
+    /**
+     * Destroy registries in "cascade".
+     */
+    public function deleteCascade()
+    {
+        if ($this->destroy->soft() && $this->destroy->type() == 1) // ScrudService::LOGICAL_EXCLUSION
+            return;
+
+        $obj = $this->destroy->obj();
+        foreach ($this->destroy->cascade() as $method) {
+            $items = $obj->{$method};
+            if (is_null($items) || ($items instanceof Collection && $items->isEmpty()))
+                continue;
+
+            $obj->{$method}()->delete();
+        }
     }
 
 }

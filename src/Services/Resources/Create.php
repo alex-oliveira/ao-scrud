@@ -2,53 +2,58 @@
 
 namespace AoScrud\Services\Resources;
 
-use AoScrud\Utils\Interceptors\BaseInterceptor;
+use AoScrud\Services\Configs\CreateConfig;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 trait Create
 {
 
     /**
-     * The validation rules to create or an interceptor class that return an array.
+     * Configs to create.
      *
-     * @var array|BaseInterceptor
+     * @var CreateConfig
      */
-    protected $createRules = [];
+    protected $create;
 
     /**
-     * The allowed fields to create.
-     *
-     * @var array
+     * Return the configs to create.
      */
-    protected $createFillable = [];
+    public function createConfig()
+    {
+        return $this->create;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // MAIN METHOD
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Main method to registry in the repository.
+     * Main method to registry.
      *
-     * @param array $data
-     * @return Model
+     * @param null|array $data
+     * @return CreateConfig|Model
      * @throws \Exception
      */
     public function create(array $data)
     {
-        $data = collect($data);
-        $this->createPrepare($data);
+        $this->create->data($data);
+
+        $this->createPrepare();
 
         $t = Transaction()->begin();
         try {
-            $obj = $this->createRun($data);
+            $this->create->triggerOnExecute();
+            $result = $this->createExecute();
+            $this->create->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
             Transaction()->rollBack($t);
             throw $e;
         }
         Transaction()->commit($t);
 
-        return $obj;
+        $this->create->triggerOnSuccess($result);
+
+        return $result;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -56,75 +61,49 @@ trait Create
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Rum the preparations to create.
-     *
-     * @param Collection $data
+     * Run all preparations before create.
      */
-    protected function createPrepare(Collection $data)
+    protected function createPrepare()
     {
-        $this->createValidate($data);
-        $this->createFilter($data);
-    }
-
-    /**
-     * Define the rule fields to create.
-     *
-     * @return array
-     */
-    protected function createRules()
-    {
-        return $this->createRules;
+        $this->create->triggerOnPrepare();
+        try {
+            $this->createValidate();
+        } catch (\Exception $e) {
+            $this->create->triggerOnPrepareError($e);
+            throw $e;
+        }
+        $this->create->triggerOnPrepareEnd();
     }
 
     /**
      * Apply validation to create.
-     *
-     * @param Collection $data
      */
-    protected function createValidate(Collection $data)
+    protected function createValidate()
     {
-        Validate()->actor($this)->data($data)->rules($this->createRules())->run();
-    }
-
-    /**
-     * Define the allow fields to create.
-     *
-     * @return array
-     */
-    protected function createFillable()
-    {
-        return $this->createFillable;
+        Validate()->actor($this)
+            ->data($this->create->data())
+            ->rules($this->create->rules())
+            ->run();
     }
 
     /**
      * Apply filter returning only the allowed fields to create.
      *
-     * @param Collection $data
+     * @return array
      */
-    protected function createFilter(Collection $data)
+    protected function createFilter()
     {
-        $data = $data->only($this->createFillable());
+        return $this->create->data()->only($this->create->columns()->all())->all();
     }
 
     /**
-     * Return the model to create.
+     * Run create command in the model.
      *
-     * @return mixed
-     */
-    protected function createModel()
-    {
-        return $this->model();
-    }
-
-    /**
-     * Run create command in the service.
-     *
-     * @param Collection $data
      * @return Model
      */
-    protected function createRun(Collection $data)
+    protected function createExecute()
     {
-        return $this->createModel()->create($data->all());
+        return $this->create->model()->create($this->createFilter());
     }
 
 }
