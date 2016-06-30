@@ -251,3 +251,55 @@ $config->onError(function ($config, $exception) {
 
 });
 ````
+
+## Facades
+
+### Transaction
+````
+$t = Transaction()->begin();
+try {
+    
+    // WRITE HERE YOUR CODE //
+    
+} catch (\Exception $e) {
+    Transaction()->rollback($t);
+    throw $e;
+}
+Transaction()->commit($t);
+````
+Follow the sample and you not will have problems with nested transactions.
+````
+class A
+{
+    public function create($data)
+    {
+        $t = Transaction()->begin();
+        try {
+            $this->validate($data)
+            $this->save($data)
+        } catch (\Exception $e) {
+            Transaction()->rollback($t);
+            throw $e;
+        }
+        Transaction()->commit($t);
+    }
+}
+
+class B
+{
+    public function create($data)
+    {
+        $a = new A();
+        $t = Transaction()->begin();
+        try {
+            $a->create($data);
+            $this->validate($data)
+            $this->save($data)
+        } catch (\Exception $e) {
+            Transaction()->rollback($t);
+            throw $e;
+        }
+        Transaction()->commit($t);
+    }
+}
+````
