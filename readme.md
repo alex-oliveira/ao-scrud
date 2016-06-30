@@ -21,11 +21,74 @@ $ composer require alex-oliveira/ao-scrud
 
 # Samples
 
-## SearchRepository
+Bellow, do you can see some fast samples, but if you need more information click **here**.
+
+## Controllers
+
+### ScrudController
 ````
-$rep = new SearchRepository();
-$rep->model(User::class)
-    ->data($data)
+namespace My\Controllers;
+
+use AoScrud\Controllers\ScrudController;
+use My\Services\UserService;
+
+class UsersController extends ScrudController
+{
+    /**
+     * @param UserService $service
+     */
+    public function __construct(UserService $service)
+    {
+        $this->service = $service;
+    }
+}
+````
+
+### BaseScrudController
+````
+namespace My\Controllers;
+
+use AoScrud\Actions\Index;
+use AoScrud\Actions\Show;
+use My\Services\UserService;
+
+class UsersController extends BaseScrudController
+{
+    use Index, Show;
+    
+    /**
+     * @param UserService $service
+     */
+    public function __construct(UserService $service)
+    {
+        $this->service = $service;
+    }
+}
+````
+
+## Services
+
+### ScrudService
+````
+namespace MY\Services;
+
+use AoScrud\Services\ScrudService;
+
+class UserService extends ScrudService
+{
+    public function __construct()
+    {
+        parent::__construct();
+        
+        // WRITE HERE THE YOUR CONFIGS //        
+    }
+}
+````
+
+### SearchConfig
+````
+$this->search
+    ->model(User::class)
     ->columns(['id', 'nickname'])
     ->otherColumns(['name', 'email', 'created_at', 'updated_at'])
     ->orders(['id', 'name', 'nickname', 'email', 'created_at', 'updated_at'])
@@ -35,83 +98,56 @@ $rep->model(User::class)
         ['name' => '%like%|get:search'],
         ['nickname' => '%like%|get:search']
     ]);
-    
-$result = $rep->run();
 ````
 
-## CreateRepository
+### CreateConfig
 ````
-$rep = new CreateRepository();
-
-$rep->model(User::class)
-    ->data($data)
+$this->create
+    ->model(User::class)
     ->columns(['name', 'nickname', 'email'])
     ->rules([
         'name' => 'required|max:100',
         'nickname' => 'required|max:50|unique:users,nickname',
         'email' => 'required|email|unique:users,email'
     ]);
-    
-$result = $rep->run();
 ````
 
-## ReadRepository
+### ReadConfig
 ````
-$rep = new ReadRepository();
-$rep->model(User::class)
-    ->data($data)
-    
+$this->read
+    ->model(User::class)
     ->columns(['id', 'nickname'])
     ->otherColumns(['name', 'email', 'created_at', 'updated_at']);
-        
-$result = $rep->run();
 ````
 
-## UpdateRepository
+### UpdateConfig
 ````
-$rep = new UpdateRepository();
-
-$rep->model(User::class)
-    ->data($data)
+$this->update
+    ->model(User::class)
     ->columns(['name', 'nickname'])
-    ->rules([
-        'name' => 'required|max:100',
-        'nickname' => 'required|max:50|unique:users,nickname,{{id}}' . $data['id']
-    ]);
-    
-$result = $rep->run();
+    ->rules(function($config){
+        return [
+            'name' => 'required|max:100',
+            'nickname' => 'required|max:50|unique:users,nickname,' . $config->data()->get('id')
+        ]
+    });
 ````
 
-##### Customizando select do update
+### DestroyConfig
 ````
-$rep->select(function ($rep) {
-     return $rep->model()->find($rep->data()->get('id'));
-});
-````
-
-## DestroyRepository
-````
-$rep = new DestroyRepository();
-
-$rep->model(User::class)
-    ->data($data)
+$this->destroy
+    ->model(User::class)
     ->title('usuário')
     ->block(['requests' => 'pedido', 'logs' => 'log'])
     ->dissociate(['groups', 'routes'])
     ->cascade(['accounts', 'contacts', 'files'])
     ->soft(true);
-    
-$result = $rep->run();
 ````
 
-## RestoreRepository
+### RestoreConfig
 ````
-$rep = new RestoreRepository();
-
-$rep->model(Group::class)
-    ->data($data);
-    
-$result = $rep->run();
+$this->restore
+    ->model(Group::class);
 ````
 
 ## Callbacks 
@@ -120,7 +156,7 @@ $result = $rep->run();
 It is dispatched when the "prepare" is started.
 
 ````
-$rep->onPrepare(function ($rep) {
+$config->onPrepare(function ($rep) {
     
 });
 ````
@@ -129,7 +165,7 @@ $rep->onPrepare(function ($rep) {
 It is dispatched when the "prepare" is ended.
 
 ````
-$rep->onPrepareEnd(function ($rep) {
+$config->onPrepareEnd(function ($rep) {
     
 })
 ````
@@ -138,7 +174,7 @@ $rep->onPrepareEnd(function ($rep) {
 It is dispatched when happen error during the "prepare".
 
 ````
-$rep->onPrepareError(function ($rep, $exception) {
+$config->onPrepareError(function ($rep, $exception) {
     
 })
 ````
@@ -147,7 +183,7 @@ $rep->onPrepareError(function ($rep, $exception) {
 It is dispatched when the "execute" is started.
 
 ````
-$rep->onExecute(function ($rep) {
+$config->onExecute(function ($rep) {
 
 })
 ````
@@ -156,7 +192,7 @@ $rep->onExecute(function ($rep) {
 It is dispatched when the "execute" is ended.
 
 ````
-$rep->onExecuteEnd(function ($rep, $result) {
+$config->onExecuteEnd(function ($rep, $result) {
 
 });
 ````
@@ -165,7 +201,7 @@ $rep->onExecuteEnd(function ($rep, $result) {
 It is dispatched when happen error during the "execute".
 
 ````
-$rep->onExecuteError(function ($rep, $exception) {
+$config->onExecuteError(function ($rep, $exception) {
 
 });
 ````
@@ -174,7 +210,7 @@ $rep->onExecuteError(function ($rep, $exception) {
 It is dispatched when all is processed without erros. 
 
 ````
-$rep->onSuccess(function ($rep, $result) {
+$config->onSuccess(function ($rep, $result) {
 
 });
 ````
@@ -183,7 +219,35 @@ $rep->onSuccess(function ($rep, $result) {
 It is dispatched when any error happen, since that it not has a specific error callback. 
 
 ````
-$rep->onError(function ($rep, $exception) {
+$config->onError(function ($rep, $exception) {
 
+});
+````
+
+## Customizations
+
+### Select
+````
+$config->select(function ($config) {
+     return User::find(1);
+});
+````
+````
+$config->select(function ($config) {
+     return $config->model()->find($config->data()->get('id'));
+});
+````
+
+### Roles
+````
+$config->rules([
+    'nickname' => 'required|max:50|unique:users,nickname'
+]);
+````
+````
+$config->rules(function($config){
+    return [
+        'nickname' => 'required|max:50|unique:users,nickname,' . $config->data()->get('id')
+    ]
 });
 ````
