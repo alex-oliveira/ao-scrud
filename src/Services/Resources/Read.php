@@ -32,12 +32,26 @@ trait Read
      *
      * @param array $data
      * @return mixed
+     * @throws \Exception
      */
     public function read(array $data)
     {
         $this->read->data($data);
+
         $this->readPrepare();
-        return $this->readExecute();
+
+        try {
+            $this->read->triggerOnExecute();
+            $result = $this->readExecute();
+            $this->read->triggerOnExecuteEnd($result);
+        } catch (\Exception $e) {
+            $this->read->triggerOnExecuteError($e);
+            throw $e;
+        }
+
+        $this->read->triggerOnSuccess($result);
+
+        return $result;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -49,7 +63,14 @@ trait Read
      */
     protected function readPrepare()
     {
-        $this->read->runCriteria();
+        $this->read->triggerOnPrepare();
+        try {
+            $this->read->runCriteria();
+        } catch (\Exception $e) {
+            $this->read->triggerOnPrepareError($e);
+            throw $e;
+        }
+        $this->read->triggerOnPrepareEnd();
     }
 
     /**

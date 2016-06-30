@@ -44,12 +44,17 @@ trait Destroy
 
         $t = Transaction()->begin();
         try {
+            $this->destroy->triggerOnExecute();
             $result = $this->destroyExecute();
+            $this->destroy->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
             Transaction()->rollBack($t);
+            $this->destroy->triggerOnExecuteError($e);
             throw $e;
         }
         Transaction()->commit($t);
+
+        $this->destroy->triggerOnSuccess($result);
 
         return $result;
     }
@@ -63,8 +68,15 @@ trait Destroy
      */
     protected function destroyPrepare()
     {
-        $this->destroySelect();
-        $this->destroyValidate();
+        $this->destroy->triggerOnPrepare();
+        try {
+            $this->destroySelect();
+            $this->destroyValidate();
+        } catch (\Exception $e) {
+            $this->destroy->triggerOnPrepareError($e);
+            throw $e;
+        }
+        $this->destroy->triggerOnPrepareEnd();
     }
 
     /**

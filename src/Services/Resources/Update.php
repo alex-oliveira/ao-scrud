@@ -43,12 +43,17 @@ trait Update
 
         $t = Transaction()->begin();
         try {
+            $this->update->triggerOnExecute();
             $result = $this->updateExecute();
+            $this->update->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
             Transaction()->rollBack($t);
+            $this->update->triggerOnExecuteError($e);
             throw $e;
         }
         Transaction()->commit($t);
+
+        $this->update->triggerOnSuccess($result);
 
         return $result;
     }
@@ -62,8 +67,15 @@ trait Update
      */
     protected function updatePrepare()
     {
-        $this->updateSelect();
-        $this->updateValidate();
+        $this->update->triggerOnPrepare();
+        try {
+            $this->updateSelect();
+            $this->updateValidate();
+        } catch (\Exception $e) {
+            $this->update->triggerOnPrepareError($e);
+            throw $e;
+        }
+        $this->update->triggerOnPrepareEnd();
     }
 
     /**

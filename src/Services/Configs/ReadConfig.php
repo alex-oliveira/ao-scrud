@@ -20,6 +20,14 @@ use AoScrud\Utils\Traits\Data;
 use AoScrud\Utils\Traits\Keys;
 use AoScrud\Utils\Traits\Model;
 use AoScrud\Utils\Traits\Obj;
+use AoScrud\Utils\Traits\OnError;
+use AoScrud\Utils\Traits\OnExecute;
+use AoScrud\Utils\Traits\OnExecuteEnd;
+use AoScrud\Utils\Traits\OnExecuteError;
+use AoScrud\Utils\Traits\OnPrepare;
+use AoScrud\Utils\Traits\OnPrepareEnd;
+use AoScrud\Utils\Traits\OnPrepareError;
+use AoScrud\Utils\Traits\OnSuccess;
 use AoScrud\Utils\Traits\OtherColumns;
 use AoScrud\Utils\Traits\Select;
 use AoScrud\Utils\Traits\With;
@@ -29,12 +37,13 @@ class ReadConfig implements ModelInterface, DataInterface, KeysInterface, Column
 {
 
     use Model, Data, Keys, Columns, OtherColumns, Select, Obj, Criteria, With;
+    use OnPrepare, OnPrepareEnd, OnPrepareError, OnExecute, OnExecuteEnd, OnExecuteError, OnSuccess, OnError;
 
     public function __construct()
     {
-        $this->criteria()->put('params',  RouteParamsCriteria::class);
+        $this->criteria()->put('params', RouteParamsCriteria::class);
         $this->criteria()->put('columns', ColumnsCriteria::class);
-        $this->criteria()->put('with',    WithCriteria::class);
+        $this->criteria()->put('with', WithCriteria::class);
     }
 
 }

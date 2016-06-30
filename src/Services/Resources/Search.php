@@ -32,12 +32,26 @@ trait Search
      *
      * @param array $data
      * @return mixed
+     * @throws \Exception
      */
     public function search(array $data)
     {
         $this->search->data($data);
+
         $this->searchPrepare();
-        return $this->searchExecute();
+
+        try {
+            $this->search->triggerOnExecute();
+            $result = $this->searchExecute();
+            $this->search->triggerOnExecuteEnd($result);
+        } catch (\Exception $e) {
+            $this->search->triggerOnExecuteError($e);
+            throw $e;
+        }
+
+        $this->search->triggerOnSuccess($result);
+
+        return $result;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -49,7 +63,14 @@ trait Search
      */
     protected function searchPrepare()
     {
-        $this->search->runCriteria();
+        $this->search->triggerOnPrepare();
+        try {
+            $this->search->runCriteria();
+        } catch (\Exception $e) {
+            $this->search->triggerOnPrepareError($e);
+            throw $e;
+        }
+        $this->search->triggerOnPrepareEnd();
     }
 
     /**
