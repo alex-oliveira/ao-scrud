@@ -25,4 +25,12 @@ interface ColumnsInterface
      */
     public function getColumns();
 
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param array $except
+     * @return Collection
+     */
+    public function getAllColumns(array $except = []);
+
 }

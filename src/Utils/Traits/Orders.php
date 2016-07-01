@@ -2,6 +2,7 @@
 
 namespace AoScrud\Utils\Traits;
 
+use AoScrud\Utils\Interfaces\Traits\ColumnsInterface;
 use Closure;
 use Illuminate\Support\Collection;
 
@@ -55,6 +56,19 @@ trait Orders
         }
 
         return $this->orders = collect([]);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param array $except
+     * @return $this
+     */
+    public function setAllOrders(array $except = [])
+    {
+        if ($this instanceof ColumnsInterface)
+            $this->setOrders($this->getAllColumns($except));
+        return $this;
     }
 
 }
