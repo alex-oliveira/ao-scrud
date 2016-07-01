@@ -28,7 +28,10 @@ class ColumnsCriteria extends BaseCriteria
             return;
 
         if ($columns = $rep->data()->get('columns', false))
-            $columns = $allowed->intersect(explode(',', $columns))->all();
+            $columns = $columns == '*' ? $allowed->all() : $allowed->intersect(explode(',', $columns))->all();
+
+        if ($without = $rep->data()->get('withoutColumns', false))
+            $columns = $allowed->diff(explode(',', $without))->all();
 
         $model = $columns && count($columns) > 0
             ? $rep->model()->select($columns)
