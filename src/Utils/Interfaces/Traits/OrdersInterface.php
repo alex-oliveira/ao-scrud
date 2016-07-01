@@ -25,4 +25,12 @@ interface OrdersInterface
      */
     public function getOrders();
 
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param array $except
+     * @return $this
+     */
+    public function setAllOrders(array $except = []);
+
 }

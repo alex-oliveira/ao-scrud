@@ -2,6 +2,7 @@
 
 namespace AoScrud\Utils\Traits;
 
+use AoScrud\Utils\Interfaces\Traits\OtherColumnsInterface;
 use Closure;
 use Illuminate\Support\Collection;
 
@@ -55,6 +56,24 @@ trait Columns
         }
 
         return $this->columns = collect([]);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param array $except
+     * @return Collection
+     */
+    public function getAllColumns(array $except = [])
+    {
+        $columns = $this->getColumns();
+
+        if ($this instanceof OtherColumnsInterface)
+            $columns = $columns->merge($this->getOtherColumns());
+
+        $columns = $columns->unique();
+
+        return $columns->diff($except);
     }
 
 }
