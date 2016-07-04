@@ -73,7 +73,7 @@ class WithCriteria extends BaseCriteria
 
     protected function settingWithoutColumns($name, $columns, $settings)
     {
-        if ($settings == '*') {
+        if (is_string($settings) && $settings == '*') {
             $this->setApproved($name);
             return true;
         }
@@ -125,8 +125,17 @@ class WithCriteria extends BaseCriteria
     {
         $fields = [];
 
-        is_string($settings) ? $fields = explode(',', $settings) : null;
-        isset($settings['columns']) ? $fields = explode(',', $settings['columns']) : null;
+        if (isset($settings['columns'])) {
+            if (is_string($settings['columns']))
+                $fields = explode(',', $settings['columns']);
+            elseif (is_array($settings['columns']))
+                $fields = $settings['columns'];
+
+        } elseif (is_string($settings)) {
+            $fields = explode(',', $settings);
+        } elseif (is_array($settings)) {
+            $fields = $settings;
+        }
 
         return $fields;
     }
@@ -135,7 +144,16 @@ class WithCriteria extends BaseCriteria
     {
         $fields = self::getDefaultFields($settings);
 
-        isset($settings['otherColumns']) ? $fields = array_merge($fields, explode(',', $settings['otherColumns'])) : null;
+        if (isset($settings['otherColumns'])) {
+            $others = [];
+
+            if (is_string($settings['otherColumns']))
+                $others = explode(',', $settings['otherColumns']);
+            elseif (is_array($settings['otherColumns']))
+                $others = $settings['otherColumns'];
+
+            $fields = array_merge($fields, $others);
+        }
 
         return $fields;
     }

@@ -92,6 +92,15 @@ $this->search
     ->columns(['id', 'nickname'])
     ->otherColumns(['name', 'email', 'created_at', 'updated_at'])
     ->orders(['id', 'name', 'nickname', 'email', 'created_at', 'updated_at'])
+    -with([
+        'status',
+        'accounts' => '*',
+        'contacts' => ['id', 'fone']
+        'requests' => [
+            'columns' => ['id', 'status'] // OR 'id,status'
+            'otherColumns' => ['description', 'created_at', 'updated_at'] // OR 'description,created_at,updated_at'
+        ]
+    ])
     ->rules([
         ['id' => '='],
         ['email' => '%like%'],
@@ -105,6 +114,15 @@ $this->search
 $this->create
     ->model(User::class)
     ->columns(['name', 'nickname', 'email'])
+    -with([
+            'status',
+            'accounts' => '*',
+            'contacts' => ['id', 'fone']
+            'requests' => [
+                'columns' => ['id', 'status'] // OR 'id,status'
+                'otherColumns' => ['description', 'created_at', 'updated_at'] // OR 'description,created_at,updated_at'
+            ]
+    ])
     ->rules([
         'name' => 'required|max:100',
         'nickname' => 'required|max:50|unique:users,nickname',
