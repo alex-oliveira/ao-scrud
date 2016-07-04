@@ -11,12 +11,12 @@ class ColumnsCriteria extends BaseCriteria
 {
 
     /**
-     * @param mixed
+     * @param ColumnsInterface|DataInterface|ModelInterface $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof ModelInterface && $config instanceof ColumnsInterface && $config instanceof DataInterface))
+        if (!($config instanceof ColumnsInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
             return;
 
         $allowed = $config->columns();

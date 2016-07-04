@@ -15,12 +15,12 @@ class RulesCriteria extends BaseCriteria
     private $data;
 
     /**
-     * @param mixed
+     * @param RulesInterface|DataInterface|ModelInterface $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof ModelInterface && $config instanceof RulesInterface && $config instanceof DataInterface))
+        if (!($config instanceof RulesInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
             return;
 
         if ($config->rules()->isEmpty())
