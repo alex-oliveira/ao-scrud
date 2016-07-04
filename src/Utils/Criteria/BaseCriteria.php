@@ -9,6 +9,6 @@ abstract class BaseCriteria
      * @param mixed
      * @return mixed
      */
-    abstract public function apply($rep);
+    abstract public function apply($config);
 
 }

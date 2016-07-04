@@ -13,24 +13,24 @@ class OrdersCriteria extends BaseCriteria
      * @param mixed
      * @return mixed
      */
-    public function apply($rep)
+    public function apply($config)
     {
-        if (!($rep instanceof ModelInterface && $rep instanceof OrdersInterface && $rep instanceof DataInterface))
+        if (!($config instanceof ModelInterface && $config instanceof OrdersInterface && $config instanceof DataInterface))
             return;
 
-        if ($rep->orders()->isEmpty())
+        if ($config->orders()->isEmpty())
             return;
 
-        $order = $rep->orders()->first();
-        if (($field = $rep->data()->get('order', false)) && $rep->orders()->contains($field))
+        $order = $config->orders()->first();
+        if (($field = $config->data()->get('order', false)) && $config->orders()->contains($field))
             $order = $field;
 
-        $sort = $rep->data()->get('sort') == 'desc' ? 'desc' : 'asc';
-        $model = $rep->model()->orderBy($order, $sort)->orderBy('id', $sort);
+        $sort = $config->data()->get('sort') == 'desc' ? 'desc' : 'asc';
+        $model = $config->model()->orderBy($order, $sort)->orderBy('id', $sort);
 
         //echo $model->toSql(); exit;
 
-        $rep->model($model);
+        $config->model($model);
     }
 
 }

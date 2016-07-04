@@ -97,8 +97,9 @@ trait Destroy
 
         $obj = $this->destroy->obj();
         foreach ($this->destroy->block() as $method => $label) {
-            $items = $obj->{$method};
-            if (is_null($items) || ($items instanceof Collection && $items->isEmpty()))
+            $qtd = $obj->{$method}()->count();
+
+            if (is_null($qtd) || $qtd == 0)
                 continue;
 
             if ($this->destroy->soft()) {
@@ -106,13 +107,7 @@ trait Destroy
                 break;
 
             } else {
-                $message = 'do registro de ' . $this->destroy->title() . ' #' . $obj->id . '.';
-                if ($items instanceof Collection) {
-                    $message = 'Há ' . $items->count() . ' registro(s) de ' . $label . ' dependendo ' . $message;
-                } else {
-                    $message = 'O registro de ' . $label . ' #' . $items->id . ' depende ' . $message;
-                }
-                abort(412, $message);
+                abort(412, 'Há ' . $qtd . ' registro(s) de ' . $label . ' dependendo do registro de ' . $this->destroy->title() . ' #' . $obj->id . '.');
             }
         }
     }

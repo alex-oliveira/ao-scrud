@@ -18,16 +18,16 @@ class RulesCriteria extends BaseCriteria
      * @param mixed
      * @return mixed
      */
-    public function apply($rep)
+    public function apply($config)
     {
-        if (!($rep instanceof ModelInterface && $rep instanceof RulesInterface && $rep instanceof DataInterface))
+        if (!($config instanceof ModelInterface && $config instanceof RulesInterface && $config instanceof DataInterface))
             return;
 
-        if ($rep->rules()->isEmpty())
+        if ($config->rules()->isEmpty())
             return;
 
-        $this->data = $rep->data();
-        $rep->model($this->run($rep->rules(), $rep->model()));
+        $this->data = $config->data();
+        $config->model($this->run($config->rules(), $config->model()));
     }
 
     /**
