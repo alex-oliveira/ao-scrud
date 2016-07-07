@@ -10,12 +10,12 @@ class OrdersCriteria extends BaseCriteria
 {
 
     /**
-     * @param mixed
+     * @param OrdersInterface|DataInterface|ModelInterface $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof ModelInterface && $config instanceof OrdersInterface && $config instanceof DataInterface))
+        if (!($config instanceof OrdersInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
             return;
 
         if ($config->orders()->isEmpty())

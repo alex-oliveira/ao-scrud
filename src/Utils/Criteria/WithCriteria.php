@@ -21,12 +21,12 @@ class WithCriteria extends BaseCriteria
     private $approved = [];
 
     /**
-     * @param ModelInterface|DataInterface|WithInterface
+     * @param WithInterface|DataInterface|ModelInterface $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof ModelInterface && $config instanceof DataInterface && $config instanceof WithInterface))
+        if (!($config instanceof WithInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
             return;
 
         if ($config->with()->isEmpty())
