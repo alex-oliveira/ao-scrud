@@ -8,7 +8,7 @@ trait Limit
     /**
      * @var int
      */
-    protected $limit = 20;
+    protected $limit = 50;
 
     /**
      * @param int|null $limit
