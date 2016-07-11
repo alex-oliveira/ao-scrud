@@ -11,6 +11,11 @@ class WithCriteria extends BaseCriteria
 {
 
     /**
+     * @var mixed
+     */
+    private $config;
+
+    /**
      * @var Collection
      */
     private $allowed;
@@ -31,6 +36,8 @@ class WithCriteria extends BaseCriteria
 
         if ($config->with()->isEmpty())
             return;
+
+        $this->config = $config;
 
         $this->allowed = $config->with();
         foreach ($this->allowed as $key => $value) {
@@ -121,10 +128,23 @@ class WithCriteria extends BaseCriteria
         foreach ($fields as $key => $value)
             $columns[] = is_string($key) && !is_numeric($key) ? $key : $value;
 
+        $settings = $this->allowed->get($name);
+        $custom = false;
+        if (is_array($settings) && isset($settings['custom']))
+            $custom = $settings['custom'];
+
         if (count($columns) > 0) {
-            $this->approved[$name] = function ($query) use ($columns) {
-                $query->select($columns);
-            };
+            if ($custom instanceof \Closure) {
+                $config = $this->config;
+                $this->approved[$name] = function ($query) use ($columns, $custom, $config) {
+                    $query->select($columns);
+                    $custom($config, $query);
+                };
+            } else {
+                $this->approved[$name] = function ($query) use ($columns) {
+                    $query->select($columns);
+                };
+            }
         } else {
             $this->approved[] = $name;
         }
