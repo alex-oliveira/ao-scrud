@@ -8,7 +8,7 @@ trait Limit
     /**
      * @var int
      */
-    protected $limit = 40;
+    protected $limit = 50;
 
     /**
      * @param int|null $limit
@@ -37,7 +37,7 @@ trait Limit
     public function getLimit()
     {
         $limit = $this->data()->get('limit', false);
-        $limit = $limit && is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= $this->limit()
+        $limit = $limit && is_numeric($limit) && is_int($limit + 0) && $limit > 0 && $limit <= $this->limit
             ? $limit
             : 20;
 
