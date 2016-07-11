@@ -100,7 +100,12 @@ class WithCriteria extends BaseCriteria
 
     protected function requestSpecificColumns($name, $columns, $settings)
     {
-        $fields = array_intersect(explode(',', $columns), self::getAllowedFields($settings));
+        $requests = explode(',', $columns);
+
+        $fields = [];
+        foreach (self::getAllowedFields($settings) as $key => $value)
+            if (in_array($value, $requests))
+                $fields[$key] = $value;
 
         if (count($fields) == 0)
             $fields = self::getDefaultFields($settings);
@@ -112,9 +117,13 @@ class WithCriteria extends BaseCriteria
 
     protected function setApproved($name, array $fields = [])
     {
-        if (count($fields) > 0) {
-            $this->approved[$name] = function ($query) use ($fields) {
-                $query->select($fields);
+        $columns = [];
+        foreach ($fields as $key => $value)
+            $columns[] = is_string($key) && !is_numeric($key) ? $key : $value;
+
+        if (count($columns) > 0) {
+            $this->approved[$name] = function ($query) use ($columns) {
+                $query->select($columns);
             };
         } else {
             $this->approved[] = $name;
