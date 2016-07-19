@@ -7,7 +7,7 @@ trait Index
 
     public function index()
     {
-        $data = $this->service->search(array_merge(request()->all(), request()->route()->parameters()));
+        $data = $this->service->search(scrud()->params());
         return response()->json($this->toArray($data), 200);
     }
 

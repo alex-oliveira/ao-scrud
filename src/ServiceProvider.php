@@ -2,6 +2,7 @@
 
 namespace AoScrud;
 
+use AoScrud\Utils\Facades\ScrudFacade;
 use AoScrud\Utils\Facades\TransactionFacade;
 use AoScrud\Utils\Facades\ValidateFacade;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
@@ -21,6 +22,9 @@ class ServiceProvider extends BaseServiceProvider
         Validator::extend('cpf', 'AoScrud\Utils\Validators\CpfValidator@validate');
         Validator::extend('cnpj', 'AoScrud\Utils\Validators\CnpjValidator@validate');
 
+        $this->app->singleton('scrud', function ($app) {
+            return new ScrudFacade();
+        });
         $this->app->singleton('transaction', function ($app) {
             return new TransactionFacade();
         });

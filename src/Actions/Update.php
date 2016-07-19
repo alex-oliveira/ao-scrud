@@ -7,7 +7,7 @@ trait Update
 
     public function update()
     {
-        $updated = $this->service->update(array_merge(request()->all(), request()->route()->parameters()));
+        $updated = $this->service->update(scrud()->params());
         return response()->json([], ($updated ? 204 : 200));
     }
 

@@ -7,7 +7,7 @@ trait Destroy
 
     public function destroy()
     {
-        $this->service->destroy(array_merge(request()->all(), request()->route()->parameters()));
+        $this->service->destroy(scrud()->params());
         return response()->json([], 204);
     }
 

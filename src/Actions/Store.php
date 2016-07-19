@@ -7,7 +7,7 @@ trait Store
 
     public function store()
     {
-        $data = $this->service->create(array_merge(request()->all(), request()->route()->parameters()));
+        $data = $this->service->create(scrud()->params());
         return response()->json($this->toArray($data), 201);
     }
 
