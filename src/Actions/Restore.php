@@ -7,7 +7,7 @@ trait Restore
 
     public function restore()
     {
-        $this->service->restore(array_merge(request()->all(), request()->route()->parameters()));
+        $this->service->restore(scrud()->params());
         return response()->json([], 204);
     }
 

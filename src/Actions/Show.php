@@ -7,7 +7,7 @@ trait Show
 
     public function show()
     {
-        $data = $this->service->read(array_merge(request()->all(), request()->route()->parameters()), true);
+        $data = $this->service->read(scrud()->params());
         return response()->json($this->toArray($data), 200);
     }
 

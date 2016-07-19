@@ -1,5 +1,17 @@
 <?php
 
+if (!function_exists('scrud')) {
+
+    /**
+     * @return \AoScrud\Utils\Facades\ScrudFacade
+     */
+    function scrud()
+    {
+        return app('scrud');
+    }
+
+}
+
 if (!function_exists('transaction')) {
 
     /**
