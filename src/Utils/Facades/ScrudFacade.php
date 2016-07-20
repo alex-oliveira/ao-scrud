@@ -2,15 +2,17 @@
 
 namespace AoScrud\Utils\Facades;
 
+use Illuminate\Support\Collection;
+
 class ScrudFacade
 {
 
     /**
-     * @return array
+     * @return Collection
      */
     public function params()
     {
-        return array_merge(request()->all(), request()->route()->parameters());
+        return collect(array_merge(request()->all(), request()->route()->parameters()));
     }
 
     /**
