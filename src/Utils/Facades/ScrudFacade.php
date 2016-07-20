@@ -16,6 +16,14 @@ class ScrudFacade
     }
 
     /**
+     * @return Collection
+     */
+    public function paramsSearch()
+    {
+        return $this->params()->only('search', 'columns', 'order', 'sort', 'limit');
+    }
+
+    /**
      * @return ValidateFacade
      */
     public function validate()
