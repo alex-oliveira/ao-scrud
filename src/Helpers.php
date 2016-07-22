@@ -17,7 +17,7 @@ if (!function_exists('transaction')) {
     /**
      * @return \AoScrud\Utils\Facades\TransactionFacade
      */
-    function transaction()
+    function Transaction()
     {
         return app('transaction');
     }
