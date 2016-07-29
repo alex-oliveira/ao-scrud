@@ -1,7 +1,7 @@
 {
   "name": "alex-oliveira/ao-scrud",
   "homepage": "http://github.com/alex-oliveira/ao-scrud",
-  "description": "Resources for SCRUD with Laravel 5.1",
+  "description": "Resources for a Super CRUD with Laravel",
   "license": "MIT",
   "keywords": [
     "alex-oliveira",
