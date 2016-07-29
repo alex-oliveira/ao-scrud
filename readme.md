@@ -1,6 +1,6 @@
 # Ao-Scrud
 
-Resources for SCRUD with Laravel 5.1
+Resources for a Super CRUD with Laravel
 
 # Installation
 
