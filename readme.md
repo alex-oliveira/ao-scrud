@@ -13,7 +13,7 @@ $ composer require alex-oliveira/ao-scrud
 ````
 'providers' => [
     /*
-     * Vendors Service Providers...
+     * Vendor Service Providers...
      */
     AoScrud\ServiceProvider::class,
 ],
