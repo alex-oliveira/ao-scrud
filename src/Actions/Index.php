@@ -13,7 +13,7 @@ trait Index
 
     public function selectSearch($service)
     {
-        $data = $service->search(scrud()->paramsSearch()->forget('with')->put('columns', 'id,name')->all());
+        $data = $service->search(scrud()->paramsSearch()->all());
         return response()->json($this->toArray($data), 200);
     }
 
