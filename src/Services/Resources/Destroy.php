@@ -93,7 +93,7 @@ trait Destroy
      */
     protected function destroyValidate()
     {
-        $this->destroy->type(0); // self::PHYSICAL_EXCLUSION
+        //$this->destroy->type(0); // self::PHYSICAL_EXCLUSION
 
         $obj = $this->destroy->obj();
         foreach ($this->destroy->block() as $method => $label) {
@@ -102,13 +102,13 @@ trait Destroy
             if (is_null($qtd) || $qtd == 0)
                 continue;
 
-            if ($this->destroy->soft()) {
-                $this->destroy->type(1); // self::LOGICAL_EXCLUSION
-                break;
-
-            } else {
+            //if ($this->destroy->soft()) {
+            //    $this->destroy->type(1); // self::LOGICAL_EXCLUSION
+            //    break;
+            //
+            //} else {
                 abort(412, 'Há ' . $qtd . ' registro(s) de ' . $label . ' dependendo do registro de ' . $this->destroy->title() . ' #' . $obj->id . '.');
-            }
+            //}
         }
     }
 
@@ -122,11 +122,11 @@ trait Destroy
         $this->deleteAssociations();
         $this->deleteCascade();
 
-        if (!$this->destroy->soft())
-            return $this->destroy->obj()->delete();
-
-        if ($this->destroy->type() == 0) // ScrudService::PHYSICAL_EXCLUSION
-            return $this->destroy->obj()->forceDelete();
+        //if (!$this->destroy->soft())
+        //    return $this->destroy->obj()->delete();
+        //
+        //if ($this->destroy->type() == 0) // ScrudService::PHYSICAL_EXCLUSION
+        //    return $this->destroy->obj()->forceDelete();
 
         return $this->destroy->obj()->delete();
     }
@@ -136,8 +136,8 @@ trait Destroy
      */
     public function deleteAssociations()
     {
-        if ($this->destroy->soft() && $this->destroy->type() == 1) // ScrudService::LOGICAL_EXCLUSION
-            return;
+        //if ($this->destroy->soft() && $this->destroy->type() == 1) // ScrudService::LOGICAL_EXCLUSION
+        //    return;
 
         $obj = $this->destroy->obj();
         foreach ($this->destroy->dissociate() as $method) {
@@ -158,8 +158,8 @@ trait Destroy
      */
     public function deleteCascade()
     {
-        if ($this->destroy->soft() && $this->destroy->type() == 1) // ScrudService::LOGICAL_EXCLUSION
-            return;
+        //if ($this->destroy->soft() && $this->destroy->type() == 1) // ScrudService::LOGICAL_EXCLUSION
+        //    return;
 
         $obj = $this->destroy->obj();
         foreach ($this->destroy->cascade() as $method) {
