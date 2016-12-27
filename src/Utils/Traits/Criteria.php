@@ -2,8 +2,8 @@
 
 namespace AoScrud\Utils\Traits;
 
-use Closure;
 use AoScrud\Utils\Criteria\BaseCriteria;
+use Closure;
 use Illuminate\Support\Collection;
 
 trait Criteria

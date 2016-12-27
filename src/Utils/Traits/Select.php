@@ -2,8 +2,8 @@
 
 namespace AoScrud\Utils\Traits;
 
-use Closure;
 use AoScrud\Utils\Interfaces\Traits\KeysInterface;
+use Closure;
 
 trait Select
 {

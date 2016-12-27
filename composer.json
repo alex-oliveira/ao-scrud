@@ -1,24 +1,31 @@
 {
-  "name": "alex-oliveira/ao-scrud",
-  "homepage": "http://github.com/alex-oliveira/ao-scrud",
-  "description": "Resources for a Super CRUD with Laravel",
-  "license": "MIT",
-  "keywords": [
-    "alex-oliveira",
-    "laravel",
-    "scrud"
-  ],
   "authors": [
     {
       "name": "Alex Oliveira",
-      "email": "bsi.alexoliveira@gmail.com",
-      "homepage": "http://alexdeoliveira.com",
+      "homepage": "https://github.com/alex-oliveira",
       "role": "Developer"
     }
   ],
+  "license": "MIT",
+  "type": "package",
+  "name": "alex-oliveira/ao-scrud",
+  "homepage": "https://github.com/alex-oliveira/ao-scrud",
+  "description": "Resources for a Super C.R.U.D. with Laravel.",
+  "keywords": [
+    "alex-oliveira",
+    "laravel",
+    "crud",
+    "search",
+    "create",
+    "read",
+    "upgrade",
+    "update",
+    "delete",
+    "destroy"
+  ],
   "require": {
     "php": ">=5.5.9",
-    "laravel/framework": "5.*"
+    "laravel/framework": ">=5.1"
   },
   "autoload": {
     "psr-4": {

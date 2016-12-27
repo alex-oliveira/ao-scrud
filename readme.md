@@ -182,7 +182,7 @@ $config->select(function ($config) {
 });
 ````
 
-### Roles
+### Rules
 ````
 $config->rules([
     'nickname' => 'required|max:50|unique:users,nickname'
@@ -274,13 +274,13 @@ $config->onError(function ($config, $exception) {
 
 ### Transaction
 ````
-$t = Transaction()->begin();
+$t = AoScrud()->transacton()->begin();
 try {
     
     // WRITE HERE YOUR CODE //
     
 } catch (\Exception $e) {
-    Transaction()->rollback($t);
+    AoScrud()->transacton()->rollback($t);
     throw $e;
 }
 Transaction()->commit($t);
@@ -291,15 +291,15 @@ class A
 {
     public function create($data)
     {
-        $t = Transaction()->begin();
+        $t = AoScrud()->transacton()->begin();
         try {
             $this->validate($data)
             $this->save($data)
         } catch (\Exception $e) {
-            Transaction()->rollback($t);
+            AoScrud()->transacton()->rollback($t);
             throw $e;
         }
-        Transaction()->commit($t);
+        AoScrud()->transacton()->commit($t);
     }
 }
 
@@ -308,16 +308,16 @@ class B
     public function create($data)
     {
         $a = new A();
-        $t = Transaction()->begin();
+        $t = AoScrud()->transacton()->begin();
         try {
             $a->create($data);
             $this->validate($data)
             $this->save($data)
         } catch (\Exception $e) {
-            Transaction()->rollback($t);
+            AoScrud()->transacton()->rollback($t);
             throw $e;
         }
-        Transaction()->commit($t);
+        AoScrud()->transacton()->commit($t);
     }
 }
 ````

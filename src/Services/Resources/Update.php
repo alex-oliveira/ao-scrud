@@ -41,17 +41,17 @@ trait Update
 
         $this->updatePrepare();
 
-        $t = Transaction()->begin();
+        $t = AoScrud()->transacton()->begin();
         try {
             $this->update->triggerOnExecute();
             $result = $this->updateExecute();
             $this->update->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
-            Transaction()->rollBack($t);
+            AoScrud()->transacton()->rollBack($t);
             $this->update->triggerOnExecuteError($e);
             throw $e;
         }
-        Transaction()->commit($t);
+        AoScrud()->transacton()->commit($t);
 
         $this->update->triggerOnSuccess($result);
 

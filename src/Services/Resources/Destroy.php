@@ -42,17 +42,17 @@ trait Destroy
 
         $this->destroyPrepare();
 
-        $t = Transaction()->begin();
+        $t = AoScrud()->transacton()->begin();
         try {
             $this->destroy->triggerOnExecute();
             $result = $this->destroyExecute();
             $this->destroy->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
-            Transaction()->rollBack($t);
+            AoScrud()->transacton()->rollBack($t);
             $this->destroy->triggerOnExecuteError($e);
             throw $e;
         }
-        Transaction()->commit($t);
+        AoScrud()->transacton()->commit($t);
 
         $this->destroy->triggerOnSuccess($result);
 

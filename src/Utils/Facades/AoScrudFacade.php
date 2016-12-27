@@ -2,9 +2,10 @@
 
 namespace AoScrud\Utils\Facades;
 
-use Illuminate\Support\Collection;
+use AoScrud\Utils\Tools\Transaction;
+use AoScrud\Utils\Tools\Validate;
 
-class ScrudFacade
+class AoScrudFacade
 {
 
     /**
@@ -28,7 +29,12 @@ class ScrudFacade
      */
     public function validate()
     {
-        return new ValidateFacade();
+        static $instance = null;
+
+        if (is_null($instance))
+            $instance = new Validate();
+
+        return $instance;
     }
 
     /**
@@ -36,7 +42,12 @@ class ScrudFacade
      */
     public function transaction()
     {
-        return new TransactionFacade();
+        static $instance = null;
+
+        if (is_null($instance))
+            $instance = new Transaction();
+
+        return $instance;
     }
 
 }

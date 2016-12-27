@@ -40,16 +40,16 @@ trait Create
 
         $this->createPrepare();
 
-        $t = Transaction()->begin();
+        $t = AoScrud()->transacton()->begin();
         try {
             $this->create->triggerOnExecute();
             $result = $this->createExecute();
             $this->create->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
-            Transaction()->rollBack($t);
+            AoScrud()->transacton()->rollBack($t);
             throw $e;
         }
-        Transaction()->commit($t);
+        AoScrud()->transacton()->commit($t);
 
         $this->create->triggerOnSuccess($result);
 

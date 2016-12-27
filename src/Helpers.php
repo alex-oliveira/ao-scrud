@@ -1,37 +1,13 @@
 <?php
 
-if (!function_exists('scrud')) {
+if (!function_exists('AoScrud')) {
 
     /**
-     * @return \AoScrud\Utils\Facades\ScrudFacade
+     * @return \AoScrud\Utils\Facades\AoScrudFacade
      */
-    function scrud()
+    function AoScrud()
     {
-        return app('scrud');
-    }
-
-}
-
-if (!function_exists('transaction')) {
-
-    /**
-     * @return \AoScrud\Utils\Facades\TransactionFacade
-     */
-    function transaction()
-    {
-        return app('transaction');
-    }
-
-}
-
-if (!function_exists('validate')) {
-
-    /**
-     * @return \AoScrud\Utils\Facades\ValidateFacade
-     */
-    function validate()
-    {
-        return app('validate');
+        return app('AoScrud');
     }
 
 }
