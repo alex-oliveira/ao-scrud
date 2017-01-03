@@ -40,16 +40,16 @@ trait Create
 
         $this->createPrepare();
 
-        $t = AoScrud()->transacton()->begin();
+        $t = AoScrud()->transaction()->begin();
         try {
             $this->create->triggerOnExecute();
             $result = $this->createExecute();
             $this->create->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
-            AoScrud()->transacton()->rollBack($t);
+            AoScrud()->transaction()->rollBack($t);
             throw $e;
         }
-        AoScrud()->transacton()->commit($t);
+        AoScrud()->transaction()->commit($t);
 
         $this->create->triggerOnSuccess($result);
 
@@ -80,7 +80,7 @@ trait Create
      */
     protected function createValidate()
     {
-        Validate()->actor($this)
+        AoScrud()->validate()->actor($this)
             ->data($this->create->data())
             ->rules($this->create->rules())
             ->run();

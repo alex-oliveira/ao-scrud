@@ -274,13 +274,13 @@ $config->onError(function ($config, $exception) {
 
 ### Transaction
 ````
-$t = AoScrud()->transacton()->begin();
+$t = AoScrud()->transaction()->begin();
 try {
     
     // WRITE HERE YOUR CODE //
     
 } catch (\Exception $e) {
-    AoScrud()->transacton()->rollback($t);
+    AoScrud()->transaction()->rollback($t);
     throw $e;
 }
 Transaction()->commit($t);
@@ -291,15 +291,15 @@ class A
 {
     public function create($data)
     {
-        $t = AoScrud()->transacton()->begin();
+        $t = AoScrud()->transaction()->begin();
         try {
             $this->validate($data)
             $this->save($data)
         } catch (\Exception $e) {
-            AoScrud()->transacton()->rollback($t);
+            AoScrud()->transaction()->rollback($t);
             throw $e;
         }
-        AoScrud()->transacton()->commit($t);
+        AoScrud()->transaction()->commit($t);
     }
 }
 
@@ -308,16 +308,16 @@ class B
     public function create($data)
     {
         $a = new A();
-        $t = AoScrud()->transacton()->begin();
+        $t = AoScrud()->transaction()->begin();
         try {
             $a->create($data);
             $this->validate($data)
             $this->save($data)
         } catch (\Exception $e) {
-            AoScrud()->transacton()->rollback($t);
+            AoScrud()->transaction()->rollback($t);
             throw $e;
         }
-        AoScrud()->transacton()->commit($t);
+        AoScrud()->transaction()->commit($t);
     }
 }
 ````

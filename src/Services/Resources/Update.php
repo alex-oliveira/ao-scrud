@@ -41,17 +41,17 @@ trait Update
 
         $this->updatePrepare();
 
-        $t = AoScrud()->transacton()->begin();
+        $t = AoScrud()->transaction()->begin();
         try {
             $this->update->triggerOnExecute();
             $result = $this->updateExecute();
             $this->update->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
-            AoScrud()->transacton()->rollBack($t);
+            AoScrud()->transaction()->rollBack($t);
             $this->update->triggerOnExecuteError($e);
             throw $e;
         }
-        AoScrud()->transacton()->commit($t);
+        AoScrud()->transaction()->commit($t);
 
         $this->update->triggerOnSuccess($result);
 
@@ -92,7 +92,7 @@ trait Update
      */
     protected function updateValidate()
     {
-        Validate()->actor($this)
+        AoScrud()->validate()->actor($this)
             ->obj($this->update->obj())
             ->data($this->update->data())
             ->rules($this->update->rules())
