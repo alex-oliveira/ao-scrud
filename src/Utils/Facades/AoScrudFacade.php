@@ -25,7 +25,7 @@ class AoScrudFacade
     }
 
     /**
-     * @return ValidateFacade
+     * @return Validate
      */
     public function validate()
     {
@@ -38,7 +38,7 @@ class AoScrudFacade
     }
 
     /**
-     * @return TransactionFacade
+     * @return Transaction
      */
     public function transaction()
     {
