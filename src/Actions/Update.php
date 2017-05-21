@@ -7,7 +7,7 @@ trait Update
 
     public function update()
     {
-        $updated = $this->service->update(scrud()->params()->all());
+        $updated = $this->service->update(AoScrud()->params()->all());
         return response()->json([], ($updated ? 204 : 200));
     }
 

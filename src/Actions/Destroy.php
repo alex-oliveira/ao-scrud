@@ -7,7 +7,7 @@ trait Destroy
 
     public function destroy()
     {
-        $this->service->destroy(scrud()->params()->all());
+        $this->service->destroy(AoScrud()->params()->all());
         return response()->json([], 204);
     }
 

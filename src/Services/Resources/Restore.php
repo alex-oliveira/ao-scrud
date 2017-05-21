@@ -39,17 +39,17 @@ trait Restore
 
         $this->restorePrepare();
 
-        $t = Transaction()->begin();
+        $t = AoScrud()->transaction()->begin();
         try {
             $this->restore->triggerOnExecute();
             $result = $this->restoreExecute();
             $this->restore->triggerOnExecuteEnd($result);
         } catch (\Exception $e) {
-            Transaction()->rollBack($t);
+            AoScrud()->transaction()->rollBack($t);
             $this->restore->triggerOnExecuteError($e);
             throw $e;
         }
-        Transaction()->commit($t);
+        AoScrud()->transaction()->commit($t);
 
         $this->restore->triggerOnSuccess($result);
 

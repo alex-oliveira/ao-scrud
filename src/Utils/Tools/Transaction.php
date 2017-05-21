@@ -1,8 +1,8 @@
 <?php
 
-namespace AoScrud\Utils\Facades;
+namespace AoScrud\Utils\Tools;
 
-class TransactionFacade
+class Transaction
 {
 
     protected $active = false;

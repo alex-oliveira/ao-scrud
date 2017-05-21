@@ -7,13 +7,13 @@ trait Index
 
     public function index()
     {
-        $data = $this->service->search(scrud()->params()->all());
+        $data = $this->service->search(AoScrud()->params()->all());
         return response()->json($this->toArray($data), 200);
     }
 
     public function selectSearch($service)
     {
-        $data = $service->search(scrud()->paramsSearch()->forget('with')->put('columns', 'id,name')->all());
+        $data = $service->search(AoScrud()->paramsSearch()->all());
         return response()->json($this->toArray($data), 200);
     }
 

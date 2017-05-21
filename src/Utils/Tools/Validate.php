@@ -1,11 +1,11 @@
 <?php
 
-namespace AoScrud\Utils\Facades;
+namespace AoScrud\Utils\Tools;
 
 use AoScrud\Utils\Interceptors\BaseInterceptor;
 use Illuminate\Support\Collection;
 
-class ValidateFacade
+class Validate
 {
 
     /**
