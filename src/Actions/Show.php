@@ -8,7 +8,7 @@ trait Show
     public function show()
     {
         $data = $this->service->read(AoScrud()->params()->all());
-        return response()->json($this->toArray($data), 200);
+        return response()->json(AoScrud()->controller()->toArray($data), 200);
     }
 
 }

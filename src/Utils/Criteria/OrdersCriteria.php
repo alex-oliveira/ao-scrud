@@ -2,20 +2,20 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Utils\Interfaces\Traits\DataInterface;
-use AoScrud\Utils\Interfaces\Traits\ModelInterface;
-use AoScrud\Utils\Interfaces\Traits\OrdersInterface;
+use AoScrud\Interfaces\IData;
+use AoScrud\Interfaces\IModel;
+use AoScrud\Interfaces\IOrders;
 
 class OrdersCriteria extends BaseCriteria
 {
 
     /**
-     * @param OrdersInterface|DataInterface|ModelInterface $config
+     * @param IData|IModel|IOrders $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof OrdersInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
+        if (!($config instanceof IOrders && $config instanceof IData && $config instanceof IModel))
             return;
 
         if ($config->orders()->isEmpty())

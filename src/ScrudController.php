@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Controllers;
+namespace AoScrud;
 
 use AoScrud\Actions\Destroy;
 use AoScrud\Actions\Index;

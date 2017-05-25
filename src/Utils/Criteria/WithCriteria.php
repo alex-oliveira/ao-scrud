@@ -2,9 +2,9 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Utils\Interfaces\Traits\DataInterface;
-use AoScrud\Utils\Interfaces\Traits\ModelInterface;
-use AoScrud\Utils\Interfaces\Traits\WithInterface;
+use AoScrud\Interfaces\IData;
+use AoScrud\Interfaces\IModel;
+use AoScrud\Interfaces\IWith;
 use Illuminate\Support\Collection;
 
 class WithCriteria extends BaseCriteria
@@ -26,12 +26,12 @@ class WithCriteria extends BaseCriteria
     private $approved = [];
 
     /**
-     * @param WithInterface|DataInterface|ModelInterface $config
+     * @param IWith|IData|IModel $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof WithInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
+        if (!($config instanceof IWith && $config instanceof IData && $config instanceof IModel))
             return;
 
         if ($config->with()->isEmpty())
