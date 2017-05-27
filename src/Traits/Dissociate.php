@@ -9,12 +9,12 @@ trait Dissociate
 {
 
     /**
-     * @var null|array|Closure|Collection
+     * @var null|Collection|Closure
      */
     protected $dissociate = null;
 
     /**
-     * @param null|array|Closure|Collection $dissociate
+     * @param null|array|Collection|Closure $dissociate
      * @return $this|Collection
      */
     public function dissociate($dissociate = null)
@@ -30,7 +30,12 @@ trait Dissociate
      */
     public function setDissociate($dissociate)
     {
-        $this->dissociate = is_array($dissociate) ? collect($dissociate) : $dissociate;
+        if (is_array($dissociate))
+            $this->dissociate = collect($dissociate);
+
+        elseif ($dissociate instanceof Collection || $dissociate instanceof Closure)
+            $this->dissociate = $dissociate;
+
         return $this;
     }
 
@@ -42,16 +47,11 @@ trait Dissociate
         if ($this->dissociate instanceof Collection)
             return $this->dissociate;
 
-        if (is_null($this->dissociate))
-            return $this->dissociate = collect([]);
-
-        if (is_array($this->dissociate))
-            return $this->dissociate = collect($this->dissociate);
-
         if ($this->dissociate instanceof Closure) {
             $closure = $this->dissociate;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
         }
 
         return $this->dissociate = collect([]);

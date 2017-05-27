@@ -18,7 +18,7 @@ class RouteParamsCriteria extends BaseCriteria
         if (!($config instanceof IKeys && $config instanceof IData && $config instanceof IModel))
             return;
 
-        $keys = $config->keys();
+        $keys = $config->keys()->all();
         if (empty($keys))
             return;
 

@@ -2,19 +2,22 @@
 
 namespace AoScrud\Traits;
 
+use Closure;
+use Illuminate\Support\Collection;
+
 trait Keys
 {
 
     /**
-     * @var array
+     * @var null|Collection|Closure
      */
-    protected $keys = ['id'];
+    protected $keys = null;
 
     /**
-     * @param array|null $keys
-     * @return $this|array
+     * @param null|array|Collection|Closure $keys
+     * @return $this|Collection
      */
-    public function keys(array $keys = null)
+    public function keys($keys = null)
     {
         if (is_null($keys))
             return $this->getKeys();
@@ -22,21 +25,36 @@ trait Keys
     }
 
     /**
-     * @return array
+     * @param array|Collection|Closure $keys
+     * @return $this
      */
-    public function getKeys()
+    public function setKeys($keys)
     {
-        return $this->keys;
+        if (is_array($keys))
+            $this->keys = collect($keys);
+
+        elseif ($keys instanceof Collection || $keys instanceof Closure)
+            $this->keys = $keys;
+
+        return $this;
     }
 
     /**
-     * @param array $keys
-     * @return $this
+     * @return Collection
      */
-    public function setKeys(array $keys)
+    public function getKeys()
     {
-        $this->keys = $keys;
-        return $this;
+        if ($this->keys instanceof Collection)
+            return $this->keys;
+
+        if ($this->keys instanceof Closure) {
+            $closure = $this->keys;
+            $result = $closure($this);
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
+        }
+
+        return $this->keys = collect([]);
     }
 
 }

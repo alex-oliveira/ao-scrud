@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Interfaces\Traits;
+namespace AoScrud\Interfaces;
 
 interface IBuild
 {

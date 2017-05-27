@@ -9,13 +9,13 @@ interface IBlock
 {
 
     /**
-     * @param null|array|Closure|Collection $block
+     * @param null|array|Collection|Closure $block
      * @return $this|Collection
      */
     public function block($block = null);
 
     /**
-     * @param array|Closure|Collection $block
+     * @param array|Collection|Closure $block
      * @return $this
      */
     public function setBlock($block);

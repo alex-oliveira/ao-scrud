@@ -2,44 +2,54 @@
 
 namespace AoScrud\Traits;
 
+use Closure;
+use Illuminate\Database\Eloquent\Model as LaraModel;
+
 trait Model
 {
 
     /**
-     * @var null|\Illuminate\Database\Eloquent\Model
+     * @var null|LaraModel|Closure
      */
     protected $model = null;
 
     /**
-     * @param null|string $model
-     * @return $this|\Illuminate\Database\Eloquent\Model
+     * @param null|string|LaraModel|Closure $model
+     * @return $this|LaraModel
      */
     public function model($model = null)
     {
         if (is_null($model))
             return $this->getModel();
-
-        if (is_string($model))
-            $model = app()->make($model);
-
         return $this->setModel($model);
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string|LaraModel|Closure $model
      * @return $this
      */
     public function setModel($model)
     {
-        $this->model = $model;
+        if (is_string($model))
+            $this->model = app()->make($model);
+
+        elseif ($model instanceof LaraModel || $model instanceof Closure)
+            $this->model = $model;
+
         return $this;
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return null|LaraModel
      */
     public function getModel()
     {
+        if ($this->model instanceof Closure) {
+            $closure = $this->model;
+            $result = $closure($this);
+            return is_string($result) ? $result = app()->make($result) : $result;
+        }
+
         return $this->model;
     }
 

@@ -27,11 +27,11 @@ trait OnExecuteError
     {
         $closure = null;
 
-        if (!is_null($this->onExecuteError)) {
+        if ($this->onExecuteError instanceof \Closure)
             $closure = $this->onExecuteError;
-        } elseif (!is_null($this->onError)) {
+
+        elseif ($this->onError instanceof \Closure)
             $closure = $this->onError;
-        }
 
         is_null($closure) ? null : $closure($this, $e);
     }

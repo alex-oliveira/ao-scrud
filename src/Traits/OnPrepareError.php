@@ -27,11 +27,11 @@ trait OnPrepareError
     {
         $closure = null;
 
-        if (!is_null($this->onPrepareError)) {
+        if ($this->onPrepareError instanceof \Closure)
             $closure = $this->onPrepareError;
-        } elseif (!is_null($this->onError)) {
+
+        elseif ($this->onError instanceof \Closure)
             $closure = $this->onError;
-        }
 
         is_null($closure) ? null : $closure($this, $e);
     }

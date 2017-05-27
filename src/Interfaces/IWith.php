@@ -9,13 +9,13 @@ interface IWith
 {
 
     /**
-     * @param null|array|Closure|Collection $with
+     * @param null|array|Collection|Closure $with
      * @return $this|Collection
      */
     public function with($with = null);
 
     /**
-     * @param array|Closure|Collection $with
+     * @param array|Collection|Closure $with
      * @return $this
      */
     public function setWith($with);

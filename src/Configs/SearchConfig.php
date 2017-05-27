@@ -33,6 +33,8 @@ class SearchConfig extends BaseConfig implements IKeys, IColumns, IOtherColumns,
 
     public function __construct()
     {
+        $this->keys(['id']);
+
         $this->criteria()->put('params', RouteParamsCriteria::class);
         $this->criteria()->put('rules', RulesCriteria::class);
         $this->criteria()->put('columns', ColumnsCriteria::class);

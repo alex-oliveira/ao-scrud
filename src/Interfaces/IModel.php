@@ -2,23 +2,25 @@
 
 namespace AoScrud\Interfaces;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface IModel
 {
 
     /**
-     * @param null|string $model
-     * @return $this|\Illuminate\Database\Eloquent\Model
+     * @param null|string|Model|Closure $model
+     * @return $this|Model
      */
     public function model($model = null);
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string|Model|Closure $model
      * @return $this
      */
     public function setModel($model);
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return null|Model
      */
     public function getModel();
 

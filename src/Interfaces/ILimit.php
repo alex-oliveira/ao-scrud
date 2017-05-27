@@ -2,17 +2,19 @@
 
 namespace AoScrud\Interfaces;
 
+use Closure;
+
 interface ILimit
 {
 
     /**
-     * @param int|null $limit
+     * @param null|int|Closure $limit
      * @return $this|int
      */
     public function limit($limit = null);
 
     /**
-     * @param int $limit
+     * @param int|Closure $limit
      * @return $this
      */
     public function setLimit($limit);

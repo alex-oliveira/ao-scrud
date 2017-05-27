@@ -9,12 +9,12 @@ trait With
 {
 
     /**
-     * @var null|array|Closure|Collection
+     * @var null|Collection|Closure
      */
     protected $with = null;
 
     /**
-     * @param null|array|Closure|Collection $with
+     * @param null|array|Collection|Closure $with
      * @return $this|Collection
      */
     public function with($with = null)
@@ -25,12 +25,17 @@ trait With
     }
 
     /**
-     * @param array|Closure|Collection $with
+     * @param array|Collection|Closure $with
      * @return $this
      */
     public function setWith($with)
     {
-        $this->with = is_array($with) ? collect($with) : $with;
+        if (is_array($with))
+            $this->with = collect($with);
+
+        elseif ($with instanceof Collection || $with instanceof Closure)
+            $this->with = $with;
+
         return $this;
     }
 
@@ -42,16 +47,11 @@ trait With
         if ($this->with instanceof Collection)
             return $this->with;
 
-        if (is_null($this->with))
-            return $this->with = collect([]);
-
-        if (is_array($this->with))
-            return $this->with = collect($this->with);
-
         if ($this->with instanceof Closure) {
             $closure = $this->with;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
         }
 
         return $this->with = collect([]);

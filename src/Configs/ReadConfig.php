@@ -27,6 +27,8 @@ class ReadConfig extends BaseConfig implements IKeys, IColumns, IOtherColumns, I
 
     public function __construct()
     {
+        $this->keys(['id']);
+
         $this->criteria()->put('params', RouteParamsCriteria::class);
         $this->criteria()->put('columns', ColumnsCriteria::class);
         $this->criteria()->put('with', WithCriteria::class);

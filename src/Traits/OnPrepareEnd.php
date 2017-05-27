@@ -22,8 +22,10 @@ trait OnPrepareEnd
 
     public function triggerOnPrepareEnd()
     {
-        $closure = $this->onPrepareEnd;
-        is_null($closure) ? null : $closure($this);
+        if ($this->onPrepareEnd instanceof \Closure) {
+            $closure = $this->onPrepareEnd;
+            $closure($this);
+        }
     }
 
 }

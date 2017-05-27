@@ -10,12 +10,12 @@ trait Columns
 {
 
     /**
-     * @var null|array|Closure|Collection
+     * @var null|Collection|Closure
      */
     protected $columns = null;
 
     /**
-     * @param null|array|Closure|Collection $columns
+     * @param null|array|Collection|Closure $columns
      * @return $this|Collection
      */
     public function columns($columns = null)
@@ -26,12 +26,17 @@ trait Columns
     }
 
     /**
-     * @param array|Closure|Collection $columns
+     * @param array|Collection|Closure $columns
      * @return $this
      */
     public function setColumns($columns)
     {
-        $this->columns = is_array($columns) ? collect($columns) : $columns;
+        if (is_array($columns))
+            $this->columns = collect($columns);
+
+        elseif ($columns instanceof Collection || $columns instanceof Closure)
+            $this->columns = $columns;
+
         return $this;
     }
 
@@ -43,16 +48,11 @@ trait Columns
         if ($this->columns instanceof Collection)
             return $this->columns;
 
-        if (is_null($this->columns))
-            return $this->columns = collect([]);
-
-        if (is_array($this->columns))
-            return $this->columns = collect($this->columns);
-
         if ($this->columns instanceof Closure) {
             $closure = $this->columns;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
         }
 
         return $this->columns = collect([]);

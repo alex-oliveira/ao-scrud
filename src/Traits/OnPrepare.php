@@ -22,8 +22,10 @@ trait OnPrepare
 
     public function triggerOnPrepare()
     {
-        $closure = $this->onPrepare;
-        is_null($closure) ? null : $closure($this);
+        if ($this->onPrepare instanceof \Closure) {
+            $closure = $this->onPrepare;
+            $closure($this);
+        }
     }
 
 }

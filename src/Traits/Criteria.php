@@ -10,12 +10,12 @@ trait Criteria
 {
 
     /**
-     * @var null|array|Closure|Collection
+     * @var null|Collection|Closure
      */
     protected $criteria = null;
 
     /**
-     * @param null|array|Closure|Collection $criteria
+     * @param null|array|Collection|Closure $criteria
      * @return $this|Collection
      */
     public function criteria($criteria = null)
@@ -26,12 +26,17 @@ trait Criteria
     }
 
     /**
-     * @param array|Closure|Collection $criteria
+     * @param array|Collection|Closure $criteria
      * @return $this
      */
     public function setCriteria($criteria)
     {
-        $this->criteria = is_array($criteria) ? collect($criteria) : $criteria;
+        if (is_array($criteria))
+            $this->criteria = collect($criteria);
+
+        elseif ($criteria instanceof Collection || $criteria instanceof Closure)
+            $this->criteria = $criteria;
+
         return $this;
     }
 
@@ -43,16 +48,11 @@ trait Criteria
         if ($this->criteria instanceof Collection)
             return $this->criteria;
 
-        if (is_null($this->criteria))
-            return $this->criteria = collect([]);
-
-        if (is_array($this->criteria))
-            return $this->criteria = collect($this->criteria);
-
         if ($this->criteria instanceof Closure) {
             $closure = $this->criteria;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
         }
 
         return $this->criteria = collect([]);

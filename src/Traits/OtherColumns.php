@@ -9,12 +9,12 @@ trait OtherColumns
 {
 
     /**
-     * @var null|array|Closure|Collection
+     * @var null|Collection|Closure
      */
     protected $otherColumns = null;
 
     /**
-     * @param null|array|Closure|Collection $columns
+     * @param null|array|Collection|Closure $columns
      * @return $this|Collection
      */
     public function otherColumns($columns = null)
@@ -25,12 +25,17 @@ trait OtherColumns
     }
 
     /**
-     * @param array|Closure|Collection $columns
+     * @param array|Collection|Closure $columns
      * @return $this
      */
     public function setOtherColumns($columns)
     {
-        $this->otherColumns = is_array($columns) ? collect($columns) : $columns;
+        if (is_array($columns))
+            $this->otherColumns = collect($columns);
+
+        elseif ($columns instanceof Collection || $columns instanceof Closure)
+            $this->otherColumns = $columns;
+
         return $this;
     }
 
@@ -42,16 +47,11 @@ trait OtherColumns
         if ($this->otherColumns instanceof Collection)
             return $this->otherColumns;
 
-        if (is_null($this->otherColumns))
-            return $this->otherColumns = collect([]);
-
-        if (is_array($this->otherColumns))
-            return $this->otherColumns = collect($this->otherColumns);
-
         if ($this->otherColumns instanceof Closure) {
             $closure = $this->otherColumns;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
         }
 
         return $this->otherColumns = collect([]);

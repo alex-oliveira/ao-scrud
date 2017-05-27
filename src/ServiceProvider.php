@@ -17,14 +17,14 @@ class ServiceProvider extends BaseServiceProvider
         Validator::extend('cep', 'AoScrud\Utils\Validators\CepValidator@validate');
         Validator::extend('cpf', 'AoScrud\Utils\Validators\CpfValidator@validate');
         Validator::extend('cnpj', 'AoScrud\Utils\Validators\CnpjValidator@validate');
-
-        $this->app->singleton('AoScrud', function ($app) {
-            return new \AoScrud\Utils\Tools();
-        });
     }
 
     public function register()
     {
+        $this->app->singleton('AoScrud', function ($app) {
+            return new \AoScrud\Utils\Tools();
+        });
+
         require_once(__DIR__ . '/Utils/Helpers.php');
     }
 

@@ -25,8 +25,10 @@ trait OnError
      */
     public function triggerOnError(\Exception $e)
     {
-        $closure = $this->onError;
-        is_null($closure) ? null : $closure($this, $e);
+        if ($this->onError instanceof \Closure) {
+            $closure = $this->onError;
+            $closure($this, $e);
+        }
     }
 
 }

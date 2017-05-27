@@ -9,13 +9,13 @@ interface IRules
 {
 
     /**
-     * @param null|string|array|Closure|Collection $rules
+     * @param null|string|array|Collection|Closure $rules
      * @return $this|string|Collection
      */
     public function rules($rules = null);
 
     /**
-     * @param string|array|Closure|Collection $rules
+     * @param string|array|Collection|Closure $rules
      * @return $this
      */
     public function setRules($rules);

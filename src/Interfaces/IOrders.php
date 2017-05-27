@@ -9,13 +9,13 @@ interface IOrders
 {
 
     /**
-     * @param null|array|Closure|Collection $orders
+     * @param null|array|Collection|Closure $orders
      * @return $this|Collection
      */
     public function orders($orders = null);
 
     /**
-     * @param array|Closure|Collection $orders
+     * @param array|Collection|Closure $orders
      * @return $this
      */
     public function setOrders($orders);

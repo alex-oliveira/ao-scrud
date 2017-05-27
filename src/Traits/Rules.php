@@ -9,12 +9,12 @@ trait Rules
 {
 
     /**
-     * @var null|string|array|Closure|Collection
+     * @var null|string|Collection|Closure
      */
     protected $rules = null;
 
     /**
-     * @param null|string|array|Closure|Collection $rules
+     * @param null|string|array|Collection|Closure $rules
      * @return $this|string|Collection
      */
     public function rules($rules = null)
@@ -25,12 +25,17 @@ trait Rules
     }
 
     /**
-     * @param string|array|Closure|Collection $rules
+     * @param string|array|Collection|Closure $rules
      * @return $this
      */
     public function setRules($rules)
     {
-        $this->rules = is_array($rules) ? collect($rules) : $rules;
+        if (is_array($rules))
+            $this->rules = collect($rules);
+
+        elseif ($rules instanceof Collection || $rules instanceof Closure)
+            $this->rules = $rules;
+
         return $this;
     }
 
@@ -42,19 +47,14 @@ trait Rules
         if ($this->rules instanceof Collection)
             return $this->rules;
 
-        if (is_null($this->rules))
-            return $this->rules = collect([]);
-
-        if (is_array($this->rules))
-            return $this->rules = collect($this->rules);
-
         if ($this->rules instanceof Closure) {
             $closure = $this->rules;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection || is_string($result) ? $result : collect([]);
         }
 
-        return $this->rules;
+        return is_string($this->rules) ? $this->rules : $this->rules = collect([]);
     }
 
 }

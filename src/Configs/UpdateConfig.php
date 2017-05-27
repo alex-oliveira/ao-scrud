@@ -18,4 +18,9 @@ class UpdateConfig extends BaseConfig implements IKeys, IColumns, IRules, ISelec
 
     use Keys, Columns, Rules, Select, Obj;
 
+    public function __construct()
+    {
+        $this->keys(['id']);
+    }
+
 }

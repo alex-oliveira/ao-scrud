@@ -9,13 +9,13 @@ interface IOtherColumns
 {
 
     /**
-     * @param null|array|Closure|Collection $columns
+     * @param null|array|Collection|Closure $columns
      * @return $this|Collection
      */
     public function otherColumns($columns = null);
 
     /**
-     * @param array|Closure|Collection $columns
+     * @param array|Collection|Closure $columns
      * @return $this
      */
     public function setOtherColumns($columns);

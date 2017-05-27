@@ -2,24 +2,27 @@
 
 namespace AoScrud\Interfaces;
 
+use Closure;
+use Illuminate\Support\Collection;
+
 interface IKeys
 {
 
     /**
-     * @param array|null $keys
-     * @return $this|array
+     * @param null|array|Collection|Closure $keys
+     * @return $this|Collection
      */
-    public function keys(array $keys = null);
+    public function keys($keys = null);
 
     /**
-     * @return array
-     */
-    public function getKeys();
-
-    /**
-     * @param array $keys
+     * @param array|Collection|Closure $keys
      * @return $this
      */
-    public function setKeys(array $keys);
+    public function setKeys($keys);
+
+    /**
+     * @return Collection
+     */
+    public function getKeys();
 
 }

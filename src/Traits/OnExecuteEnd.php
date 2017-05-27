@@ -25,8 +25,10 @@ trait OnExecuteEnd
      */
     public function triggerOnExecuteEnd($result)
     {
-        $closure = $this->onExecuteEnd;
-        is_null($closure) ? null : $closure($this, $result);
+        if ($this->onExecuteEnd instanceof \Closure) {
+            $closure = $this->onExecuteEnd;
+            $closure($this, $result);
+        }
     }
 
 }

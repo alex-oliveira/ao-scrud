@@ -14,4 +14,9 @@ class RestoreConfig extends BaseConfig implements IKeys, ISelect, IObj
 
     use Keys, Select, Obj;
 
+    public function __construct()
+    {
+        $this->keys(['id']);
+    }
+
 }

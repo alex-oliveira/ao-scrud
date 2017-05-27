@@ -2,16 +2,18 @@
 
 namespace AoScrud\Traits;
 
+use Closure;
+
 trait Limit
 {
 
     /**
-     * @var int
+     * @var int|Closure
      */
-    protected $limit = 50;
+    protected $limit = 20;
 
     /**
-     * @param int|null $limit
+     * @param null|int|Closure $limit
      * @return $this|int
      */
     public function limit($limit = null)
@@ -22,12 +24,17 @@ trait Limit
     }
 
     /**
-     * @param int $limit
+     * @param int|Closure $limit
      * @return $this
      */
     public function setLimit($limit)
     {
-        $this->limit = $limit;
+        if (is_numeric($limit) && $limit > 0 && is_int($limit + 0))
+            $this->limit = $limit;
+
+        elseif ($limit instanceof Closure)
+            $this->limit = $limit;
+
         return $this;
     }
 

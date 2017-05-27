@@ -9,12 +9,12 @@ trait Block
 {
 
     /**
-     * @var null|array|Closure|Collection
+     * @var null|Collection|Closure
      */
     protected $block = null;
 
     /**
-     * @param null|array|Closure|Collection $block
+     * @param null|array|Collection|Closure $block
      * @return $this|Collection
      */
     public function block($block = null)
@@ -25,12 +25,17 @@ trait Block
     }
 
     /**
-     * @param array|Closure|Collection $block
+     * @param array|Collection|Closure $block
      * @return $this
      */
     public function setBlock($block)
     {
-        $this->block = is_array($block) ? collect($block) : $block;
+        if (is_array($block))
+            $this->block = collect($block);
+
+        elseif ($block instanceof Collection || $block instanceof Closure)
+            $this->block = $block;
+
         return $this;
     }
 
@@ -42,16 +47,11 @@ trait Block
         if ($this->block instanceof Collection)
             return $this->block;
 
-        if (is_null($this->block))
-            return $this->block = collect([]);
-
-        if (is_array($this->block))
-            return $this->block = collect($this->block);
-
         if ($this->block instanceof Closure) {
             $closure = $this->block;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
         }
 
         return $this->block = collect([]);

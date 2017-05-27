@@ -9,13 +9,13 @@ interface ICriteria
 {
 
     /**
-     * @param null|array|Closure|Collection $criteria
+     * @param null|array|Collection|Closure $criteria
      * @return $this|Collection
      */
     public function criteria($criteria = null);
 
     /**
-     * @param array|Closure|Collection $criteria
+     * @param array|Collection|Closure $criteria
      * @return $this
      */
     public function setCriteria($criteria);
@@ -24,6 +24,8 @@ interface ICriteria
      * @return Collection
      */
     public function getCriteria();
+
+    //------------------------------------------------------------------------------------------------------------------
 
     public function runCriteria();
 

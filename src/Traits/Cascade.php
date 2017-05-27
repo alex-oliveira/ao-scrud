@@ -9,12 +9,12 @@ trait Cascade
 {
 
     /**
-     * @var null|array|Closure|Collection
+     * @var null|Collection|Closure
      */
     protected $cascade = null;
 
     /**
-     * @param null|array|Closure|Collection $cascade
+     * @param null|array|Collection|Closure $cascade
      * @return $this|Collection
      */
     public function cascade($cascade = null)
@@ -25,12 +25,17 @@ trait Cascade
     }
 
     /**
-     * @param array|Closure|Collection $cascade
+     * @param array|Collection|Closure $cascade
      * @return $this
      */
     public function setCascade($cascade)
     {
-        $this->cascade = is_array($cascade) ? collect($cascade) : $cascade;
+        if (is_array($cascade))
+            $this->cascade = collect($cascade);
+
+        elseif ($cascade instanceof Collection || $cascade instanceof Closure)
+            $this->cascade = $cascade;
+
         return $this;
     }
 
@@ -42,16 +47,11 @@ trait Cascade
         if ($this->cascade instanceof Collection)
             return $this->cascade;
 
-        if (is_null($this->cascade))
-            return $this->cascade = collect([]);
-
-        if (is_array($this->cascade))
-            return $this->cascade = collect($this->cascade);
-
         if ($this->cascade instanceof Closure) {
             $closure = $this->cascade;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
         }
 
         return $this->cascade = collect([]);

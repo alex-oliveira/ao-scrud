@@ -2,22 +2,23 @@
 
 namespace AoScrud\Interfaces;
 
+use Closure;
 use Illuminate\Support\Collection;
 
 interface IData
 {
 
     /**
-     * @param null|array $data
+     * @param null|array|Collection|Closure $data
      * @return $this|Collection
      */
-    public function data(array $data = null);
+    public function data($data = null);
 
     /**
-     * @param array $data
+     * @param array|Collection|Closure $data
      * @return $this
      */
-    public function setData(array $data);
+    public function setData($data);
 
     /**
      * @return Collection

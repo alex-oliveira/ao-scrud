@@ -9,7 +9,7 @@ interface IDissociate
 {
 
     /**
-     * @param null|array|Closure|Collection $dissociate
+     * @param null|array|Collection|Closure $dissociate
      * @return $this|Collection
      */
     public function dissociate($dissociate = null);

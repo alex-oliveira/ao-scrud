@@ -22,8 +22,10 @@ trait OnExecute
 
     public function triggerOnExecute()
     {
-        $closure = $this->onExecute;
-        is_null($closure) ? null : $closure($this);
+        if ($this->onExecute instanceof \Closure) {
+            $closure = $this->onExecute;
+            $closure($this);
+        }
     }
 
 }

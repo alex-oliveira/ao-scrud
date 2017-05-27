@@ -3,6 +3,7 @@
 namespace AoScrud\Utils;
 
 use AoScrud\Utils\Tools\Controller;
+use AoScrud\Utils\Tools\Router;
 use AoScrud\Utils\Tools\Transaction;
 use AoScrud\Utils\Tools\Validate;
 
@@ -28,6 +29,19 @@ class Tools
             $instance = new Controller();
 
         return $instance;
+    }
+
+    /**
+     * @return Router
+     */
+    public function router($controller = null)
+    {
+        $router = Router::build();
+
+        if (isset($controller))
+            $router->controller($controller);
+
+        return $router;
     }
 
     /**

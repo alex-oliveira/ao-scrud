@@ -26,8 +26,12 @@ trait OnSuccess
      */
     public function triggerOnSuccess($result)
     {
-        $closure = $this->onSuccess;
-        return is_null($closure) ? $result : $closure($this, $result);
+        if ($this->onSuccess instanceof \Closure) {
+            $closure = $this->onSuccess;
+            return $closure($this, $result);
+        }
+
+        return $result;
     }
 
 }

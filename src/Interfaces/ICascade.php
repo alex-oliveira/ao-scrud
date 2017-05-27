@@ -9,13 +9,13 @@ interface ICascade
 {
 
     /**
-     * @param null|array|Closure|Collection $cascade
+     * @param null|array|Collection|Closure $cascade
      * @return $this|Collection
      */
     public function cascade($cascade = null);
 
     /**
-     * @param array|Closure|Collection $cascade
+     * @param array|Collection|Closure $cascade
      * @return $this
      */
     public function setCascade($cascade);

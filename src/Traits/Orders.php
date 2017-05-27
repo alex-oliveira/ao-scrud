@@ -10,12 +10,12 @@ trait Orders
 {
 
     /**
-     * @var null|array|Closure|Collection
+     * @var null|Collection|Closure
      */
     protected $orders = null;
 
     /**
-     * @param null|array|Closure|Collection $orders
+     * @param null|array|Collection|Closure $orders
      * @return $this|Collection
      */
     public function orders($orders = null)
@@ -26,12 +26,17 @@ trait Orders
     }
 
     /**
-     * @param array|Closure|Collection $orders
+     * @param array|Collection|Closure $orders
      * @return $this
      */
     public function setOrders($orders)
     {
-        $this->orders = is_array($orders) ? collect($orders) : $orders;
+        if (is_array($orders))
+            $this->orders = collect($orders);
+
+        elseif ($orders instanceof Collection || $orders instanceof Closure)
+            $this->orders = $orders;
+
         return $this;
     }
 
@@ -43,16 +48,11 @@ trait Orders
         if ($this->orders instanceof Collection)
             return $this->orders;
 
-        if (is_null($this->orders))
-            return $this->orders = collect([]);
-
-        if (is_array($this->orders))
-            return $this->orders = collect($this->orders);
-
         if ($this->orders instanceof Closure) {
             $closure = $this->orders;
             $result = $closure($this);
-            return is_array($result) ? collect($result) : $result;
+            is_array($result) ? $result = collect($result) : null;
+            return $result instanceof Collection ? $result : collect([]);
         }
 
         return $this->orders = collect([]);
@@ -68,6 +68,7 @@ trait Orders
     {
         if ($this instanceof IColumns)
             $this->setOrders($this->getAllColumns($except));
+
         return $this;
     }
 
