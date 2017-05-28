@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Traits;
+namespace AoScrud\Configs\Traits;
 
 use AoScrud\Utils\Criteria\BaseCriteria;
 use Closure;

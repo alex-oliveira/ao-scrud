@@ -4,7 +4,7 @@ namespace AoScrud\Resources\Interfaces;
 
 use AoScrud\Configs\ReadConfig;
 
-interface ReadResourceInterface
+interface IReadResource
 {
 
     /**

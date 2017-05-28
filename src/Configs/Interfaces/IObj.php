@@ -1,23 +1,25 @@
 <?php
 
-namespace AoScrud\Interfaces;
+namespace AoScrud\Configs\Interfaces;
+
+use Illuminate\Database\Eloquent\Model;
 
 interface IObj
 {
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|mixed $obj
-     * @return $this|\Illuminate\Database\Eloquent\Model|mixed
+     * @param Model|mixed $obj
+     * @return $this|Model|mixed
      */
     public function obj($obj = null);
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|mixed
+     * @return Model|mixed
      */
     public function getObj();
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|mixed $obj
+     * @param Model|mixed $obj
      * @return $this
      */
     public function setObj($obj);

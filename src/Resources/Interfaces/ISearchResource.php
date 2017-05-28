@@ -4,7 +4,7 @@ namespace AoScrud\Resources\Interfaces;
 
 use AoScrud\Configs\SearchConfig;
 
-interface SearchResourceInterface
+interface ISearchResource
 {
 
     /**

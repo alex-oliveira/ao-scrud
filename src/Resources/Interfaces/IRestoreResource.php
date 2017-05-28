@@ -4,7 +4,7 @@ namespace AoScrud\Resources\Interfaces;
 
 use AoScrud\Configs\RestoreConfig;
 
-interface RestoreResourceInterface
+interface IRestoreResource
 {
 
     /**

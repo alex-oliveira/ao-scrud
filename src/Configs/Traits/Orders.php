@@ -1,8 +1,8 @@
 <?php
 
-namespace AoScrud\Traits;
+namespace AoScrud\Configs\Traits;
 
-use AoScrud\Interfaces\IColumns;
+use AoScrud\Configs\Interfaces\IColumns;
 use Closure;
 use Illuminate\Support\Collection;
 

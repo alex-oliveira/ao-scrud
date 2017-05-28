@@ -1,8 +1,8 @@
 <?php
 
-namespace AoScrud\Traits;
+namespace AoScrud\Configs\Traits;
 
-use AoScrud\Interfaces\IKeys;
+use AoScrud\Configs\Interfaces\IKeys;
 use Closure;
 
 trait Select

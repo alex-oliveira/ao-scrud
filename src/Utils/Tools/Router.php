@@ -2,13 +2,13 @@
 
 namespace AoScrud\Utils\Tools;
 
-use AoScrud\Traits\Build;
+use AoScrud\Utils\Traits\BuildTrait;
 use Illuminate\Support\Collection;
 
 class Router extends RouterGerator
 {
 
-    use Build;
+    use BuildTrait;
 
     protected $routes = [
         ['method' => 'get',    'url' => '/',             'configs' => ['as' => 'index',   'uses' => '@index']],

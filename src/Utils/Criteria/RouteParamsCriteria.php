@@ -2,9 +2,9 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Interfaces\IData;
-use AoScrud\Interfaces\IKeys;
-use AoScrud\Interfaces\IModel;
+use AoScrud\Configs\Interfaces\IData;
+use AoScrud\Configs\Interfaces\IKeys;
+use AoScrud\Configs\Interfaces\IModel;
 
 class RouteParamsCriteria extends BaseCriteria
 {

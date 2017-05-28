@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Traits;
+namespace AoScrud\Configs\Traits;
 
 trait OnPrepareEnd
 {

@@ -5,7 +5,7 @@ namespace AoScrud\Resources\Interfaces;
 use AoScrud\Configs\CreateConfig;
 use Illuminate\Database\Eloquent\Model;
 
-interface CreateResourceInterface
+interface ICreateResource
 {
 
     /**

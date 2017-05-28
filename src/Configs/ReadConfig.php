@@ -5,20 +5,20 @@ namespace AoScrud\Configs;
 use AoScrud\Utils\Criteria\ColumnsCriteria;
 use AoScrud\Utils\Criteria\RouteParamsCriteria;
 use AoScrud\Utils\Criteria\WithCriteria;
-use AoScrud\Interfaces\IColumns;
-use AoScrud\Interfaces\ICriteria;
-use AoScrud\Interfaces\IKeys;
-use AoScrud\Interfaces\IObj;
-use AoScrud\Interfaces\IOtherColumns;
-use AoScrud\Interfaces\ISelect;
-use AoScrud\Interfaces\IWith;
-use AoScrud\Traits\Columns;
-use AoScrud\Traits\Criteria;
-use AoScrud\Traits\Keys;
-use AoScrud\Traits\Obj;
-use AoScrud\Traits\OtherColumns;
-use AoScrud\Traits\Select;
-use AoScrud\Traits\With;
+use AoScrud\Configs\Interfaces\IColumns;
+use AoScrud\Configs\Interfaces\ICriteria;
+use AoScrud\Configs\Interfaces\IKeys;
+use AoScrud\Configs\Interfaces\IObj;
+use AoScrud\Configs\Interfaces\IOtherColumns;
+use AoScrud\Configs\Interfaces\ISelect;
+use AoScrud\Configs\Interfaces\IWith;
+use AoScrud\Configs\Traits\Columns;
+use AoScrud\Configs\Traits\Criteria;
+use AoScrud\Configs\Traits\Keys;
+use AoScrud\Configs\Traits\Obj;
+use AoScrud\Configs\Traits\OtherColumns;
+use AoScrud\Configs\Traits\Select;
+use AoScrud\Configs\Traits\With;
 
 class ReadConfig extends BaseConfig implements IKeys, IColumns, IOtherColumns, ISelect, IObj, ICriteria, IWith
 {

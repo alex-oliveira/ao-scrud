@@ -2,9 +2,9 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Interfaces\IData;
-use AoScrud\Interfaces\IModel;
-use AoScrud\Interfaces\IWith;
+use AoScrud\Configs\Interfaces\IData;
+use AoScrud\Configs\Interfaces\IModel;
+use AoScrud\Configs\Interfaces\IWith;
 use Illuminate\Support\Collection;
 
 class WithCriteria extends BaseCriteria

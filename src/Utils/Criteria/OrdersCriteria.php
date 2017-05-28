@@ -2,9 +2,9 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Interfaces\IData;
-use AoScrud\Interfaces\IModel;
-use AoScrud\Interfaces\IOrders;
+use AoScrud\Configs\Interfaces\IData;
+use AoScrud\Configs\Interfaces\IModel;
+use AoScrud\Configs\Interfaces\IOrders;
 
 class OrdersCriteria extends BaseCriteria
 {

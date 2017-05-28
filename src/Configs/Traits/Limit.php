@@ -1,8 +1,8 @@
 <?php
 
-namespace AoScrud\Traits;
+namespace AoScrud\Configs\Traits;
 
-use AoScrud\Interfaces\IMaxLimit;
+use AoScrud\Configs\Interfaces\IMaxLimit;
 use Closure;
 
 trait Limit

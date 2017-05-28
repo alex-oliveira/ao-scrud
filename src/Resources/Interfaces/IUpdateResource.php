@@ -4,7 +4,7 @@ namespace AoScrud\Resources\Interfaces;
 
 use AoScrud\Configs\UpdateConfig;
 
-interface UpdateResourceInterface
+interface IUpdateResource
 {
 
     /**

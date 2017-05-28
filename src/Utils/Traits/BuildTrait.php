@@ -1,8 +1,8 @@
 <?php
 
-namespace AoScrud\Traits;
+namespace AoScrud\Utils\Traits;
 
-trait Build
+trait BuildTrait
 {
 
     /**

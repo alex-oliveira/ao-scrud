@@ -2,16 +2,16 @@
 
 namespace AoScrud\Configs;
 
-use AoScrud\Interfaces\IColumns;
-use AoScrud\Interfaces\IKeys;
-use AoScrud\Interfaces\IObj;
-use AoScrud\Interfaces\IRules;
-use AoScrud\Interfaces\ISelect;
-use AoScrud\Traits\Columns;
-use AoScrud\Traits\Keys;
-use AoScrud\Traits\Obj;
-use AoScrud\Traits\Rules;
-use AoScrud\Traits\Select;
+use AoScrud\Configs\Interfaces\IColumns;
+use AoScrud\Configs\Interfaces\IKeys;
+use AoScrud\Configs\Interfaces\IObj;
+use AoScrud\Configs\Interfaces\IRules;
+use AoScrud\Configs\Interfaces\ISelect;
+use AoScrud\Configs\Traits\Columns;
+use AoScrud\Configs\Traits\Keys;
+use AoScrud\Configs\Traits\Obj;
+use AoScrud\Configs\Traits\Rules;
+use AoScrud\Configs\Traits\Select;
 
 class UpdateConfig extends BaseConfig implements IKeys, IColumns, IRules, ISelect, IObj
 {

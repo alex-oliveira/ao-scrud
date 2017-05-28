@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Interfaces;
+namespace AoScrud\Configs\Interfaces;
 
 interface ISoft
 {

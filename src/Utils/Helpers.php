@@ -3,7 +3,7 @@
 if (!function_exists('AoScrud')) {
 
     /**
-     * @return \AoScrud\Utils\Tools
+     * @return \AoScrud\Utils\Tools\Kit
      */
     function AoScrud()
     {

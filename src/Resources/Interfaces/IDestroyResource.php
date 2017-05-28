@@ -4,7 +4,7 @@ namespace AoScrud\Resources\Interfaces;
 
 use AoScrud\Configs\DestroyConfig;
 
-interface DestroyResourceInterface
+interface IDestroyResource
 {
 
     /**

@@ -15,6 +15,24 @@ $ composer require alex-oliveira/ao-scrud
 ],
 ````
 
+### 3) Configure "app/Exceptions/Handler.php" file
+````
+class Handler extends ExceptionHandler
+{
+    use \AoScrud\Core\ScrudHandler;
+    .
+    .
+    .
+    public function render($request, Exception $exception)
+    {
+        return $this->scrudRender($request, $exception);
+    }
+    .
+    .
+    .
+}
+````
+
 # Utilization
 
 Discover all in the [**wiki**](https://github.com/alex-oliveira/ao-scrud/wiki).

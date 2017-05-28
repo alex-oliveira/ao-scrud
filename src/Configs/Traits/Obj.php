@@ -1,20 +1,20 @@
 <?php
 
-namespace AoScrud\Traits;
+namespace AoScrud\Configs\Traits;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as LaraModel;
 
 trait Obj
 {
 
     /**
-     * @var Model|mixed
+     * @var LaraModel|mixed
      */
     protected $obj = null;
 
     /**
-     * @param Model|mixed $obj
-     * @return $this|Model|mixed
+     * @param LaraModel|mixed $obj
+     * @return $this|LaraModel|mixed
      */
     public function obj($obj = null)
     {
@@ -24,7 +24,7 @@ trait Obj
     }
 
     /**
-     * @return Model|mixed
+     * @return LaraModel|mixed
      */
     public function getObj()
     {
@@ -32,7 +32,7 @@ trait Obj
     }
 
     /**
-     * @param Model|mixed $obj
+     * @param LaraModel|mixed $obj
      * @return $this
      */
     public function setObj($obj)

@@ -2,12 +2,12 @@
 
 namespace AoScrud\Configs;
 
-use AoScrud\Interfaces\IKeys;
-use AoScrud\Interfaces\IObj;
-use AoScrud\Interfaces\ISelect;
-use AoScrud\Traits\Keys;
-use AoScrud\Traits\Obj;
-use AoScrud\Traits\Select;
+use AoScrud\Configs\Interfaces\IKeys;
+use AoScrud\Configs\Interfaces\IObj;
+use AoScrud\Configs\Interfaces\ISelect;
+use AoScrud\Configs\Traits\Keys;
+use AoScrud\Configs\Traits\Obj;
+use AoScrud\Configs\Traits\Select;
 
 class RestoreConfig extends BaseConfig implements IKeys, ISelect, IObj
 {
