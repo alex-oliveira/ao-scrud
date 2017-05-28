@@ -2,17 +2,19 @@
 
 namespace AoScrud\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait Obj
 {
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model|mixed
+     * @var Model|mixed
      */
     protected $obj = null;
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|mixed $obj
-     * @return $this|\Illuminate\Database\Eloquent\Model|mixed
+     * @param Model|mixed $obj
+     * @return $this|Model|mixed
      */
     public function obj($obj = null)
     {
@@ -22,7 +24,7 @@ trait Obj
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|mixed
+     * @return Model|mixed
      */
     public function getObj()
     {
@@ -30,7 +32,7 @@ trait Obj
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|mixed $obj
+     * @param Model|mixed $obj
      * @return $this
      */
     public function setObj($obj)

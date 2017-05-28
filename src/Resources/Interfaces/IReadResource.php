@@ -1,6 +1,6 @@
 <?php
 
-namespace AoScrud\Resources;
+namespace AoScrud\Resources\Interfaces;
 
 use AoScrud\Configs\ReadConfig;
 
