@@ -4,17 +4,18 @@ namespace AoScrud\Configs\Traits;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model as LaraModel;
+use Illuminate\Database\Eloquent\Builder;
 
 trait Model
 {
 
     /**
-     * @var null|LaraModel|Closure
+     * @var null|LaraModel|Builder|Closure
      */
     protected $model = null;
 
     /**
-     * @param null|string|LaraModel|Closure $model
+     * @param null|string|LaraModel|Builder|Closure $model
      * @return $this|LaraModel
      */
     public function model($model = null)
@@ -25,7 +26,7 @@ trait Model
     }
 
     /**
-     * @param string|LaraModel|Closure $model
+     * @param string|LaraModel|Builder|Closure $model
      * @return $this
      */
     public function setModel($model)
@@ -33,14 +34,14 @@ trait Model
         if (is_string($model))
             $this->model = app()->make($model);
 
-        elseif ($model instanceof LaraModel || $model instanceof Closure)
+        elseif ($model instanceof LaraModel || $model instanceof Builder || $model instanceof Closure)
             $this->model = $model;
 
         return $this;
     }
 
     /**
-     * @return null|LaraModel
+     * @return null|LaraModel|Builder
      */
     public function getModel()
     {

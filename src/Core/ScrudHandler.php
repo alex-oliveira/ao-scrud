@@ -88,8 +88,11 @@ trait ScrudHandler
     {
         $exception = ['code' => 500, 'desc' => ''];
 
-        if ($e instanceof NotFoundHttpException)
+        $route = request()->route();
+
+        if (!$route)
             $exception['code'] = 501;
+
         else if ($e instanceof HttpException)
             $exception['code'] = $e->getStatusCode();
 
