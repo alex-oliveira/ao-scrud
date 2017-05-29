@@ -47,13 +47,9 @@ class WithCriteria extends BaseCriteria
 
         foreach (explode('|', $config->data()->get('with', '')) as $with) {
             $parts = explode(':', $with);
-            if (count($parts) == 0)
-                continue;
 
-            if (!$this->allowed->has($parts[0]))
-                continue;
-
-            $this->processWith($parts[0], (isset($parts[1]) ? $parts[1] : ''));
+            if (count($parts) > 0 && $this->allowed->has($parts[0]))
+                $this->processWith($parts[0], (isset($parts[1]) ? $parts[1] : ''));
         }
 
         if (count($this->approved) > 0)

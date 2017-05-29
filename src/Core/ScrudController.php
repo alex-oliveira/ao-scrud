@@ -8,7 +8,7 @@ use AoScrud\Actions\Show;
 use AoScrud\Actions\Store;
 use AoScrud\Actions\Update;
 use AoScrud\Actions\Restore;
-use AoScrud\Services\ScrudService;
+use AoScrud\Core\ScrudService;
 use Illuminate\Routing\Controller;
 
 class ScrudController extends Controller

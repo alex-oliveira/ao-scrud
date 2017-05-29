@@ -109,14 +109,14 @@ class RouterGerator
 
     // MAKE //----------------------------------------------------------------------------------------------------------
 
-    public function do()
+    public function make()
     {
         Route::group($this->configs(), function () {
             $list = $this->only();
             if (count($list) > 0) {
                 foreach ($this->routes() as $route)
                     if (in_array($route['configs']['as'], $list))
-                        $this->make($route['method'], $route['url'], $route['configs']);
+                        $this->do($route['method'], $route['url'], $route['configs']);
                 return;
             }
 
@@ -124,16 +124,16 @@ class RouterGerator
             if (count($list) > 0) {
                 foreach ($this->routes() as $route)
                     if (!in_array($route['configs']['as'], $list))
-                        $this->make($route['method'], $route['url'], $route['configs']);
+                        $this->do($route['method'], $route['url'], $route['configs']);
                 return;
             }
 
             foreach ($this->routes() as $route)
-                $this->make($route['method'], $route['url'], $route['configs']);
+                $this->do($route['method'], $route['url'], $route['configs']);
         });
     }
 
-    protected function make($method, $url, $configs)
+    protected function do($method, $url, $configs)
     {
         Route::$method($url, $configs);
     }
