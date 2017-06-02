@@ -2,23 +2,23 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Utils\Interfaces\Traits\DataInterface;
-use AoScrud\Utils\Interfaces\Traits\KeysInterface;
-use AoScrud\Utils\Interfaces\Traits\ModelInterface;
+use AoScrud\Configs\Interfaces\IData;
+use AoScrud\Configs\Interfaces\IKeys;
+use AoScrud\Configs\Interfaces\IModel;
 
 class RouteParamsCriteria extends BaseCriteria
 {
 
     /**
-     * @param KeysInterface|DataInterface|ModelInterface $config
+     * @param IKeys|IData|IModel $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof KeysInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
+        if (!($config instanceof IKeys && $config instanceof IData && $config instanceof IModel))
             return;
 
-        $keys = $config->keys();
+        $keys = $config->keys()->all();
         if (empty($keys))
             return;
 

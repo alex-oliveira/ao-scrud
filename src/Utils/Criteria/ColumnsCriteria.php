@@ -2,26 +2,26 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Utils\Interfaces\Traits\ColumnsInterface;
-use AoScrud\Utils\Interfaces\Traits\DataInterface;
-use AoScrud\Utils\Interfaces\Traits\ModelInterface;
-use AoScrud\Utils\Interfaces\Traits\OtherColumnsInterface;
+use AoScrud\Configs\Interfaces\IColumns;
+use AoScrud\Configs\Interfaces\IData;
+use AoScrud\Configs\Interfaces\IModel;
+use AoScrud\Configs\Interfaces\IOtherColumns;
 
 class ColumnsCriteria extends BaseCriteria
 {
 
     /**
-     * @param ColumnsInterface|DataInterface|ModelInterface $config
+     * @param IColumns|IData|IModel $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof ColumnsInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
+        if (!($config instanceof IColumns && $config instanceof IData && $config instanceof IModel))
             return;
 
         $allowed = $config->columns();
 
-        if ($config instanceof OtherColumnsInterface)
+        if ($config instanceof IOtherColumns)
             $allowed = $allowed->merge($config->otherColumns()->all())->unique();
 
         if ($allowed->count() == 0)

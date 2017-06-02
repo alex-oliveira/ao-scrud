@@ -2,9 +2,9 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Utils\Interfaces\Traits\DataInterface;
-use AoScrud\Utils\Interfaces\Traits\ModelInterface;
-use AoScrud\Utils\Interfaces\Traits\WithInterface;
+use AoScrud\Configs\Interfaces\IData;
+use AoScrud\Configs\Interfaces\IModel;
+use AoScrud\Configs\Interfaces\IWith;
 use Illuminate\Support\Collection;
 
 class WithCriteria extends BaseCriteria
@@ -26,12 +26,12 @@ class WithCriteria extends BaseCriteria
     private $approved = [];
 
     /**
-     * @param WithInterface|DataInterface|ModelInterface $config
+     * @param IWith|IData|IModel $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof WithInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
+        if (!($config instanceof IWith && $config instanceof IData && $config instanceof IModel))
             return;
 
         if ($config->with()->isEmpty())
@@ -47,13 +47,9 @@ class WithCriteria extends BaseCriteria
 
         foreach (explode('|', $config->data()->get('with', '')) as $with) {
             $parts = explode(':', $with);
-            if (count($parts) == 0)
-                continue;
 
-            if (!$this->allowed->has($parts[0]))
-                continue;
-
-            $this->processWith($parts[0], (isset($parts[1]) ? $parts[1] : ''));
+            if (count($parts) > 0 && $this->allowed->has($parts[0]))
+                $this->processWith($parts[0], (isset($parts[1]) ? $parts[1] : ''));
         }
 
         if (count($this->approved) > 0)

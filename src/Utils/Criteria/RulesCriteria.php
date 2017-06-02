@@ -2,9 +2,9 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Utils\Interfaces\Traits\DataInterface;
-use AoScrud\Utils\Interfaces\Traits\ModelInterface;
-use AoScrud\Utils\Interfaces\Traits\RulesInterface;
+use AoScrud\Configs\Interfaces\IData;
+use AoScrud\Configs\Interfaces\IModel;
+use AoScrud\Configs\Interfaces\IRules;
 
 class RulesCriteria extends BaseCriteria
 {
@@ -15,12 +15,12 @@ class RulesCriteria extends BaseCriteria
     private $data;
 
     /**
-     * @param RulesInterface|DataInterface|ModelInterface $config
+     * @param IRules|IData|IModel $config
      * @return mixed
      */
     public function apply($config)
     {
-        if (!($config instanceof RulesInterface && $config instanceof DataInterface && $config instanceof ModelInterface))
+        if (!($config instanceof IRules && $config instanceof IData && $config instanceof IModel))
             return;
 
         if ($config->rules()->isEmpty())

@@ -4,7 +4,7 @@
   "name": "alex-oliveira/ao-scrud",
   "homepage": "https://github.com/alex-oliveira/ao-scrud",
   "description": "Resources for a Super C.R.U.D. with Laravel.",
-  "keywords": ["alex-oliveira", "laravel", "crud", "search", "create", "read", "upgrade", "update", "delete", "destroy"],
+  "keywords": ["alex-oliveira", "laravel", "crud", "search", "create", "read", "upgrade", "update", "delete", "destroy", "restore"],
   "authors": [
     {
       "name": "Alex Oliveira",
