@@ -2,10 +2,10 @@
 
 namespace AoScrud\Utils\Criteria;
 
-use AoScrud\Configs\Interfaces\IColumns;
-use AoScrud\Configs\Interfaces\IData;
-use AoScrud\Configs\Interfaces\IModel;
-use AoScrud\Configs\Interfaces\IOtherColumns;
+use AoScrud\Services\Configs\Interfaces\IColumns;
+use AoScrud\Services\Configs\Interfaces\IData;
+use AoScrud\Services\Configs\Interfaces\IModel;
+use AoScrud\Services\Configs\Interfaces\IOtherColumns;
 
 class ColumnsCriteria extends BaseCriteria
 {

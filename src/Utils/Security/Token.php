@@ -4,6 +4,7 @@ namespace AoScrud\Security;
 
 class Token
 {
+
     protected static $defaultExpires = 3600;
 
     /**
