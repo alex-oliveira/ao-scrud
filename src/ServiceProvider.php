@@ -21,6 +21,10 @@ class ServiceProvider extends LaraServiceProvider
             DBTruncateCommand::class,
             DBDropCommand::class,
         ]);
+
+        $this->publishes([
+            __DIR__ . '/../resources/lang' => resource_path('lang'),
+        ], 'ao-scrud');
     }
 
     public function register()
