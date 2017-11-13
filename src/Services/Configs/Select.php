@@ -48,15 +48,15 @@ trait Select
      */
     public function getSelectDefault()
     {
-        return function ($rep) {
-            $keys = $rep instanceof IKeys ? $rep->keys() : [];
+        return function ($config) {
+            $keys = $config instanceof IKeys ? $config->keys() : [];
 
             if (empty($keys))
-                return $rep->model()->find($rep->data()->get('id'));
+                return $config->model()->find($config->data()->get('id'));
 
-            $model = $rep->model();
-            foreach ($rep->keys() as $key)
-                $model = $model->where($key, $rep->data()->get($key));
+            $model = $config->model();
+            foreach ($keys as $key)
+                $model = $model->where($key, $config->data()->get($key));
 
             return $model->first();
         };

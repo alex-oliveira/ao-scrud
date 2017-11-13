@@ -114,4 +114,7 @@ return [
         //
     ],
 
+    'cpf' => 'CPF inválido.',
+    'cnpj' => 'CNPJ inválido.',
+
 ];

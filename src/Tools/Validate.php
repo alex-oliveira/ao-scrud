@@ -110,8 +110,14 @@ class Validate
 
         $validator = app('validator')->make($this->data->all(), $this->rules, $this->messages, $this->labels);
 
-        if ($validator->fails())
-            abort(400, json_encode($validator->errors()->all()));
+        if ($validator->fails()) {
+            $headers = [];
+
+            if ($validator->errors()->count() > 1)
+                $headers['X-Validator-Messages'] = base64_encode(json_encode($validator->errors()->all()));
+
+            abort(412, $validator->errors()->first(), $headers);
+        }
 
         return $validator;
     }

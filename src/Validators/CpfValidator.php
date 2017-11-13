@@ -19,7 +19,7 @@ class CpfValidator
         # Filtra o que não for numero para permitir diferentes
         # formacaçoes, tais como: "000.000.000-00", "00000000000" e "000 000 000 00".
 
-        $cpf = preg_replace('/\D/', '', $value);
+        $cpf = $value; // preg_replace('/\D/', '', $value);
 
         if (strlen($cpf) != 11)
             return false;

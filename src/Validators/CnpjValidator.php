@@ -19,7 +19,7 @@ class CnpjValidator
         # Filtra o que não for numero para permitir diferentes
         # formacaçoes, tais como: "00.000.000/0000-00", "00000000000000" e "00 000 000 0000 00".
 
-        $cnpj = preg_replace('/\D/', '', $value);
+        $cnpj = $value; //preg_replace('/\D/', '', $value);
 
         if (strlen($cnpj) != 14)
             return false;
