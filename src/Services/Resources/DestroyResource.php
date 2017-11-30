@@ -107,7 +107,7 @@ trait DestroyResource
             //    break;
             //
             //} else {
-            abort(412, 'Há ' . $qtd . ' registro(s) de ' . $label . ' dependendo do registro de TITLE #' . $obj->id . '.');
+            abort(412, 'Há ' . $qtd . ' registro(s) de ' . $label . ' dependendo deste registro.');
             //}
         }
     }
